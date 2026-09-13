@@ -2,16 +2,17 @@ remote_theme: MicrosoftLearning/Jekyll-Theme
 exclude:
   - readme.md
   - .github/
-  # Lab source code is delivered by cloning the repo, not by the site. Jekyll
-  # was copying ~199 files from here into _site for no benefit, and processing
-  # content it was never meant to render.
   - Labfiles/
   - tools/
+  - Instructions/Consolidated/
+  - workshop.md
+  - explore.md
+  - labs.json
 header_pages:
   - index.html
-author: Microsoft Learning
+author: FelipePorcinoProfessor
 twitter_username: mslearning
-github_username:  MicrosoftLearning
+github_username: FelipePorcinoProfessor
 plugins:
   - jekyll-sitemap
   - jekyll-mentions
@@ -19,5 +20,5 @@ plugins:
 markdown: kramdown
 kramdown:
    syntax_highlighter_opts:
-      disable : true
-title: Develop AI Agents in Azure
+      disable: true
+title: Exercícios de AI Agents em Português
