@@ -1,109 +1,109 @@
 ---
 lab:
-    title: 'Connect to remote agents with A2A protocol'
-    description: 'Use the A2A protocol to collaborate with remote agents.'
+    title: 'Conectar-se a agentes remotos com o protocolo A2A'
+    description: 'Use o protocolo A2A para colaborar com agentes remotos.'
     level: 300
     duration: 30
     islab: true
     status: 'released'
 ---
 
-# Connect to remote agents with A2A protocol
+# Conectar-se a agentes remotos com o protocolo A2A
 
-In this exercise, you'll use Azure AI Agent Service with the A2A protocol to create simple remote agents that interact with one another. These agents will assist technical writers with preparing their developer blog posts. A title agent will generate a headline, and an outline agent will use the title to develop a concise outline for the article. Let's get started.
+Neste exercício, você usará o Azure AI Agent Service com o protocolo A2A para criar agentes remotos simples que interagem entre si. Esses agentes ajudarão redatores técnicos a preparar suas publicações de blog para desenvolvedores. Um agente de títulos gerará um título, e um agente de esboço usará o título para desenvolver um esboço conciso para o artigo. Vamos começar.
 
-> **Tip**: The code used in this exercise is based on the Microsoft Foundry SDK for Python. You can develop similar solutions using the SDKs for Microsoft .NET, JavaScript, and Java. Refer to [Microsoft Foundry SDK client libraries](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) for details.
+> **Dica**: O código usado neste exercício baseia-se no Microsoft Foundry SDK para Python. Você pode desenvolver soluções semelhantes usando os SDKs para Microsoft .NET, JavaScript e Java. Consulte [Bibliotecas de cliente do Microsoft Foundry SDK](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para obter detalhes.
 
-This exercise should take approximately **30** minutes to complete.
+Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: Algumas das tecnologias usadas neste exercício estão em versão prévia ou em desenvolvimento ativo. Você pode encontrar algum comportamento inesperado, avisos ou erros.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- An active [Azure subscription](https://azure.microsoft.com/free/)
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
+- [Visual Studio Code](https://code.visualstudio.com/) instalado em seu computador local
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) ativa
+- [Python 3.13](https://www.python.org/downloads/) instalado
+- [Git](https://git-scm.com/downloads) instalado em seu computador local
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para a versão 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Foundry project with the Foundry Toolkit for VS Code extension
+## Criar um projeto do Foundry com a extensão Foundry Toolkit para VS Code
 
-As a developer, you may spend some time working in the Foundry portal; but you’re also likely to spend a lot of time in Visual Studio Code. The Foundry Toolkit for VS Code extension provides a convenient way to work with Foundry project resources without leaving the development environment.
+Como desenvolvedor, você pode passar algum tempo trabalhando no portal do Foundry; mas também é provável que passe bastante tempo no Visual Studio Code. A extensão Foundry Toolkit para VS Code oferece uma maneira conveniente de trabalhar com os recursos do projeto do Foundry sem sair do ambiente de desenvolvimento.
 
-1. Open Visual Studio Code.
+1. Abra o Visual Studio Code.
 
-2. Select **Extensions** from the left pane (or press **Ctrl+Shift+X**).
+2. Selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**).
 
-3. Search the extensions marketplace for the `Foundry Toolkit` extension from Microsoft and select **Install**.
+3. Pesquise no marketplace de extensões a extensão `Foundry Toolkit` da Microsoft e selecione **Install**.
 
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
+    > **Observação**: Atualmente, a extensão está listada como **Foundry Toolkit**, mas alguns rótulos e comandos do VS Code, ou capturas de tela mais antigas, ainda podem fazer referência a **AI Toolkit**. Neste laboratório, considere que esses nomes se referem à mesma experiência da extensão.
 
-4. After installing the extension, select its icon in the sidebar to open the Foundry Toolkit view.
+4. Depois de instalar a extensão, selecione o ícone dela na barra lateral para abrir a exibição do Foundry Toolkit.
 
-    You should be prompted to sign in to your Azure account if you haven't already.
+    Será solicitado que você entre em sua conta do Azure, caso ainda não tenha feito isso.
 
-5. Select **Create Project** under **Microsoft Foundry Resources**.
+5. Selecione **Create Project** em **Microsoft Foundry Resources**.
 
-    If a default project is already active, the project name will appear under **My Resources**. You can create a new project by right-clicking on the active project and selecting **Switch Default Project in Azure Extension**.
+    Se já houver um projeto padrão ativo, o nome do projeto aparecerá em **My Resources**. Você pode criar um novo projeto clicando com o botão direito do mouse no projeto ativo e selecionando **Switch Default Project in Azure Extension**.
 
-6. Select your Azure subscription and resource group, then enter a name for your Foundry project to create a new project for this exercise.
+6. Selecione sua assinatura do Azure e o grupo de recursos e, em seguida, insira um nome para o projeto do Foundry a fim de criar um novo projeto para este exercício.
 
-    When the deployment is complete, you should see the project appear in the Foundry Toolkit pane as the default project.
+    Quando a implantação for concluída, o projeto deverá aparecer no painel do Foundry Toolkit como o projeto padrão.
 
-## Deploy a model
+## Implantar um modelo
 
-At the core of any generative AI project, there’s at least one generative AI model. In this task, you'll deploy a model from the Model Catalog to use with your agent.
+No núcleo de qualquer projeto de IA generativa há pelo menos um modelo de IA generativa. Nesta tarefa, você implantará um modelo do Model Catalog para usar com seu agente.
 
-1. When the "Project deployed successfully" popup appears, select the **Deploy a new model** button. This opens the Model Catalog.
+1. Quando o pop-up "Project deployed successfully" aparecer, selecione o botão **Deploy a new model**. Isso abrirá o Model Catalog.
 
-   > **Tip**: You can also access the Model Catalog by selecting the **+** icon next to **Models** in the Resources section, or by pressing **F1** and running the command **Foundry Toolkit: Show model catalog**.
+   > **Dica**: Você também pode acessar o Model Catalog selecionando o ícone **+** ao lado de **Models** na seção Resources ou pressionando **F1** e executando o comando **Foundry Toolkit: Show model catalog**.
 
-1. In the Model Catalog, locate the **gpt-5** model (you can use the search bar to find it quickly).
+1. No Model Catalog, localize o modelo **gpt-5** (você pode usar a barra de pesquisa para encontrá-lo rapidamente).
 
-1. Select **Deploy** next to the gpt-5 model.
+1. Selecione **Deploy** ao lado do modelo gpt-5.
 
-1. Configure the deployment settings:
-   - **Deployment name**: Enter a name like "gpt-5"
-   - **Deployment type**: Select **Global Standard** (or **Standard** if Global Standard is not available)
-   - **Model version**: Leave as default
-   - **Tokens per minute**: Leave as default
+1. Defina as configurações de implantação:
+   - **Deployment name**: insira um nome como "gpt-5"
+   - **Deployment type**: selecione **Global Standard** (ou **Standard**, se Global Standard não estiver disponível)
+   - **Model version**: mantenha o padrão
+   - **Tokens per minute**: mantenha o padrão
 
-1. Select **Deploy to Microsoft Foundry** in the bottom-left corner.
+1. Selecione **Deploy to Microsoft Foundry** no canto inferior esquerdo.
 
-1. Wait for the deployment to complete. Your deployed model will appear under the **Models** section in the Resources view.
+1. Aguarde a conclusão da implantação. O modelo implantado aparecerá na seção **Models** do modo de exibição Resources.
 
-1. Right-click the name of the project deployment and select **Copy Project Endpoint**. You'll need this URL to connect your agent to the Foundry project in the next steps.
+1. Clique com o botão direito do mouse no nome da implantação do projeto e selecione **Copy Project Endpoint**. Você precisará dessa URL para conectar seu agente ao projeto do Foundry nas próximas etapas.
 
-    ![Screenshot of copying the project endpoint in the Foundry Toolkit VS Code extension.](../Media/vs-code-endpoint.png)
+    ![Captura de tela da cópia do ponto de extremidade do projeto na extensão Foundry Toolkit do VS Code.](../Media/vs-code-endpoint.png)
 
-## Clone the starter code repository
+## Clonar o repositório do código inicial
 
-For this exercise, you'll use starter code that will help you connect to your Foundry project and create an agent that can process expenses data. You'll clone this code from a GitHub repository.
+Para este exercício, você usará um código inicial que ajudará a se conectar ao projeto do Foundry e a criar um agente capaz de processar dados de despesas. Você clonará esse código de um repositório do GitHub.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
 
-1. Type **Git: Clone** and select it from the list.
+1. Digite **Git: Clone** e selecione-o na lista.
 
-1. Enter the repository URL:
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local em seu computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/09-build-remote-agents-with-a2a`, then choose **Select Folder**.
+1. Depois que o repositório for aberto, selecione **File > Open Folder**, navegue até `mslearn-ai-agents/Labfiles/09-build-remote-agents-with-a2a` e selecione **Select Folder**.
 
-1. In the Explorer pane, expand the **Python** folder to view the code files for this exercise.
+1. No painel Explorer, expanda a pasta **Python** para exibir os arquivos de código deste exercício.
 
-1. In the Explorer view, navigate to the **Labfiles/09-build-remote-agents-with-a2a/Python** folder to find the starter code for this exercise.
+1. No modo de exibição Explorer, navegue até a pasta **Labfiles/09-build-remote-agents-with-a2a/Python** para localizar o código inicial deste exercício.
 
-    The provided files include:
+    Os arquivos fornecidos incluem:
 
     ```output
    python
@@ -122,11 +122,11 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    └── run_all.py
     ```
 
-    Each agent folder contains the Azure AI agent code and a server to host the agent. The **routing agent** is responsible for discovering and communicating with the **title** and **outline** agents. The **client** allows users to submit prompts to the routing agent. `run_all.py` launches all the servers and runs the client.
+    Cada pasta de agente contém o código do agente de IA do Azure e um servidor para hospedar o agente. O **routing agent** é responsável por descobrir e se comunicar com os agentes **title** e **outline**. O **client** permite que os usuários enviem prompts ao routing agent. `run_all.py` inicia todos os servidores e executa o cliente.
 
-1. Right-click on the **requirements.txt** file and select **Open in Integrated Terminal**.
+1. Clique com o botão direito do mouse no arquivo **requirements.txt** e selecione **Open in Integrated Terminal**.
 
-1. In the terminal, enter the following command to install the required Python packages in a virtual environment:
+1. No terminal, insira o comando a seguir para instalar os pacotes Python necessários em um ambiente virtual:
 
     ```
    python -m venv labenv
@@ -134,22 +134,22 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    pip install -r requirements.txt
     ```
 
-1. Open the **.env** file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the project deployment resource in the Foundry Toolkit extension) and ensure that the MODEL_DEPLOYMENT_NAME variable is set to your model deployment name. Use **Ctrl+S** to save the file after making these changes.
+1. Abra o arquivo **.env**, substitua o espaço reservado **your_project_endpoint** pelo ponto de extremidade do seu projeto (copiado do recurso de implantação do projeto na extensão Foundry Toolkit) e verifique se a variável MODEL_DEPLOYMENT_NAME está definida como o nome da implantação do seu modelo. Use **Ctrl+S** para salvar o arquivo depois de fazer essas alterações.
 
-## Create a discoverable agent
+## Criar um agente detectável
 
-In this task, you create the title agent that helps writers create trendy headlines for their articles. You also define the agent's skills and card required by the A2A protocol to make the agent discoverable.
+Nesta tarefa, você criará o agente de títulos que ajuda redatores a criar títulos modernos para seus artigos. Você também definirá as habilidades e o cartão do agente exigidos pelo protocolo A2A para tornar o agente detectável.
 
-> **Tip**: As you add code, be sure to maintain the correct indentation. Use the existing comments as a guide, entering the new code at the same level of indentation.
+> **Dica**: Ao adicionar código, mantenha a indentação correta. Use os comentários existentes como guia, inserindo o novo código no mesmo nível de indentação.
 
-1. Open the **title_agent/agent.py** file in the code editor.
+1. Abra o arquivo **title_agent/agent.py** no editor de código.
 
-1. Find the comment **Create the agents client** and add the following code to connect to the Azure AI project:
+1. Localize o comentário **Create the agents client** e adicione o código a seguir para se conectar ao projeto de IA do Azure:
 
-    > **Tip**: Be careful to maintain the correct indentation level.
+    > **Dica**: Tenha cuidado para manter o nível correto de indentação.
 
     ```python
-   # Create the agents client
+   # Criar o cliente dos agentes
    self.client = AgentsClient(
        endpoint=os.environ['PROJECT_ENDPOINT'],
        credential=DefaultAzureCredential(
@@ -159,72 +159,72 @@ In this task, you create the title agent that helps writers create trendy headli
    )
     ```
 
-1. Find the comment **Create the title agent** and add the following code to create the agent:
+1. Localize o comentário **Create the title agent** e adicione o código a seguir para criar o agente:
 
     ```python
-   # Create the title agent
+   # Criar o agente de títulos
    self.agent = self.client.create_agent(
        model=os.environ['MODEL_DEPLOYMENT_NAME'],
        name='title-agent',
        instructions="""
-       You are a helpful writing assistant.
-       Given a topic the user wants to write about, suggest a single clear and catchy blog post title.
+       Você é um assistente de escrita prestativo.
+       Dado um tópico sobre o qual o usuário deseja escrever, sugira um único título claro e atraente para uma publicação de blog.
        """,
    )
     ```
 
-1. Find the comment **Create a thread for the chat session** and add the following code to create the chat thread:
+1. Localize o comentário **Create a thread for the chat session** e adicione o código a seguir para criar a thread do chat:
 
     ```python
-   # Create a thread for the chat session
+   # Criar uma thread para a sessão de chat
    thread = self.client.threads.create()
     ```
 
-1. Locate the comment **Send user message** and add this code to submit the user's prompt:
+1. Localize o comentário **Send user message** e adicione este código para enviar o prompt do usuário:
 
     ```python
-   # Send user message
+   # Enviar a mensagem do usuário
    self.client.messages.create(thread_id=thread.id, role=MessageRole.USER, content=user_message)
     ```
 
-1. Under the comment **Create and run the agent**, add the following code to initiate the agent's response generation:
+1. No comentário **Create and run the agent**, adicione o código a seguir para iniciar a geração da resposta do agente:
 
     ```python
-   # Create and run the agent
+   # Criar e executar o agente
    run = self.client.runs.create_and_process(thread_id=thread.id, agent_id=self.agent.id)
     ```
 
-    The code provided in the rest of the file will process and return the agent's response.
+    O código fornecido no restante do arquivo processará e retornará a resposta do agente.
 
-1. Save the code file (*CTRL+S*). Now you're ready to share the agent's skills and card with the A2A protocol.
+1. Salve o arquivo de código (*CTRL+S*). Agora você está pronto para compartilhar as habilidades e o cartão do agente com o protocolo A2A.
 
-1. Open the **title_agent/server.py** file in the code editor.
+1. Abra o arquivo **title_agent/server.py** no editor de código.
 
-1. Find the comment **Define agent skills** and add the following code to specify the agent’s functionality:
+1. Localize o comentário **Define agent skills** e adicione o código a seguir para especificar a funcionalidade do agente:
 
     ```python
-   # Define agent skills
+   # Definir as habilidades do agente
    skills = [
        AgentSkill(
            id='generate_blog_title',
-           name='Generate Blog Title',
-           description='Generates a blog title based on a topic',
+           name='Gerar título do blog',
+           description='Gera um título de blog com base em um tópico',
            tags=['title'],
            examples=[
-               'Can you give me a title for this article?',
+               'Você pode me dar um título para este artigo?',
            ],
        ),
    ]
     ```
 
-1. Find the comment **Create agent card** and add this code to define the metadata that makes the agent discoverable:
+1. Localize o comentário **Create agent card** e adicione este código para definir os metadados que tornam o agente detectável:
 
     ```python
-   # Create agent card
+   # Criar o cartão do agente
    agent_card = AgentCard(
-       name='Microsoft Foundry Title Agent',
-       description='An intelligent title generator agent powered by Foundry. '
-       'I can help you generate catchy titles for your articles.',
+       name='Agente de títulos do Microsoft Foundry',
+       description='Um agente inteligente gerador de títulos desenvolvido com o Foundry. '
+       'Posso ajudar você a gerar títulos atraentes para seus artigos.',
        url=f'http://{host}:{port}/',
        version='1.0.0',
        default_input_modes=['text'],
@@ -234,66 +234,66 @@ In this task, you create the title agent that helps writers create trendy headli
    )
     ```
 
-1. Locate the comment **Create agent executor** and add the following code to initialize the agent executor using the agent card:
+1. Localize o comentário **Create agent executor** e adicione o código a seguir para inicializar o executor do agente usando o cartão do agente:
 
     ```python
-   # Create agent executor
+   # Criar o executor do agente
    agent_executor = create_foundry_agent_executor(agent_card)
     ```
 
-    The agent executor will act as a wrapper for the title agent you created.
+    O executor do agente atuará como um wrapper para o agente de títulos que você criou.
 
-1. Find the comment **Create request handler** and add the following to handle incoming requests using the executor:
+1. Localize o comentário **Create request handler** e adicione o código a seguir para tratar as solicitações recebidas usando o executor:
 
     ```python
-   # Create request handler
+   # Criar o manipulador de solicitações
    request_handler = DefaultRequestHandler(
        agent_executor=agent_executor, task_store=InMemoryTaskStore()
    )
     ```
 
-1. Under the comment **Create A2A application**, add this code to create the A2A-compatible application instance:
+1. No comentário **Create A2A application**, adicione este código para criar a instância do aplicativo compatível com A2A:
 
     ```python
-   # Create A2A application
+   # Criar o aplicativo A2A
    a2a_app = A2AStarletteApplication(
        agent_card=agent_card, http_handler=request_handler
    )
     ```
 
-    This code creates an A2A server that will share the title agent's information and handle incoming requests for this agent using the title agent executor.
+    Este código cria um servidor A2A que compartilhará as informações do agente de títulos e tratará as solicitações recebidas para esse agente usando o executor do agente de títulos.
 
-1. Save the code file (*CTRL+S*) when you have finished.
+1. Salve o arquivo de código (*CTRL+S*) quando terminar.
 
-## Enable messages between the agents
+## Habilitar mensagens entre os agentes
 
-In this task, you use the A2A protocol to enable the routing agent to send messages to the other agents. You also allow the title agent to receive messages by implementing the agent executor class.
+Nesta tarefa, você usará o protocolo A2A para permitir que o routing agent envie mensagens aos outros agentes. Você também permitirá que o agente de títulos receba mensagens implementando a classe do executor do agente.
 
-1. Open the **routing_agent/agent.py** file in the code editor.
+1. Abra o arquivo **routing_agent/agent.py** no editor de código.
 
-    The routing agent acts as an orchestrator that handles user messages and determines which remote agent should process the request.
+    O routing agent atua como um orquestrador que trata as mensagens dos usuários e determina qual agente remoto deve processar a solicitação.
 
-    When a user message is received, the routing agent:
-    - Starts a conversation thread.
-    - Uses the `create_and_process` method to evaluate the best-matching agent for the user's message.
-    - The message is routed to the appropriate agent over HTTP using the `send_message` function.
-    - The remote agent processes the message and returns a response.
+    Quando uma mensagem do usuário é recebida, o routing agent:
+    - Inicia uma thread de conversa.
+    - Usa o método `create_and_process` para avaliar o agente mais adequado à mensagem do usuário.
+    - A mensagem é encaminhada ao agente apropriado por HTTP usando a função `send_message`.
+    - O agente remoto processa a mensagem e retorna uma resposta.
 
-    The routing agent finally captures the response and returns it to the user through the thread.
+    Por fim, o routing agent captura a resposta e a retorna ao usuário por meio da thread.
 
-    Notice that the `send_message` method is async and must be awaited for the agent run to complete successfully.
+    Observe que o método `send_message` é assíncrono e deve ser aguardado para que a execução do agente seja concluída com êxito.
 
-1. Add the following code under the comment **Retrieve the remote agent's A2A client using the agent name**:
+1. Adicione o código a seguir sob o comentário **Retrieve the remote agent's A2A client using the agent name**:
 
     ```python
-   # Retrieve the remote agent's A2A client using the agent name 
+   # Recuperar o cliente A2A do agente remoto usando o nome do agente
    client = self.remote_agent_connections[agent_name]
     ```
 
-1. Locate the comment **Construct the payload to send to the remote agent** and add the following code:
+1. Localize o comentário **Construct the payload to send to the remote agent** e adicione o código a seguir:
 
     ```python
-   # Construct the payload to send to the remote agent
+   # Construir o payload a ser enviado ao agente remoto
    payload: dict[str, Any] = {
        'message': {
            'role': 'user',
@@ -303,61 +303,61 @@ In this task, you use the A2A protocol to enable the routing agent to send messa
    }
     ```
 
-1. Find the comment **Wrap the payload in a SendMessageRequest object** and add the following code:
+1. Localize o comentário **Wrap the payload in a SendMessageRequest object** e adicione o código a seguir:
 
     ```python
-   # Wrap the payload in a SendMessageRequest object
+   # Encapsular o payload em um objeto SendMessageRequest
    message_request = SendMessageRequest(id=message_id, params=MessageSendParams.model_validate(payload))
     ```
 
-1. Add the following code under the comment **Send the message to the remote agent client and await the response**:
+1. Adicione o código a seguir sob o comentário **Send the message to the remote agent client and await the response**:
 
     ```python
-   # Send the message to the remote agent client and await the response
+   # Enviar a mensagem ao cliente do agente remoto e aguardar a resposta
    send_response: SendMessageResponse = await client.send_message(message_request=message_request)
     ```
 
-1. Save the code file (*CTRL+S*) when you have finished. Now the routing agent is able to discover and send messages to the title agent. Let's create the agent executor code to handle those incoming messages from the routing agent.
+1. Salve o arquivo de código (*CTRL+S*) quando terminar. Agora o routing agent pode descobrir e enviar mensagens ao agente de títulos. Vamos criar o código do executor do agente para tratar essas mensagens recebidas do routing agent.
 
-1. Open the **title_agent/agent_executor.py** file in the code editor.
+1. Abra o arquivo **title_agent/agent_executor.py** no editor de código.
 
-    The `AgentExecutor` class implementation must contain the methods `execute` and `cancel`. The cancel method has been provided for you. The `execute` method includes a `TaskUpdater` object that manages events and signals to the caller when the task is complete. Let's add the logic for task execution.
+    A implementação da classe `AgentExecutor` deve conter os métodos `execute` e `cancel`. O método cancel foi fornecido para você. O método `execute` inclui um objeto `TaskUpdater` que gerencia eventos e sinaliza ao chamador quando a tarefa é concluída. Vamos adicionar a lógica para a execução da tarefa.
 
-1. In the `execute` method, add the following code under the comment **Process the request**:
+1. No método `execute`, adicione o código a seguir sob o comentário **Process the request**:
 
     ```python
-   # Process the request
+   # Processar a solicitação
    await self._process_request(context.message.parts, context.context_id, updater)
     ```
 
-1. In the `_process_request` method, add the following code under the comment **Get the title agent**:
+1. No método `_process_request`, adicione o código a seguir sob o comentário **Get the title agent**:
 
     ```python
-   # Get the title agent
+   # Obter o agente de títulos
    agent = await self._get_or_create_agent()
     ```
 
-1. Add the following code under the comment **Update the task status**:
+1. Adicione o código a seguir sob o comentário **Update the task status**:
 
     ```python
-   # Update the task status
+   # Atualizar o status da tarefa
    await task_updater.update_status(
        TaskState.working,
-       message=new_agent_text_message('Title Agent is processing your request...', context_id=context_id),
+       message=new_agent_text_message('O agente de títulos está processando sua solicitação...', context_id=context_id),
    )
     ```
 
-1. Find the comment **Run the agent conversation** and add the following code:
+1. Localize o comentário **Run the agent conversation** e adicione o código a seguir:
 
     ```python
-   # Run the agent conversation
+   # Executar a conversa do agente
    responses = await agent.run_conversation(user_message)
     ```
 
-1. Find the comment **Update the task with the responses** and add the following code:
+1. Localize o comentário **Update the task with the responses** e adicione o código a seguir:
 
     ```python
-   # Update the task with the responses
+   # Atualizar a tarefa com as respostas
    for response in responses:
        await task_updater.update_status(
            TaskState.working,
@@ -365,21 +365,21 @@ In this task, you use the A2A protocol to enable the routing agent to send messa
        )
     ```
 
-1. Find the comment **Mark the task as complete** and add the following code:
+1. Localize o comentário **Mark the task as complete** e adicione o código a seguir:
 
     ```python
-   # Mark the task as complete
-   final_message = responses[-1] if responses else 'Task completed.'
+   # Marcar a tarefa como concluída
+   final_message = responses[-1] if responses else 'Tarefa concluída.'
    await task_updater.complete(
        message=new_agent_text_message(final_message, context_id=context_id)
    )
     ```
 
-    Now your title agent has been wrapped with an agent executor that the A2A protocol will use to handle messages. Great work!
+    Agora seu agente de títulos foi encapsulado com um executor de agente que o protocolo A2A usará para tratar mensagens. Muito bem!
 
-## Test the application
+## Testar o aplicativo
 
-1. In the integrated terminal, enter the following commands to run the application:
+1. No terminal integrado, insira os comandos a seguir para executar o aplicativo:
 
     ```
    az login
@@ -389,24 +389,24 @@ In this task, you use the A2A protocol to enable the routing agent to send messa
    python run_all.py
     ```
 
-    The application runs using the credentials for your authenticated Azure session to connect to your project and create and run the agent. You should see some output from each server as it starts.
+    O aplicativo usa as credenciais da sua sessão autenticada do Azure para se conectar ao projeto e criar e executar o agente. Você deverá ver alguma saída de cada servidor à medida que ele for iniciado.
 
-1. Wait until the prompt for input appears, then enter a prompt such as:
+1. Aguarde até que o prompt de entrada apareça e, em seguida, insira um prompt como:
 
     ```
-   Create a title and outline for an article about React programming.
+   Crie um título e um esboço para um artigo sobre programação em React.
     ```
 
-    After a few moments, you should see a response from the agent with the results.
+    Após alguns instantes, você deverá ver uma resposta do agente com os resultados.
 
-1. Enter `quit` to exit the program and stop the servers.
+1. Insira `quit` para sair do programa e parar os servidores.
 
-    You can also use `deactivate` to exit the Python virtual environment in the terminal.
+    Você também pode usar `deactivate` para sair do ambiente virtual do Python no terminal.
 
-## Clean up
+## Limpar
 
-If you've finished exploring Azure AI Agent Service, you should delete the resources you have created in this exercise to avoid incurring unnecessary Azure costs.
+Se você terminou de explorar o Azure AI Agent Service, deverá excluir os recursos criados neste exercício para evitar custos desnecessários do Azure.
 
-1. Return to the browser tab containing the Azure portal (or re-open the [Azure portal](https://portal.azure.com) at `https://portal.azure.com` in a new browser tab) and view the contents of the resource group where you deployed the resources used in this exercise.
-1. On the toolbar, select **Delete resource group**.
-1. Enter the resource group name and confirm that you want to delete it.
+1. Retorne à guia do navegador que contém o portal do Azure (ou reabra o [portal do Azure](https://portal.azure.com) em `https://portal.azure.com` em uma nova guia do navegador) e exiba o conteúdo do grupo de recursos no qual você implantou os recursos usados neste exercício.
+1. Na barra de ferramentas, selecione **Delete resource group**.
+1. Insira o nome do grupo de recursos e confirme que deseja excluí-lo.

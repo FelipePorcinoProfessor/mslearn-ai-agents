@@ -1,111 +1,111 @@
 ---
 lab:
-    title: 'Use a custom function in an AI agent'
-    description: 'Learn how to use functions to add custom capabilities to your agents.'
+    title: 'Usar uma função personalizada em um agente de IA'
+    description: 'Aprenda a usar funções para adicionar recursos personalizados aos seus agentes.'
     level: 300
     duration: 50
     islab: true
     status: 'released'
 ---
 
-# Use a custom function in an AI agent
+# Usar uma função personalizada em um agente de IA
 
-In this exercise you'll explore creating an agent that can use custom functions as a tool to complete tasks. The agent will act as an astronomy assistant that can provide information about astronomical events and calculate the cost of telescope rentals based on user inputs. You'll define the function tools and implement the logic to process function calls made by the agent.
+Neste exercício, você explorará a criação de um agente que pode usar funções personalizadas como uma ferramenta para concluir tarefas. O agente atuará como um assistente de astronomia que pode fornecer informações sobre eventos astronômicos e calcular o custo do aluguel de telescópios com base nas entradas do usuário. Você definirá as ferramentas de função e implementará a lógica para processar as chamadas de função feitas pelo agente.
 
-> **Tip**: The code used in this exercise is based on the Microsoft Foundry SDK for Python. You can develop similar solutions using the SDKs for Microsoft .NET, JavaScript, and Java. Refer to [Microsoft Foundry SDK client libraries](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) for details.
+> **Dica**: o código usado neste exercício é baseado no Microsoft Foundry SDK para Python. Você pode desenvolver soluções semelhantes usando os SDKs para Microsoft .NET, JavaScript e Java. Consulte [bibliotecas cliente do Microsoft Foundry SDK](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para obter detalhes.
 
-This exercise should take approximately **50** minutes to complete.
+Este exercício deve levar aproximadamente **50** minutos para ser concluído.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: algumas das tecnologias usadas neste exercício estão em versão prévia ou em desenvolvimento ativo. Você poderá encontrar algum comportamento inesperado, avisos ou erros.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- An active [Azure subscription](https://azure.microsoft.com/free/)
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
+- O [Visual Studio Code](https://code.visualstudio.com/) instalado em seu computador local
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) ativa
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado em seu computador local
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para a versão 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Foundry project with the Foundry Toolkit for VS Code extension
+## Criar um projeto do Foundry com a extensão Foundry Toolkit for VS Code
 
-As a developer, you may spend some time working in the Foundry portal; but you’re also likely to spend a lot of time in Visual Studio Code. The Foundry Toolkit for VS Code extension provides a convenient way to work with Foundry project resources without leaving the development environment.
+Como desenvolvedor, você pode passar algum tempo trabalhando no portal do Foundry, mas também é provável que passe bastante tempo no Visual Studio Code. A extensão Foundry Toolkit for VS Code oferece uma maneira conveniente de trabalhar com os recursos do projeto do Foundry sem sair do ambiente de desenvolvimento.
 
-1. Open Visual Studio Code.
+1. Abra o Visual Studio Code.
 
-2. Select **Extensions** from the left pane (or press **Ctrl+Shift+X**).
+2. Selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**).
 
-3. Search the extensions marketplace for the `Foundry Toolkit for VS Code` extension from Microsoft and select **Install**.
+3. Procure no marketplace de extensões a extensão `Foundry Toolkit for VS Code` da Microsoft e selecione **Install**.
 
-    Installing the Foundry Toolkit Extension will add the Foundry Toolkit extension to VS Code.
+    A instalação da extensão Foundry Toolkit adicionará a extensão Foundry Toolkit ao VS Code.
 
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
+    > **Observação**: atualmente, a extensão aparece como **Foundry Toolkit**, mas alguns rótulos e comandos do VS Code, ou capturas de tela mais antigas, ainda podem fazer referência a **AI Toolkit**. Neste laboratório, considere que esses nomes se referem à mesma experiência de extensão.
 
-4. After installing the extension, select the Foundry Toolkit icon in the sidebar.
+4. Depois de instalar a extensão, selecione o ícone do Foundry Toolkit na barra lateral.
 
-    You should be prompted to sign in to your Azure account if you haven't already.
+    Se ainda não tiver feito isso, você deverá receber uma solicitação para entrar em sua conta do Azure.
 
-5. Select **Create Project** under **Microsoft Foundry Resources**.
+5. Selecione **Create Project** em **Microsoft Foundry Resources**.
 
-    If a default project is already active, the project name will appear under **My Resources**. You can create a new project by right-clicking on the active project and selecting **Switch Default Project in Azure Extension**.
+    Se já houver um projeto padrão ativo, o nome do projeto aparecerá em **My Resources**. Você pode criar um novo projeto clicando com o botão direito do mouse no projeto ativo e selecionando **Switch Default Project in Azure Extension**.
 
-6. Select your Azure subscription and resource group, then enter a name for your Foundry project to create a new project for this exercise.
+6. Selecione sua assinatura do Azure e o grupo de recursos e, em seguida, insira um nome para o projeto do Foundry a fim de criar um novo projeto para este exercício.
 
-    When the deployment is complete, you should see the project appear in the Foundry Toolkit pane as the default project.
+    Quando a implantação for concluída, você deverá ver o projeto aparecer no painel do Foundry Toolkit como o projeto padrão.
 
-## Deploy a model
+## Implantar um modelo
 
-At the core of any generative AI project, there’s at least one generative AI model. In this task, you'll deploy a model from the Model Catalog to use with your agent.
+No núcleo de qualquer projeto de IA generativa, há pelo menos um modelo de IA generativa. Nesta tarefa, você implantará um modelo do Model Catalog para usar com seu agente.
 
-1. When the "Project deployed successfully" popup appears, select the **Deploy a new model** button. This opens the Model Catalog.
+1. Quando o pop-up "Project deployed successfully" aparecer, selecione o botão **Deploy a new model**. Isso abrirá o Model Catalog.
 
-   > **Tip**: You can also access the Model Catalog by selecting the **+** icon next to **Models** in the Resources section, or by pressing **F1** and running the command **Foundry Toolkit: Show model catalog**.
+   > **Dica**: você também pode acessar o Model Catalog selecionando o ícone **+** ao lado de **Models** na seção Resources ou pressionando **F1** e executando o comando **Foundry Toolkit: Show model catalog**.
 
-1. In the Model Catalog, locate the **gpt-5** model (you can use the search bar to find it quickly).
+1. No Model Catalog, localize o modelo **gpt-5** (você pode usar a barra de pesquisa para encontrá-lo rapidamente).
 
-1. Select **Deploy** next to the gpt-5 model.
+1. Selecione **Deploy** ao lado do modelo gpt-5.
 
-1. Configure the deployment settings:
-   - **Deployment name**: Enter a name like "gpt-5"
-   - **Deployment type**: Select **Global Standard** (or **Standard** if Global Standard is not available)
-   - **Model version**: Leave as default
-   - **Tokens per minute**: Leave as default
+1. Defina as configurações da implantação:
+   - **Deployment name**: insira um nome como "gpt-5"
+   - **Deployment type**: selecione **Global Standard** (ou **Standard** se Global Standard não estiver disponível)
+   - **Model version**: deixe o valor padrão
+   - **Tokens per minute**: deixe o valor padrão
 
-1. Select **Deploy to Microsoft Foundry** in the bottom-left corner.
+1. Selecione **Deploy to Microsoft Foundry** no canto inferior esquerdo.
 
-1. Wait for the deployment to complete. Your deployed model will appear under the **Models** section in the Resources view.
+1. Aguarde a conclusão da implantação. O modelo implantado aparecerá na seção **Models** do modo de exibição Resources.
 
-1. Right-click the name of the project deployment and select **Copy Project Endpoint**. You'll need this URL to connect your agent to the Foundry project in the next steps.
+1. Clique com o botão direito do mouse no nome da implantação do projeto e selecione **Copy Project Endpoint**. Você precisará dessa URL para conectar seu agente ao projeto do Foundry nas próximas etapas.
 
-    ![Screenshot of copying the project endpoint in the Foundry Toolkit VS Code extension.](../Media/vs-code-endpoint.png)
+    ![Captura de tela da cópia do endpoint do projeto na extensão Foundry Toolkit do VS Code.](../Media/vs-code-endpoint.png)
 
-## Clone the starter code repository
+## Clonar o repositório do código inicial
 
-For this exercise, you'll use starter code that will help you connect to your Foundry project and create an agent that uses custom function tools.
+Neste exercício, você usará um código inicial que ajudará a conectar-se ao seu projeto do Foundry e criar um agente que usa ferramentas de função personalizadas.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
 
-1. Type **Git: Clone** and select it from the list.
+1. Digite **Git: Clone** e selecione-o na lista.
 
-1. Enter the repository URL:
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local em seu computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/02-agent-custom-tools`, then choose **Select Folder**.
+1. Depois que o repositório for aberto, selecione **File > Open Folder** e navegue até `mslearn-ai-agents/Labfiles/02-agent-custom-tools`. Em seguida, escolha **Select Folder**.
 
-1. In the Explorer pane, expand the **Python** folder to view the code files for this exercise.
+1. No painel Explorer, expanda a pasta **Python** para exibir os arquivos de código deste exercício.
 
-1. Right-click on the **requirements.txt** file and select **Open in Integrated Terminal**.
+1. Clique com o botão direito do mouse no arquivo **requirements.txt** e selecione **Open in Integrated Terminal**.
 
-1. In the terminal, enter the following command to install the required Python packages in a virtual environment:
+1. No terminal, insira o comando a seguir para instalar os pacotes Python necessários em um ambiente virtual:
 
     ```
    python -m venv labenv
@@ -113,45 +113,45 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    pip install -r requirements.txt
     ```
 
-1. Open the **.env** file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the project deployment resource in the Foundry Toolkit VS Code extension) and ensure that the MODEL_DEPLOYMENT_NAME variable is set to your model deployment name. Use **Ctrl+S** to save the file after making these changes.
+1. Abra o arquivo **.env**, substitua o espaço reservado **your_project_endpoint** pelo endpoint do seu projeto (copiado do recurso de implantação do projeto na extensão Foundry Toolkit do VS Code) e verifique se a variável MODEL_DEPLOYMENT_NAME está definida como o nome da implantação do modelo. Use **Ctrl+S** para salvar o arquivo depois de fazer essas alterações.
 
-Now you're ready to create an AI agent that uses MCP server tools to access external data sources and APIs.
+Agora você está pronto para criar um agente de IA que usa ferramentas do servidor MCP para acessar fontes de dados e APIs externas.
 
-## Create a function for the agent to use
+## Criar uma função para o agente usar
 
-1. Open the **functions.py** file and review the existing code.
+1. Abra o arquivo **functions.py** e examine o código existente.
 
-    This file includes several functions that you can use as tools for your agent. The functions use sample files located in the **data** folder to retrieve information about astronomical events and locations.
+    Esse arquivo inclui várias funções que você pode usar como ferramentas para seu agente. As funções usam arquivos de exemplo localizados na pasta **data** para recuperar informações sobre eventos e locais astronômicos.
 
-1. Find the comment **Determine the next visible astronomical event for a given location** and add the following code:
+1. Localize o comentário **Determinar o próximo evento astronômico visível para um determinado local** e adicione o código a seguir:
 
     ```python
-   # Determine the next visible astronomical event for a given location
+   # Determinar o próximo evento astronômico visível para um determinado local
    def next_visible_event(location: str) -> str:
-       """Returns the next visible astronomical event for a location."""
+       """Retorna o próximo evento astronômico visível para um local."""
        today = int(datetime.now().strftime("%m%d"))
        loc = location.lower().replace(" ", "_")
 
-       # Retrieve the next event visible from the location, starting with events later this year
+       # Recuperar o próximo evento visível a partir do local, começando pelos eventos posteriores neste ano
        for name, event_type, date, date_str, locs in EVENTS:
            if loc in locs and date >= today:
                return json.dumps({"event": name, "type": event_type, "date": date_str, "visible_from": sorted(locs)})
 
-       return json.dumps({"message": f"No upcoming events found for {location}."})
+       return json.dumps({"message": f"Nenhum evento futuro encontrado para {location}."})
     ```
 
-    This function checks the sample events data to find the next astronomical event that is visible from a specified location, and returns the event details as a JSON string. Next, let's create an agent that can use this function.
+    Essa função verifica os dados de eventos de exemplo para encontrar o próximo evento astronômico visível a partir de um local especificado e retorna os detalhes do evento como uma cadeia de caracteres JSON. Em seguida, vamos criar um agente que possa usar essa função.
 
-## Connect to the Foundry project
+## Conectar-se ao projeto do Foundry
 
-1. Open the **agent.py** file.
+1. Abra o arquivo **agent.py**.
 
-   > **Tip**: As you add code, be sure to maintain the correct indentation. Use the comment indentation levels as a guide.
+   > **Dica**: ao adicionar código, mantenha a indentação correta. Use os níveis de indentação dos comentários como guia.
 
-1. Find the comment **Add references** and add the following code to import the classes you'll need to build an Azure AI agent that uses a function tool:
+1. Localize o comentário **Adicionar referências** e adicione o código a seguir para importar as classes necessárias para criar um agente de IA do Azure que usa uma ferramenta de função:
 
     ```python
-   # Add references
+   # Adicionar referências
    from azure.ai.projects import AIProjectClient
    from azure.ai.projects.models import FunctionTool
    from azure.identity import DefaultAzureCredential
@@ -160,12 +160,12 @@ Now you're ready to create an AI agent that uses MCP server tools to access exte
    from functions import next_visible_event, calculate_observation_cost, generate_observation_report
     ```
 
-    Notice that the functions you defined in the **functions.py** file are imported so they can be used as tools for the agent.
+    Observe que as funções definidas no arquivo **functions.py** são importadas para que possam ser usadas como ferramentas do agente.
 
-1. Find the comment **Connect to the project client** and add the following code:
+1. Localize o comentário **Conectar ao cliente do projeto** e adicione o código a seguir:
 
     ```python
-   # Connect to the project client
+   # Conectar ao cliente do projeto
    with (
        DefaultAzureCredential() as credential,
        AIProjectClient(endpoint=project_endpoint, credential=credential) as project_client,
@@ -173,23 +173,23 @@ Now you're ready to create an AI agent that uses MCP server tools to access exte
    ):
     ```
 
-## Define the function tools
+## Definir as ferramentas de função
 
-In this task, you'll define each of the function tools that the agent can use. The parameters for each function tool are defined using a JSON schema, which specifies the name, type, description, and other attributes for each parameter of the function.
+Nesta tarefa, você definirá cada uma das ferramentas de função que o agente pode usar. Os parâmetros de cada ferramenta de função são definidos usando um esquema JSON, que especifica o nome, o tipo, a descrição e outros atributos de cada parâmetro da função.
 
-1. Find the comment **Define the event function tool** and add the following code:
+1. Localize o comentário **Definir a ferramenta de função de evento** e adicione o código a seguir:
 
     ```python
-   # Define the event function tool
+   # Definir a ferramenta de função de evento
    event_tool = FunctionTool(
        name="next_visible_event",
-       description="Get the next visible event in a given location.",
+       description="Obter o próximo evento visível em um determinado local.",
        parameters={
            "type": "object",
            "properties": {
                "location": {
                    "type": "string",
-                   "description": "continent to find the next visible event in (e.g. 'north_america', 'south_america', 'australia')",
+                   "description": "continente onde encontrar o próximo evento visível (por exemplo, 'north_america', 'south_america', 'australia')",
                },
            },
            "required": ["location"],
@@ -199,27 +199,27 @@ In this task, you'll define each of the function tools that the agent can use. T
    )
     ```
 
-1. Find the comment **Define the observation cost function tool** and add the following code:
+1. Localize o comentário **Definir a ferramenta de função de custo de observação** e adicione o código a seguir:
 
     ```python
-   # Define the observation cost function tool
+   # Definir a ferramenta de função de custo de observação
    cost_tool = FunctionTool(
        name="calculate_observation_cost",
-       description="Calculate the cost of an observation based on the telescope tier, number of hours, and priority level.",
+       description="Calcular o custo de uma observação com base na categoria do telescópio, no número de horas e no nível de prioridade.",
        parameters={
            "type": "object",
            "properties": {
                "telescope_tier": {
                    "type": "string",
-                   "description": "the tier of the telescope (e.g. 'standard', 'advanced', 'premium')",
+                   "description": "a categoria do telescópio (por exemplo, 'standard', 'advanced', 'premium')",
                },
                "hours": {
                    "type": "number",
-                   "description": "the number of hours for the observation",
+                   "description": "o número de horas da observação",
                },
                "priority": {
                    "type": "string",
-                   "description": "the priority level of the observation (e.g. 'low', 'normal', 'high')",
+                   "description": "o nível de prioridade da observação (por exemplo, 'low', 'normal', 'high')",
                },
            },
            "required": ["telescope_tier", "hours", "priority"],
@@ -229,40 +229,40 @@ In this task, you'll define each of the function tools that the agent can use. T
    )
     ```
 
-1. Find the comment **Define the observation report generation function tool** and add the following code:
+1. Localize o comentário **Definir a ferramenta de função de geração de relatório de observação** e adicione o código a seguir:
 
     ```python
-   # Define the observation report generation function tool
+   # Definir a ferramenta de função de geração de relatório de observação
    report_tool = FunctionTool(
        name="generate_observation_report",
-       description="Generate a report summarizing an astronomical observation",
+       description="Gerar um relatório que resume uma observação astronômica",
        parameters={
            "type": "object",
            "properties": {
                "event_name": {
                    "type": "string",
-                   "description": "the name of the astronomical event being observed",
+                   "description": "o nome do evento astronômico que está sendo observado",
                },
                "location": {
                    "type": "string",
-                   "description": "the location of the observer",
+                   "description": "o local do observador",
                },
                "telescope_tier": {
                    "type": "string",
-                   "description": "the tier of the telescope used for the observation (e.g. 'standard', 'advanced', 'premium')",
+                   "description": "a categoria do telescópio usado para a observação (por exemplo, 'standard', 'advanced', 'premium')",
                },
                "hours": {
                    "type": "number",
-                   "description": "the number of hours the telescope was used for the observation",
+                   "description": "o número de horas que o telescópio foi usado para a observação",
                },
                "priority": {
                    "type": "string",
-                   "description": "the priority level of the observation (e.g. 'low', 'normal', 'high')",
+                   "description": "o nível de prioridade da observação (por exemplo, 'low', 'normal', 'high')",
                },
                "observer_name": {
                    "type": "string",
-                   "description": "the name of the person who conducted the observation",
-               },                   
+                   "description": "o nome da pessoa que realizou a observação",
+               },
            },
            "required": ["event_name", "location", "telescope_tier", "hours", "priority", "observer_name"],
            "additionalProperties": False,
@@ -271,83 +271,83 @@ In this task, you'll define each of the function tools that the agent can use. T
    )
     ```
 
-## Create the agent that uses the function tools
+## Criar o agente que usa as ferramentas de função
 
-Now that you've defined the function tools, you can create an agent that can use those tools to complete tasks.
+Agora que você definiu as ferramentas de função, pode criar um agente que use essas ferramentas para concluir tarefas.
 
-1. Find the comment **Create a new agent with the function tools** and add the following code:
+1. Localize o comentário **Criar um novo agente com as ferramentas de função** e adicione o código a seguir:
 
     ```python
-   # Create a new agent with the function tools
+   # Criar um novo agente com as ferramentas de função
    agent = project_client.agents.create_version(
        agent_name="astronomy-agent",
        definition=PromptAgentDefinition(
            model=model_deployment,
            instructions=
-               """You are an astronomy observations assistant that helps users find 
-               information about astronomical events and calculate telescope rental costs. 
-               Use the available tools to assist users with their inquiries.""",
+               """Você é um assistente de observações astronômicas que ajuda os usuários a encontrar
+               informações sobre eventos astronômicos e calcular custos de aluguel de telescópios.
+               Use as ferramentas disponíveis para ajudar os usuários com suas dúvidas.""",
            tools=[event_tool, cost_tool, report_tool],
        ),
    )
     ```
 
-## Send a message to the agent and process the response
+## Enviar uma mensagem ao agente e processar a resposta
 
-Now that you've created the agent with the function tools, you can send messages to the agent and process its responses.
+Agora que você criou o agente com as ferramentas de função, pode enviar mensagens ao agente e processar suas respostas.
 
-1. Find the comment **Create a thread for the chat session** and add the following code:
+1. Localize o comentário **Criar uma conversa para a sessão de chat** e adicione o código a seguir:
 
     ```python
-   # Create a thread for the chat session
+   # Criar uma conversa para a sessão de chat
    conversation = openai_client.conversations.create()
     ```
 
-    This code creates the chat session with the agent.
+    Esse código cria a sessão de chat com o agente.
 
-1. Find the comment **Create a list to hold function call outputs that will be sent back as input to the agent** and add the following code:
+1. Localize o comentário **Criar uma lista para armazenar as saídas das chamadas de função que serão enviadas de volta como entrada para o agente** e adicione o código a seguir:
 
     ```python
-   # Create a list to hold function call outputs that will be sent back as input to the agent
+   # Criar uma lista para armazenar as saídas das chamadas de função que serão enviadas de volta como entrada para o agente
    input_list: ResponseInputParam = []
     ```
 
-1. Find the comment **Send a prompt to the agent** and add the following code:
+1. Localize o comentário **Enviar um prompt ao agente** e adicione o código a seguir:
 
     ```python
-   # Send a prompt to the agent
+   # Enviar um prompt ao agente
    openai_client.conversations.items.create(
        conversation_id=conversation.id,
        items=[{"type": "message", "role": "user", "content": user_input}],
    )
     ```
 
-1. Find the comment **Retrieve the agent's response, which may include function calls** and add the following code:
+1. Localize o comentário **Recuperar a resposta do agente, que pode incluir chamadas de função** e adicione o código a seguir:
 
     ```python
-   # Retrieve the agent's response, which may include function calls
+   # Recuperar a resposta do agente, que pode incluir chamadas de função
    response = openai_client.responses.create(
        conversation=conversation.id,
        extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
        input=input_list,
    )
 
-   # Check the run status for failures
+   # Verificar se o status da execução indica falha
    if response.status == "failed":
-       print(f"Response failed: {response.error}")
+       print(f"Falha na resposta: {response.error}")
     ```
 
-    In this code, you send a user prompt to the agent and retrieve the response. You also check if the response indicates a failure and print the error if so.
+    Neste código, você envia um prompt do usuário ao agente e recupera a resposta. Você também verifica se a resposta indica uma falha e, se isso ocorrer, imprime o erro.
 
-## Process function calls and display the agent's response
+## Processar chamadas de função e exibir a resposta do agente
 
-1. Find the comment **Process function calls** and add the following code to handle any function calls made by the agent:
+1. Localize o comentário **Processar chamadas de função** e adicione o código a seguir para tratar todas as chamadas de função feitas pelo agente:
 
     ```python
-   # Process function calls
+   # Processar chamadas de função
    for item in response.output:
        if item.type == "function_call":
-           # Retrieve the matching function tool
+           # Recuperar a ferramenta de função correspondente
            function_name = item.name
            result = None
            if item.name == "next_visible_event":
@@ -357,7 +357,7 @@ Now that you've created the agent with the function tools, you can send messages
            elif item.name == "generate_observation_report":
                result = generate_observation_report(**json.loads(item.arguments))
 
-           # Append the output text
+           # Acrescentar o texto da saída
            input_list.append(
                FunctionCallOutput(
                    type="function_call_output",
@@ -367,47 +367,47 @@ Now that you've created the agent with the function tools, you can send messages
            )
     ```
 
-    This code iterates through the items in the agent's response to check for any function calls. If a function call is found, it retrieves the corresponding function tool, executes the function with the provided arguments, and appends the result to the input list that will be sent back to the agent.
+    Esse código itera pelos itens da resposta do agente para verificar se há chamadas de função. Se uma chamada de função for encontrada, ele recuperará a ferramenta de função correspondente, executará a função com os argumentos fornecidos e acrescentará o resultado à lista de entradas que será enviada de volta ao agente.
 
-1. Find the comment **Send function call outputs back to the model and retrieve a response** and add the following code:
+1. Localize o comentário **Enviar as saídas das chamadas de função de volta ao modelo e recuperar uma resposta** e adicione o código a seguir:
 
     ```python
-   # Send function call outputs back to the model and retrieve a response
+   # Enviar as saídas das chamadas de função de volta ao modelo e recuperar uma resposta
    if input_list:
        response = openai_client.responses.create(
            input=input_list,
            previous_response_id=response.id,
            extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
        )
-   # Display the agent's response
-   print(f"AGENT: {response.output_text}")
+   # Exibir a resposta do agente
+   print(f"AGENTE: {response.output_text}")
     ```
 
-    This code checks if there are any function call outputs in the input list, and if so, it sends them back to the agent as input to retrieve an updated response. Finally, it prints the agent's response.
+    Esse código verifica se há saídas de chamadas de função na lista de entradas e, se houver, envia-as de volta ao agente como entrada para recuperar uma resposta atualizada. Por fim, ele imprime a resposta do agente.
 
-1. Find the comment **Delete the agent when done** and add the following code:
+1. Localize o comentário **Excluir o agente quando terminar** e adicione o código a seguir:
 
     ```python
-   # Delete the agent when done
+   # Excluir o agente quando terminar
    project_client.agents.delete_version(agent_name=agent.name, agent_version=agent.version)
-   print("Deleted agent.")
+   print("Agente excluído.")
     ```
 
-1. Review the complete code you've added to the file. It should now include sections that:
-   - Import necessary libraries
-    - Connect to the Foundry project and OpenAI client
-    - Define function tools for the agent to use
-    - Create an agent with those function tools
-    - Send a message to the agent and retrieve the response
-    - Process any function calls made by the agent and send the outputs back to the agent
-    - Display the agent's response
-    - Delete the agent when done
+1. Examine o código completo que você adicionou ao arquivo. Agora ele deverá incluir seções que:
+   - Importam as bibliotecas necessárias
+    - Conectam-se ao projeto do Foundry e ao cliente OpenAI
+    - Definem as ferramentas de função que o agente usará
+    - Criam um agente com essas ferramentas de função
+    - Enviam uma mensagem ao agente e recuperam a resposta
+    - Processam as chamadas de função feitas pelo agente e enviam as saídas de volta ao agente
+    - Exibem a resposta do agente
+    - Excluem o agente quando terminarem
 
-1. Save the code file (*CTRL+S*) when you have finished.
+1. Salve o arquivo de código (**CTRL+S**) quando terminar.
 
-## Run the agent application
+## Executar o aplicativo do agente
 
-1. In the integrated terminal, enter the following command to run the application:
+1. No terminal integrado, insira o comando a seguir para executar o aplicativo:
 
     ```
    az login
@@ -417,68 +417,68 @@ Now that you've created the agent with the function tools, you can send messages
    python agent.py
     ```
 
-1. When prompted, enter a prompt such as:
+1. Quando solicitado, insira um prompt como:
 
     ```
-   Find me the next event I can see from South America and give me the cost for 5 hours of premium telescope time at normal priority.
+   Encontre o próximo evento que posso observar da América do Sul e informe o custo de 5 horas de uso de um telescópio premium com prioridade normal.
     ```
 
-    Notice that this prompt asks the agent to use both of the function tools you defined: `next_visible_event` and `calculate_observation_cost`. The agent is able to invoke both functions in the same conversation turn, and use the outputs from those function calls to provide a helpful response to the user.
+    Observe que esse prompt solicita que o agente use as duas ferramentas de função definidas: `next_visible_event` e `calculate_observation_cost`. O agente consegue invocar as duas funções no mesmo turno da conversa e usar as saídas dessas chamadas de função para fornecer uma resposta útil ao usuário.
 
-    > **Tip**: If the app fails because the rate limit is exceeded. Wait a few seconds and try again. If there is insufficient quota available in your subscription, the model may not be able to respond.
+    > **Dica**: se o aplicativo falhar porque o limite de taxa foi excedido, aguarde alguns segundos e tente novamente. Se não houver cota suficiente disponível em sua assinatura, talvez o modelo não consiga responder.
 
-    You should see some output similar to the following:
+    Você deverá ver uma saída semelhante à seguinte:
 
     ```output
-   AGENT: The next astronomical event you can observe from South America is the Jupiter-Venus Conjunction, taking place on May 1st.
-   The cost for 5 hours of premium telescope time at normal priority for this observation will be $1,875. 
+   AGENTE: O próximo evento astronômico que você pode observar da América do Sul é a Conjunção Júpiter-Vênus, que ocorrerá em 1º de maio.
+   O custo de 5 horas de uso de um telescópio premium com prioridade normal para essa observação será de $1,875.
     ```
 
-1. Enter a follow-up prompt to generate an observation report, such as:
+1. Insira um prompt de acompanhamento para gerar um relatório de observação, como:
 
     ```
-   Generate that information in a report for Bellows College.
+   Gere essas informações em um relatório para Bellows College.
     ```
 
-    You should see a response similar to the following:
+    Você deverá ver uma resposta semelhante à seguinte:
 
     ```output
-   AGENT: Here is your report for Bellows College:
+   AGENTE: Aqui está seu relatório para Bellows College:
 
-   - Next visible astronomical event: Jupiter-Venus Conjunction
-   - Date: May 1st
-   - Visible from: South America
-   - Observation details:
-       - Telescope tier: Premium
-       - Duration: 5 hours
-       - Priority: Normal
-   - Observation cost: $1,875
+   - Próximo evento astronômico visível: Conjunção Júpiter-Vênus
+   - Data: 1º de maio
+   - Visível a partir de: América do Sul
+   - Detalhes da observação:
+       - Categoria do telescópio: Premium
+       - Duração: 5 horas
+       - Prioridade: Normal
+   - Custo da observação: $1,875
 
-   A formal report has been generated for Bellows College.
+   Um relatório formal foi gerado para Bellows College.
     ```
 
-    In the file explorer, you can see that a new file named `report-<event-type>.txt` has been created, which contains the generated report. You can open this file to view the contents of the report.
+    No explorador de arquivos, você verá que um novo arquivo chamado `report-<event-type>.txt` foi criado. Ele contém o relatório gerado. Você pode abrir esse arquivo para exibir o conteúdo do relatório.
 
-1. Enter `quit` to exit the application.
+1. Insira `quit` para sair do aplicativo.
 
-    You can also use `deactivate` to exit the Python virtual environment in the terminal.
+    Você também pode usar `deactivate` para sair do ambiente virtual do Python no terminal.
 
-## Clean up
+## Limpar
 
-When you've finished exploring the Foundry Toolkit for VS Code extension, you should clean up the resources to avoid incurring unnecessary Azure costs.
+Quando terminar de explorar a extensão Foundry Toolkit for VS Code, limpe os recursos para evitar incorrer em custos desnecessários do Azure.
 
-### Delete your model
+### Excluir seu modelo
 
-1. In VS Code, refresh the **Azure Resources** view.
+1. No VS Code, atualize o modo de exibição **Azure Resources**.
 
-1. Expand the **Models** subsection.
+1. Expanda a subseção **Models**.
 
-1. Right-click on your deployed model and select **Delete**.
+1. Clique com o botão direito do mouse no modelo implantado e selecione **Delete**.
 
-### Delete the resource group
+### Excluir o grupo de recursos
 
-1. Open the [Azure portal](https://portal.azure.com).
+1. Abra o [portal do Azure](https://portal.azure.com).
 
-1. Navigate to the resource group containing your Microsoft Foundry resources.
+1. Navegue até o grupo de recursos que contém seus recursos do Microsoft Foundry.
 
-1. Select **Delete resource group** and confirm the deletion.
+1. Selecione **Delete resource group** e confirme a exclusão.

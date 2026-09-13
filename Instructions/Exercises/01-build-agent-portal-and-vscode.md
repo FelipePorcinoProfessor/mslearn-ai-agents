@@ -1,215 +1,215 @@
 ---
 lab:
-    title: 'Build AI agents with portal and VS Code'
-    description: 'Create an AI agent using both Microsoft Foundry portal and the Foundry Toolkit VS Code extension with built-in tools like file search and code interpreter.'
+    title: 'Criar agentes de IA com o portal e o VS Code'
+    description: 'Crie um agente de IA usando o portal do Microsoft Foundry e a extensão Foundry Toolkit para VS Code, com ferramentas integradas como pesquisa de arquivos e interpretador de código.'
     level: 300
     duration: 45
     islab: true
     status: 'released'
 ---
 
-# Build AI agents with portal and VS Code
+# Criar agentes de IA com o portal e o VS Code
 
-In this exercise, you'll build a complete AI agent solution using both the Microsoft Foundry portal and the Foundry Toolkit VS Code extension. You'll start by creating a basic agent in the portal with grounding data and built-in tools, then interact with it programmatically using VS Code to use advanced capabilities like code interpreter for data analysis.
+Neste exercício, você criará uma solução completa de agente de IA usando o portal do Microsoft Foundry e a extensão Foundry Toolkit para VS Code. Primeiro, você criará um agente básico no portal com dados de fundamentação e ferramentas integradas; depois, interagirá programaticamente com ele usando o VS Code para utilizar recursos avançados, como o interpretador de código para análise de dados.
 
-This exercise takes approximately **45** minutes.
+Este exercício leva aproximadamente **45** minutos.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: Algumas das tecnologias usadas neste exercício estão em versão prévia ou em desenvolvimento ativo. Você pode encontrar comportamentos, avisos ou erros inesperados.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- An [Azure subscription](https://azure.microsoft.com/free/) with sufficient permissions and quota to provision Azure AI resources
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
-- Basic familiarity with Azure AI services and Python programming
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) com permissões e cota suficientes para provisionar recursos do Azure AI
+- O [Visual Studio Code](https://code.visualstudio.com/) instalado no computador local
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado no computador local
+- Familiaridade básica com os serviços do Azure AI e a programação em Python
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Microsoft Foundry Project
+## Criar um projeto do Microsoft Foundry
 
-Microsoft Foundry uses projects to organize models, resources, data, and other assets used to develop an AI solution.
+O Microsoft Foundry usa projetos para organizar modelos, recursos, dados e outros ativos usados para desenvolver uma solução de IA.
 
-1. In a web browser, open the [Foundry portal](https://ai.azure.com) at `https://ai.azure.com` and sign in using your Azure credentials. Close any tips or quick start panes that are opened the first time you sign in, and if necessary use the **Foundry** logo at the top left to navigate to the home page.
+1. Em um navegador da Web, abra o [portal do Foundry](https://ai.azure.com) em `https://ai.azure.com` e entre usando suas credenciais do Azure. Feche todas as dicas ou painéis de início rápido que forem abertos na primeira vez que você entrar e, se necessário, use o logotipo do **Foundry** no canto superior esquerdo para navegar até a página inicial.
 
-    > **Important**: For this lab, you're using the **New** Foundry experience.
+    > **Importante**: Para este laboratório, você está usando a experiência **New** do Foundry.
 
-1. In the top banner, select **Start building** to try the new Microsoft Foundry Experience.
+1. No banner superior, selecione **Start building** para experimentar a nova experiência do Microsoft Foundry.
 
-1. When prompted, create a **new** project, and enter a valid name for your project (e.g., `it-support-agent-project`).
+1. Quando solicitado, crie um projeto **novo** e insira um nome válido para o projeto (por exemplo, `it-support-agent-project`).
 
-1. Expand **Advanced options** and specify the following settings:
-    - **Microsoft Foundry resource**: *A valid name for your Foundry resource*
-    - **Region**: *Select one available near you*\**
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Select your resource group, or create a new one*
+1. Expanda **Advanced options** e especifique as seguintes configurações:
+    - **Microsoft Foundry resource**: *Um nome válido para o recurso do Foundry*
+    - **Region**: *Selecione uma disponível perto de você*\**
+    - **Subscription**: *Sua assinatura do Azure*
+    - **Resource group**: *Selecione seu grupo de recursos ou crie um novo*
 
-    > \* Some Azure AI resources are constrained by regional model quotas. In the event of a quota limit being exceeded later in the exercise, there's a possibility you may need to create another resource in a different region.
+    > \* Alguns recursos do Azure AI têm limitações de cotas de modelo por região. Se um limite de cota for excedido mais adiante no exercício, talvez seja necessário criar outro recurso em uma região diferente.
 
-1. Select **Create** and wait for your project to be created.
+1. Selecione **Create** e aguarde a criação do projeto.
 
-1. When your project is created, a welcome dialog may appear. Select **Next** to read through the welcome message, and then select **Create agent**.
+1. Quando o projeto for criado, uma caixa de diálogo de boas-vindas poderá aparecer. Selecione **Next** para ler a mensagem de boas-vindas e, em seguida, selecione **Create agent**.
 
-    You can also select **Start building** on the home page, and select **Create agents** from the drop-down menu.
+    Você também pode selecionar **Start building** na página inicial e selecionar **Create agents** no menu suspenso.
 
-1. Set the **Agent name** to `it-support-agent` and create the agent.
+1. Defina **Agent name** como `it-support-agent` e crie o agente.
 
-The playground will open for your newly created agent. You'll see that an available deployed model is already selected for you.
+O playground será aberto para o agente recém-criado. Você verá que um modelo implantado disponível já está selecionado para você.
 
-## Configure your agent with instructions and grounding data
+## Configurar o agente com instruções e dados de fundamentação
 
-Now that you have an agent created, let's configure it with instructions and add grounding data.
+Agora que você criou um agente, vamos configurá-lo com instruções e adicionar dados de fundamentação.
 
-1. In the agent playground, set the **Instructions** to:
+1. No playground do agente, defina **Instructions** como:
 
     ```prompt
-   You are an IT Support Agent for Contoso Corporation.
-   You help employees with technical issues and IT policy questions.
+   Você é um Agente de Suporte de TI da Contoso Corporation.
+   Você ajuda os funcionários com problemas técnicos e dúvidas sobre as políticas de TI.
 
-   Guidelines:
-   - Always be professional and helpful
-   - Use the IT policy documentation to answer questions accurately
-   - If you don't know the answer, admit it and suggest contacting IT support directly
-   - When creating tickets, collect all necessary information before proceeding
+   Diretrizes:
+   - Seja sempre profissional e prestativo
+   - Use a documentação das políticas de TI para responder às perguntas com precisão
+   - Se não souber a resposta, admita isso e sugira entrar em contato diretamente com o suporte de TI
+   - Ao criar tíquetes, colete todas as informações necessárias antes de prosseguir
     ```
 
-1. Download the IT policy document from the lab repository. Open a new browser tab and navigate to:
+1. Baixe o documento de política de TI do repositório do laboratório. Abra uma nova guia do navegador e navegue até:
 
     ```
    https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/main/Labfiles/01-build-agent-portal-and-vscode/IT_Policy.txt
     ```
 
-    Save the file to your local machine.
+    Salve o arquivo no computador local.
 
-    > **Note**: This document contains sample IT policies for password resets, software installation requests, and hardware troubleshooting.
+    > **Observação**: Este documento contém políticas de TI de exemplo para redefinições de senha, solicitações de instalação de software e solução de problemas de hardware.
 
-1. Return to the agent playground. In the **Tools** section, select **Add**, and then add both **File search** and **</> Code interpreter**.
+1. Retorne ao playground do agente. Na seção **Tools**, selecione **Add** e adicione **File search** e **</> Code interpreter**.
 
-1. To the right of **Add**, select **Upload files**. Under **Attach files**, browse to and upload the `IT_Policy.txt` file you just downloaded, and then select **Attach**.
+1. À direita de **Add**, selecione **Upload files**. Em **Attach files**, procure e carregue o arquivo `IT_Policy.txt` que você acabou de baixar e selecione **Attach**.
 
-1. Wait for the file to be indexed. You'll see a confirmation when it's ready.
+1. Aguarde a indexação do arquivo. Uma confirmação será exibida quando ele estiver pronto.
 
-1. Now let's add some performance data for the code interpreter to analyze. Download the system performance data file from:
+1. Agora vamos adicionar alguns dados de desempenho para o interpretador de código analisar. Baixe o arquivo de dados de desempenho do sistema em:
 
     ```
    https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/main/Labfiles/01-build-agent-portal-and-vscode/system_performance.csv
     ```
 
-    Save this file to your local machine.
+    Salve este arquivo no computador local.
 
-1. To the right of **</> Code interpreter**, select **+ Files**, and then upload the `system_performance.csv` file you just downloaded.
+1. À direita de **</> Code interpreter**, selecione **+ Files** e carregue o arquivo `system_performance.csv` que você acabou de baixar.
 
-    > **Note**: This CSV file contains simulated system metrics (CPU, memory, disk usage) over time that the agent can analyze.
+    > **Observação**: Este arquivo CSV contém métricas de sistema simuladas (uso de CPU, memória e disco) ao longo do tempo que o agente pode analisar.
 
-1. Save the agent.
+1. Salve o agente.
 
-## Test your agent
+## Testar o agente
 
-Let's test the agent to see how it responds using the grounding data.
+Vamos testar o agente para ver como ele responde usando os dados de fundamentação.
 
-1. In the chat interface on the right side of the playground, enter the following prompt:
-
-    ```
-   What's the policy for password resets?
-    ```
-
-1. Review the response. The agent should reference the IT policy document and provide accurate information about password reset procedures.
-
-1. Try another prompt:
+1. Na interface de chat no lado direito do playground, insira o seguinte prompt:
 
     ```
-   How do I request new software?
+   Qual é a política para redefinições de senha?
     ```
 
-1. Again, review the response and observe how the agent uses the grounding data.
+1. Examine a resposta. O agente deve fazer referência ao documento de política de TI e fornecer informações precisas sobre os procedimentos de redefinição de senha.
 
-1. Now test the code interpreter with a data analysis request:
-
-    ```
-   Can you analyze the system performance data and tell me if there are any concerning trends?
-    ```
-
-1. The agent should use the code interpreter to analyze the CSV file and provide insights about system performance.
-
-1. Try asking for a visualization:
+1. Tente outro prompt:
 
     ```
-   Create a chart showing CPU usage over time from the performance data
+   Como solicito um novo software?
     ```
 
-1. The agent will use code interpreter to generate visualizations and analysis.
+1. Novamente, examine a resposta e observe como o agente usa os dados de fundamentação.
 
-Great! You've created an agent with grounding data, file search, and code interpreter capabilities. In the next section, you'll interact with this agent programmatically using VS Code.
-
-## Interact with your agent using VS Code
-
-As a developer, you may spend some time working in the Foundry portal; but you’re also likely to spend a lot of time in Visual Studio Code. The Foundry Toolkit for VS Code extension provides a convenient way to work with Foundry project resources without leaving the development environment.
-
-### Install and configure the VS Code extension
-
-If you already have installed the Foundry Toolkit extension, you can skip this section.
-
-1. Open Visual Studio Code.
-
-2. Select **Extensions** from the left pane (or press **Ctrl+Shift+X**).
-
-3. Search the extensions marketplace for the `Foundry Toolkit for VS Code` extension from Microsoft and select **Install**.
-
-    Installing the Foundry Toolkit Extension will add the Foundry Toolkit extension to VS Code.
-
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
-
-4. After installing the extension, select the Foundry Toolkit icon in the sidebar.
-
-    You should be prompted to sign in to your Azure account if you haven't already.
-
-### Test your agent in VS Code
-
-Before writing any code, you can interact with your agent directly in the extension interface.
-
-1. Under **Microsoft Foundry Resources**, choose **Set Default Project**
-
-    If a default project is already active, the project name will appear in the resources list. You can select a different project by selecting the same **Select project** icon.
-
-2. Expand the project section. Under **Prompt Agents**, you should see the `it-support-agent` you created in the portal. Select the agent name to open the Agent Builder interface.
-
-    The agent playground will appear in the Agent Builder interface, allowing you to interact with the agent and configure its settings without leaving VS Code.
-
-3. In the playground chat pane, type a question such as:
+1. Agora teste o interpretador de código com uma solicitação de análise de dados:
 
     ```
-   What is the policy for reporting a lost or stolen device?
+   Você pode analisar os dados de desempenho do sistema e me dizer se há alguma tendência preocupante?
     ```
 
-4. Review the agent's response. It should use the grounding data you uploaded earlier to provide relevant IT policy information.
+1. O agente deve usar o interpretador de código para analisar o arquivo CSV e fornecer insights sobre o desempenho do sistema.
 
-    > **Tip**: You can use this built-in playground to quickly test your agent's instructions and knowledge without writing any code.
+1. Tente solicitar uma visualização:
 
-## Create a client application to interact with your agent
+    ```
+   Crie um gráfico mostrando o uso da CPU ao longo do tempo a partir dos dados de desempenho
+    ```
 
-Now let's create a client application that interacts with your agent programmatically.
+1. O agente usará o interpretador de código para gerar visualizações e análises.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+Muito bem! Você criou um agente com dados de fundamentação, pesquisa de arquivos e recursos de interpretador de código. Na próxima seção, você interagirá programaticamente com esse agente usando o VS Code.
 
-1. Type **Git: Clone** and select it from the list.
+## Interagir com o agente usando o VS Code
 
-1. Enter the repository URL:
+Como desenvolvedor, você pode passar algum tempo trabalhando no portal do Foundry; mas também é provável que passe bastante tempo no Visual Studio Code. A extensão Foundry Toolkit para VS Code oferece uma maneira conveniente de trabalhar com os recursos do projeto do Foundry sem sair do ambiente de desenvolvimento.
+
+### Instalar e configurar a extensão do VS Code
+
+Se você já instalou a extensão Foundry Toolkit, pode ignorar esta seção.
+
+1. Abra o Visual Studio Code.
+
+2. Selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**).
+
+3. Procure no marketplace de extensões a extensão `Foundry Toolkit for VS Code` da Microsoft e selecione **Install**.
+
+    A instalação da extensão Foundry Toolkit adicionará a extensão Foundry Toolkit ao VS Code.
+
+    > **Observação**: Atualmente, a extensão está listada como **Foundry Toolkit**, mas alguns rótulos e comandos do VS Code, ou capturas de tela mais antigas, ainda podem fazer referência a **AI Toolkit**. Neste laboratório, considere esses nomes como referências à mesma experiência da extensão.
+
+4. Depois de instalar a extensão, selecione o ícone do Foundry Toolkit na barra lateral.
+
+    Será solicitado que você entre na sua conta do Azure caso ainda não tenha feito isso.
+
+### Testar o agente no VS Code
+
+Antes de escrever qualquer código, você pode interagir diretamente com o agente na interface da extensão.
+
+1. Em **Microsoft Foundry Resources**, escolha **Set Default Project**.
+
+    Se um projeto padrão já estiver ativo, o nome do projeto aparecerá na lista de recursos. Você pode selecionar outro projeto selecionando o mesmo ícone **Select project**.
+
+2. Expanda a seção do projeto. Em **Prompt Agents**, você deverá ver o `it-support-agent` criado no portal. Selecione o nome do agente para abrir a interface do Agent Builder.
+
+    O playground do agente aparecerá na interface do Agent Builder, permitindo interagir com o agente e configurar suas definições sem sair do VS Code.
+
+3. No painel de chat do playground, digite uma pergunta como:
+
+    ```
+   Qual é a política para comunicar a perda ou o roubo de um dispositivo?
+    ```
+
+4. Examine a resposta do agente. Ele deve usar os dados de fundamentação carregados anteriormente para fornecer informações relevantes sobre a política de TI.
+
+    > **Dica**: Você pode usar este playground integrado para testar rapidamente as instruções e os conhecimentos do agente sem escrever código.
+
+## Criar uma aplicação cliente para interagir com o agente
+
+Agora vamos criar uma aplicação cliente que interage programaticamente com o agente.
+
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
+
+1. Digite **Git: Clone** e selecione-o na lista.
+
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local no computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/01-build-agent-portal-and-vscode/Python`, then choose **Select Folder**.
+1. Depois que o repositório for aberto, selecione **File > Open Folder** e navegue até `mslearn-ai-agents/Labfiles/01-build-agent-portal-and-vscode/Python`; em seguida, escolha **Select Folder**.
 
-1. In the Explorer pane, open the `agent_with_functions.py` file. If the file is empty, replace its contents with the following code.
+1. No painel Explorer, abra o arquivo `agent_with_functions.py`. Se o arquivo estiver vazio, substitua seu conteúdo pelo código a seguir.
 
-1. Use the following code:
+1. Use o código a seguir:
 
     ```python
    import base64
@@ -225,7 +225,7 @@ Now let's create a client application that interacts with your agent programmati
 
 
    def get_output_path(filename):
-       """Create a unique path for generated files."""
+       """Cria um caminho exclusivo para arquivos gerados."""
        OUTPUT_DIR.mkdir(exist_ok=True)
        file_name = Path(filename).name
        stem = Path(file_name).stem or "output"
@@ -241,7 +241,7 @@ Now let's create a client application that interacts with your agent programmati
 
 
    def save_bytes(file_bytes, filename):
-       """Save binary content to a local file."""
+       """Salva conteúdo binário em um arquivo local."""
        output_path = get_output_path(filename)
        with open(output_path, "wb") as file_handle:
            file_handle.write(file_bytes)
@@ -249,12 +249,12 @@ Now let's create a client application that interacts with your agent programmati
 
 
    def save_image(image_data, filename):
-       """Save base64 image data to a file."""
+       """Salva dados de imagem em base64 em um arquivo."""
        return save_bytes(base64.b64decode(image_data), filename)
 
 
    def download_container_file(openai_client, annotation, downloaded_files):
-       """Download a cited container file once and return its local path."""
+       """Baixa um arquivo de contêiner citado uma vez e retorna seu caminho local."""
        cache_key = (annotation.container_id, annotation.file_id)
        if cache_key in downloaded_files:
            return downloaded_files[cache_key]
@@ -272,7 +272,7 @@ Now let's create a client application that interacts with your agent programmati
 
 
    def format_output_text(content_item, openai_client, downloaded_files):
-       """Replace sandbox file citations with local file paths."""
+       """Substitui citações de arquivos do sandbox por caminhos de arquivos locais."""
        text = content_item.text or ""
        replacements = []
        referenced_files = set()
@@ -282,7 +282,7 @@ Now let's create a client application that interacts with your agent programmati
                continue
 
            output_path = download_container_file(openai_client, annotation, downloaded_files)
-           replacement_text = f"{annotation.filename} (saved to {output_path})"
+           replacement_text = f"{annotation.filename} (salvo em {output_path})"
            referenced_files.add(output_path)
 
            start_index = getattr(annotation, "start_index", None)
@@ -302,67 +302,67 @@ Now let's create a client application that interacts with your agent programmati
 
 
    def main():
-       # Initialize the project client
+       # Inicializa o cliente do projeto
        load_dotenv()
        project_endpoint = os.environ.get("PROJECT_ENDPOINT")
        agent_name = os.environ.get("AGENT_NAME", "it-support-agent")
 
        if not project_endpoint:
-           print("Error: PROJECT_ENDPOINT environment variable not set")
-           print("Please set it in your .env file or environment")
+           print("Erro: a variável de ambiente PROJECT_ENDPOINT não foi definida")
+           print("Defina-a no arquivo .env ou no ambiente")
            return
 
-       print("Connecting to Microsoft Foundry project...")
+       print("Conectando ao projeto do Microsoft Foundry...")
        credential = DefaultAzureCredential()
        project_client = AIProjectClient(
            credential=credential,
            endpoint=project_endpoint
        )
 
-       # Get the OpenAI client for Responses API
+       # Obtém o cliente OpenAI para a API de Responses
        openai_client = project_client.get_openai_client()
 
-       # Get the agent created in the portal
-       print(f"Loading agent: {agent_name}")
+       # Obtém o agente criado no portal
+       print(f"Carregando o agente: {agent_name}")
        agent = project_client.agents.get(agent_name=agent_name)
-       print(f"Connected to agent: {agent.name} (id: {agent.id})")
+       print(f"Conectado ao agente: {agent.name} (id: {agent.id})")
 
-       # Create a conversation
+       # Cria uma conversa
        conversation = openai_client.conversations.create(items=[])
-       print(f"Conversation created (id: {conversation.id})")
+       print(f"Conversa criada (id: {conversation.id})")
 
-       # Chat loop
+       # Loop de chat
        print("\n" + "="*60)
-       print("IT Support Agent Ready!")
-       print("Ask questions, request data analysis, or get help.")
-       print("Type 'exit' to quit.")
+       print("Agente de Suporte de TI pronto!")
+       print("Faça perguntas, solicite análises de dados ou peça ajuda.")
+       print("Digite 'exit' para sair.")
        print("="*60 + "\n")
 
        while True:
-           user_input = input("You: ").strip()
+           user_input = input("Você: ").strip()
 
            if user_input.lower() in ['exit', 'quit', 'bye']:
-               print("Goodbye!")
+               print("Até logo!")
                break
 
            if not user_input:
                continue
 
-           # Add user message to conversation
+           # Adiciona a mensagem do usuário à conversa
            openai_client.conversations.items.create(
                conversation_id=conversation.id,
                items=[{"type": "message", "role": "user", "content": user_input}]
            )
 
-           # Get response from agent
-           print("\n[Agent is thinking...]")
+           # Obtém a resposta do agente
+           print("\n[O agente está pensando...]")
            response = openai_client.responses.create(
                conversation=conversation.id,
                extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
                input=""
            )
 
-           # Display response and save any generated files locally
+           # Exibe a resposta e salva localmente os arquivos gerados
            handled_output = False
            downloaded_files = {}
            referenced_files = set()
@@ -385,11 +385,11 @@ Now let's create a client application that interacts with your agent programmati
                            referenced_files.update(message_files)
 
                            if formatted_text:
-                               print(f"\nAgent: {formatted_text}\n")
+                               print(f"\nAgente: {formatted_text}\n")
                                handled_output = True
 
                    elif hasattr(item, "text") and item.text:
-                       print(f"\nAgent: {item.text}\n")
+                       print(f"\nAgente: {item.text}\n")
                        handled_output = True
 
                    elif item_type == "image":
@@ -398,45 +398,45 @@ Now let's create a client application that interacts with your agent programmati
 
                        if hasattr(item, "image") and hasattr(item.image, "data"):
                            file_path = save_image(item.image.data, filename)
-                           print(f"\n[Agent generated a chart - saved to: {file_path}]")
+                           print(f"\n[O agente gerou um gráfico - salvo em: {file_path}]")
                        else:
-                           print("\n[Agent generated an image]")
+                           print("\n[O agente gerou uma imagem]")
                        handled_output = True
 
                for file_path in downloaded_files.values():
                    if file_path not in referenced_files:
-                       print(f"\n[Agent generated a file - saved to: {file_path}]")
+                       print(f"\n[O agente gerou um arquivo - salvo em: {file_path}]")
                        handled_output = True
 
            if not handled_output and hasattr(response, "output_text") and response.output_text:
-               print(f"\nAgent: {response.output_text}\n")
+               print(f"\nAgente: {response.output_text}\n")
 
    if __name__ == "__main__":
        main()
     ```
 
-1. Save the `agent_with_functions.py` file (**Ctrl+S** or **File > Save**).
+1. Salve o arquivo `agent_with_functions.py` (**Ctrl+S** ou **File > Save**).
 
-### Configure environment and run the application
+### Configurar o ambiente e executar a aplicação
 
-1. In the Explorer pane, you'll see `.env.example` and `requirements.txt` files already present in the folder.
+1. No painel Explorer, você verá os arquivos `.env.example` e `requirements.txt` já presentes na pasta.
 
-1. Duplicate the `.env.example` file, and rename it to `.env`.
+1. Duplique o arquivo `.env.example` e renomeie-o para `.env`.
 
-1. In the `.env` file, replace `your_project_endpoint_here` with your actual project endpoint:
+1. No arquivo `.env`, substitua `your_project_endpoint_here` pelo endpoint real do projeto:
 
     ```
    PROJECT_ENDPOINT=<your_project_endpoint>
    AGENT_NAME=it-support-agent
     ```
 
-    **To get your project endpoint:** In VS Code, open the **Foundry Toolkit** extension, right-click on your active project, and select **Copy Endpoint**. If **Copy Endpoint** isn't available in your installed version of Foundry Toolkit, open the Microsoft Foundry portal, go to your project, and copy the project endpoint from the project overview page instead.
+    **Para obter o endpoint do projeto:** No VS Code, abra a extensão **Foundry Toolkit**, clique com o botão direito no projeto ativo e selecione **Copy Endpoint**. Se **Copy Endpoint** não estiver disponível na versão instalada do Foundry Toolkit, abra o portal do Microsoft Foundry, acesse o projeto e copie o endpoint do projeto na página de visão geral do projeto.
 
-1. Save the `.env` file (**Ctrl+S** or **File > Save**).
+1. Salve o arquivo `.env` (**Ctrl+S** ou **File > Save**).
 
-1. Open a terminal in VS Code (**Terminal > New Terminal**) and navigate to the working directory.
+1. Abra um terminal no VS Code (**Terminal > New Terminal**) e navegue até o diretório de trabalho.
 
-1. Install the required packages and login:
+1. Instale os pacotes necessários e entre:
 
     ```bash
    python -m venv labenv
@@ -448,54 +448,54 @@ Now let's create a client application that interacts with your agent programmati
    az login
     ```
 
-1. Run the application:
+1. Execute a aplicação:
 
     ```bash
    python agent_with_functions.py
     ```
 
-## Test the client application
+## Testar a aplicação cliente
 
-When the agent starts, try these prompts to test different capabilities:
+Quando o agente for iniciado, tente os prompts a seguir para testar diferentes recursos:
 
-1. Test policy search with file search:
-
-    ```
-   What's the policy for password resets?
-    ```
-
-2. Request data analysis with code interpreter:
+1. Teste a pesquisa de políticas com a pesquisa de arquivos:
 
     ```
-   Analyze the system performance data and identify any periods where CPU usage exceeded 80%
+   Qual é a política para redefinições de senha?
     ```
 
-3. Request a visualization:
+2. Solicite uma análise de dados com o interpretador de código:
 
     ```
-   Create a line chart showing memory usage trends over time
+   Analise os dados de desempenho do sistema e identifique os períodos em que o uso da CPU excedeu 80%
     ```
 
-    The application saves generated charts and cited files to the `agent_outputs` folder and prints the local file path in the terminal.
-
-4. Ask for statistical analysis:
+3. Solicite uma visualização:
 
     ```
-   What are the average, minimum, and maximum values for disk usage in the performance data?
+   Crie um gráfico de linhas mostrando as tendências de uso da memória ao longo do tempo
     ```
 
-5. Combined analysis:
+    A aplicação salva os gráficos gerados e os arquivos citados na pasta `agent_outputs` e imprime o caminho do arquivo local no terminal.
+
+4. Solicite uma análise estatística:
 
     ```
-   Find any correlation between high CPU usage and memory usage in the performance data
+   Quais são os valores médio, mínimo e máximo do uso do disco nos dados de desempenho?
     ```
 
-Observe how the agent uses both file search (for policy questions) and code interpreter (for data analysis) to fulfill your requests. The code interpreter will analyze the CSV data, perform calculations, and can even generate visualizations. Type `exit` when done testing.
+5. Análise combinada:
 
-## Cleanup
+    ```
+   Encontre alguma correlação entre o alto uso da CPU e o uso da memória nos dados de desempenho
+    ```
 
-To avoid unnecessary Azure charges, delete the resources you created:
+Observe como o agente usa tanto a pesquisa de arquivos (para perguntas sobre políticas) quanto o interpretador de código (para análise de dados) para atender às suas solicitações. O interpretador de código analisará os dados CSV, realizará cálculos e poderá até gerar visualizações. Digite `exit` quando terminar os testes.
 
-1. In the Foundry portal, navigate to your project
-1. Select **Settings** > **Delete project**
-1. Alternatively, delete the entire resource group from the Azure portal
+## Limpeza
+
+Para evitar cobranças desnecessárias do Azure, exclua os recursos criados:
+
+1. No portal do Foundry, navegue até o projeto
+1. Selecione **Settings** > **Delete project**
+1. Como alternativa, exclua todo o grupo de recursos no portal do Azure

@@ -1,107 +1,107 @@
 ---
 lab:
-    title: 'Develop an Azure AI agent with the Microsoft Agent Framework SDK'
-    description: 'Learn how to use the Microsoft Agent Framework SDK to create and use an Azure AI chat agent.'
+    title: 'Desenvolva um agente de IA do Azure com o SDK do Microsoft Agent Framework'
+    description: 'Aprenda a usar o SDK do Microsoft Agent Framework para criar e usar um agente de chat de IA do Azure.'
     level: 300
     duration: 30
     islab: true
     status: 'released'
 ---
 
-# Develop an Azure AI chat agent with the Microsoft Agent Framework SDK
+# Desenvolva um agente de chat de IA do Azure com o SDK do Microsoft Agent Framework
 
-In this exercise, you'll use Azure AI Agent Service and Microsoft Agent Framework to create an AI agent that processes expense claims.
+Neste exercício, você usará o Azure AI Agent Service e o Microsoft Agent Framework para criar um agente de IA que processa solicitações de despesas.
 
-This exercise should take approximately **30** minutes to complete.
+Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: Algumas das tecnologias usadas neste exercício estão em versão prévia ou em desenvolvimento ativo. Você pode observar comportamentos inesperados, avisos ou erros.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- An active [Azure subscription](https://azure.microsoft.com/free/)
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
+- O [Visual Studio Code](https://code.visualstudio.com/) instalado no computador local
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) ativa
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado no computador local
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm um build para a versão 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Foundry project with the Foundry Toolkit VS Code extension
+## Criar um projeto do Foundry com a extensão Foundry Toolkit para VS Code
 
-As a developer, you may spend some time working in the Foundry portal; but you’re also likely to spend a lot of time in Visual Studio Code. The Foundry Toolkit extension provides a convenient way to work with Foundry project resources without leaving the development environment.
+Como desenvolvedor, talvez você passe algum tempo trabalhando no portal do Foundry; mas também é provável que passe bastante tempo no Visual Studio Code. A extensão Foundry Toolkit oferece uma maneira conveniente de trabalhar com os recursos do projeto do Foundry sem sair do ambiente de desenvolvimento.
 
-1. Open Visual Studio Code.
+1. Abra o Visual Studio Code.
 
-2. Select **Extensions** from the left pane (or press **Ctrl+Shift+X**).
+2. Selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**).
 
-3. Search the extensions marketplace for the `Foundry Toolkit` extension from Microsoft and select **Install**.
+3. Pesquise no marketplace de extensões a extensão `Foundry Toolkit` da Microsoft e selecione **Install**.
 
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
+    > **Observação**: Atualmente, a extensão está listada como **Foundry Toolkit**, mas alguns rótulos e comandos do VS Code, ou capturas de tela mais antigas, ainda podem fazer referência a **AI Toolkit**. Neste laboratório, considere que esses nomes se referem à mesma experiência de extensão.
 
-4. After installing the extension, select its icon in the sidebar to open the Foundry Toolkit view.
+4. Depois de instalar a extensão, selecione o ícone dela na barra lateral para abrir a exibição do Foundry Toolkit.
 
-    You should be prompted to sign in to your Azure account if you haven't already.
+    Será solicitado que você entre na sua conta do Azure, caso ainda não tenha feito isso.
 
-5. Select **Create Project** under **Microsoft Foundry Resources**.
+5. Selecione **Create Project** em **Microsoft Foundry Resources**.
 
-    If a default project is already active, the project name will appear under **My Resources**. You can create a new project by right-clicking on the active project and selecting **Switch Default Project**.
+    Se um projeto padrão já estiver ativo, o nome do projeto aparecerá em **My Resources**. Você pode criar um novo projeto clicando com o botão direito do mouse no projeto ativo e selecionando **Switch Default Project**.
 
-6. Select your Azure subscription and resource group, then enter a name for your Foundry project to create a new project for this exercise.
+6. Selecione sua assinatura do Azure e o grupo de recursos e, em seguida, insira um nome para o projeto do Foundry a fim de criar um novo projeto para este exercício.
 
-    When the deployment is complete, you should see the project appear in the Foundry Toolkit pane as the default project.
+    Quando a implantação for concluída, o projeto deverá aparecer no painel do Foundry Toolkit como o projeto padrão.
 
-## Deploy a model
+## Implantar um modelo
 
-At the core of any generative AI project, there’s at least one generative AI model. In this task, you'll deploy a model from the Model Catalog to use with your agent.
+No centro de qualquer projeto de IA generativa há pelo menos um modelo de IA generativa. Nesta tarefa, você implantará um modelo do Catálogo de Modelos para usar com seu agente.
 
-1. When the "Project deployed successfully" popup appears, select the **Deploy a model** button. This opens the Model Catalog.
+1. Quando o pop-up "Project deployed successfully" aparecer, selecione o botão **Deploy a model**. Isso abrirá o Catálogo de Modelos.
 
-   > **Tip**: You can also access the Model Catalog by selecting the **+** icon next to **Models** in the Resources section, or by pressing **F1** and running the command **Foundry Toolkit: Show model catalog**.
+   > **Dica**: Você também pode acessar o Catálogo de Modelos selecionando o ícone **+** ao lado de **Models** na seção Resources ou pressionando **F1** e executando o comando **Foundry Toolkit: Show model catalog**.
 
-1. In the Model Catalog, locate the **gpt-5** model (you can use the search bar to find it quickly).
+1. No Catálogo de Modelos, localize o modelo **gpt-5** (você pode usar a barra de pesquisa para encontrá-lo rapidamente).
 
-1. Select **Deploy** next to the gpt-5 model.
+1. Selecione **Deploy** ao lado do modelo gpt-5.
 
-1. Configure the deployment settings:
-   - **Deployment name**: Enter a name like "gpt-5"
-   - **Deployment type**: Select **Global Standard** (or **Standard** if Global Standard is not available)
-   - **Model version**: Leave as default
-   - **Tokens per minute**: Leave as default
+1. Defina as configurações de implantação:
+   - **Deployment name**: insira um nome como "gpt-5"
+   - **Deployment type**: selecione **Global Standard** (ou **Standard**, se Global Standard não estiver disponível)
+   - **Model version**: mantenha o padrão
+   - **Tokens per minute**: mantenha o padrão
 
-1. Select **Deploy to Microsoft Foundry** in the bottom-left corner.
+1. Selecione **Deploy to Microsoft Foundry** no canto inferior esquerdo.
 
-1. Wait for the deployment to complete. Your deployed model will appear under the **Models** section in the Resources view.
+1. Aguarde a conclusão da implantação. O modelo implantado aparecerá na seção **Models** da exibição Resources.
 
-1. Right-click the name of the project deployment and select **Copy Project Endpoint**. You'll need this URL to connect your agent to the Foundry project in the next steps.
+1. Clique com o botão direito do mouse no nome da implantação do projeto e selecione **Copy Project Endpoint**. Você precisará dessa URL para conectar seu agente ao projeto do Foundry nas próximas etapas.
 
-    ![Screenshot of copying the project endpoint in the Foundry Toolkit VS Code extension.](../Media/vs-code-endpoint.png)
+    ![Captura de tela da cópia do ponto de extremidade do projeto na extensão Foundry Toolkit para VS Code.](../Media/vs-code-endpoint.png)
 
-## Clone the starter code repository
+## Clonar o repositório do código inicial
 
-For this exercise, you'll use starter code that will help you connect to your Foundry project and create an agent that can process expenses data. You'll clone this code from a GitHub repository.
+Neste exercício, você usará um código inicial que ajudará a conectar-se ao projeto do Foundry e a criar um agente capaz de processar dados de despesas. Você clonará esse código de um repositório do GitHub.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
 
-1. Type **Git: Clone** and select it from the list.
+1. Digite **Git: Clone** e selecione-o na lista.
 
-1. Enter the repository URL:
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local no computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/07-agent-framework`, then choose **Select Folder**.
+1. Depois que o repositório for aberto, selecione **File > Open Folder** e navegue até `mslearn-ai-agents/Labfiles/07-agent-framework`; em seguida, escolha **Select Folder**.
 
-1. In the Explorer pane, expand the **Python** folder to view the code files for this exercise.
+1. No painel Explorer, expanda a pasta **Python** para exibir os arquivos de código deste exercício.
 
-1. Right-click on the **requirements.txt** file and select **Open in Integrated Terminal**.
+1. Clique com o botão direito do mouse no arquivo **requirements.txt** e selecione **Open in Integrated Terminal**.
 
-1. In the terminal, enter the following command to install the required Python packages in a virtual environment:
+1. No terminal, insira o comando a seguir para instalar os pacotes Python necessários em um ambiente virtual:
 
     ```
    python -m venv labenv
@@ -109,25 +109,25 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    pip install -r requirements.txt
     ```
 
-1. Open the **.env** file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the project deployment resource in the Foundry Toolkit extension) and ensure that the MODEL_DEPLOYMENT_NAME variable is set to your model deployment name. Use **Ctrl+S** to save the file after making these changes.
+1. Abra o arquivo **.env**, substitua o espaço reservado **your_project_endpoint** pelo ponto de extremidade do seu projeto (copiado do recurso de implantação do projeto na extensão Foundry Toolkit) e verifique se a variável MODEL_DEPLOYMENT_NAME está definida como o nome da implantação do seu modelo. Use **Ctrl+S** para salvar o arquivo depois de fazer essas alterações.
 
-Now you're ready to create an AI agent that uses a custom tool to process expenses data.
+Agora você está pronto para criar um agente de IA que usa uma ferramenta personalizada para processar dados de despesas.
 
-## Create an agent with a custom tool
+## Criar um agente com uma ferramenta personalizada
 
-> **Tip**: As you add code, be sure to maintain the correct indentation. Use the existing comments as a guide, entering the new code at the same level of indentation.
+> **Dica**: Ao adicionar código, mantenha a indentação correta. Use os comentários existentes como guia, inserindo o novo código no mesmo nível de indentação.
 
-1. Open the **agent-framework.py** file in the code editor.
+1. Abra o arquivo **agent-framework.py** no editor de código.
 
-1. Review the code in the file. It contains:
-    - Some **import** statements to add references to commonly used namespaces
-    - A *main* function that loads a file containing expenses data, asks the user for instructions, and and then calls...
-    - A **process_expenses_data** function in which the code to create and use your agent must be added
+1. Examine o código no arquivo. Ele contém:
+    - Algumas instruções **import** para adicionar referências a namespaces usados com frequência
+    - Uma função *main* que carrega um arquivo contendo dados de despesas, solicita instruções ao usuário e, em seguida, chama...
+    - Uma função **process_expenses_data**, na qual o código para criar e usar seu agente deve ser adicionado
 
-1. At the top of the file, after the existing **import** statement, find the comment **Add references**, and add the following code to reference the namespaces in the libraries you'll need to implement your agent:
+1. Na parte superior do arquivo, depois da instrução **import** existente, localize o comentário **Adicionar referências** e adicione o código a seguir para fazer referência aos namespaces nas bibliotecas necessárias para implementar seu agente:
 
     ```python
-   # Add references
+   # Adicionar referências
    from agent_framework import tool, Agent
    from agent_framework.foundry import FoundryChatClient
    from azure.identity import AzureCliCredential
@@ -135,28 +135,28 @@ Now you're ready to create an AI agent that uses a custom tool to process expens
    from typing import Annotated
     ```
 
-1. Near the bottom of the file, find the comment **Create a tool function for the email functionality**, and add the following code to define a function that your agent will use to send email (tools are a way to add custom functionality to agents)
+1. Próximo à parte inferior do arquivo, localize o comentário **Criar uma função de ferramenta para a funcionalidade de email** e adicione o código a seguir para definir uma função que seu agente usará para enviar emails (as ferramentas são uma forma de adicionar funcionalidade personalizada aos agentes):
 
     ```python
-   # Create a tool function for the email functionality
+   # Criar uma função de ferramenta para a funcionalidade de email
    @tool(approval_mode="never_require")
    def submit_claim(
-       to: Annotated[str, Field(description="Who to send the email to")],
-       subject: Annotated[str, Field(description="The subject of the email.")],
-       body: Annotated[str, Field(description="The text body of the email.")]):
-           print("\nTo:", to)
-           print("Subject:", subject)
+       to: Annotated[str, Field(description="Para quem enviar o email")],
+       subject: Annotated[str, Field(description="O assunto do email.")],
+       body: Annotated[str, Field(description="O corpo de texto do email.")]):
+           print("\nPara:", to)
+           print("Assunto:", subject)
            print(body, "\n")
     ```
 
-    > **Note**: The function *simulates* sending an email by printing it to the console. In a real application, you'd use an SMTP service or similar to actually send the email!
+    > **Observação**: A função *simula* o envio de um email imprimindo-o no console. Em um aplicativo real, você usaria um serviço SMTP ou algo semelhante para enviar o email de fato!
 
-1. Back up above the **send_email** code, in the **process_expenses_data** function, find the comment **Create a foundry chat client**, and add the following code:
+1. Logo acima do código **send_email**, na função **process_expenses_data**, localize o comentário **Criar um cliente de chat do Foundry** e adicione o código a seguir:
 
-    (Be sure to maintain the indentation level)
+    (Lembre-se de manter o nível de indentação.)
 
     ```python
-   # Create a foundry chat client 
+   # Criar um cliente de chat do Foundry
    client = FoundryChatClient(
        project_endpoint=os.getenv("PROJECT_ENDPOINT"),
        model=os.getenv("MODEL_DEPLOYMENT_NAME"),
@@ -164,50 +164,50 @@ Now you're ready to create an AI agent that uses a custom tool to process expens
    )
     ```
 
-    Note that the **AzureCliCredential** object will allow your code to authenticate to your Azure account. This client will be used to interact with the Foundry agent services.
+    Observe que o objeto **AzureCliCredential** permitirá que seu código se autentique na sua conta do Azure. Esse cliente será usado para interagir com os serviços de agente do Foundry.
 
-2. Find the comment **Initialize an agent with the tool and instructions**, and add the following code:
+2. Localize o comentário **Inicializar um agente com a ferramenta e as instruções** e adicione o código a seguir:
 
-    (Be sure to maintain the indentation level)
+    (Lembre-se de manter o nível de indentação.)
 
     ```python
-   # Initialize an agent with the tool and instructions
+   # Inicializar um agente com a ferramenta e as instruções
    async with (
        Agent(
            client=client,
            name="ExpenseClaimAgent",
-           instructions="""You are an AI assistant for expense claim submission.
-                       At the user's request, create an expense claim and use the plug-in function to send an email to expenses@contoso.com with the subject 'Expense Claim`and a body that contains itemized expenses with a total.
-                       Then confirm to the user that you've done so. Don't ask for any more information from the user, just use the data provided to create the email.""",
+           instructions="""Você é um assistente de IA para o envio de solicitações de despesas.
+                       A pedido do usuário, crie uma solicitação de despesas e use a função de plug-in para enviar um email para expenses@contoso.com com o assunto 'Solicitação de despesas' e um corpo que contenha as despesas discriminadas e um total.
+                       Em seguida, confirme ao usuário que você fez isso. Não peça mais informações ao usuário; apenas use os dados fornecidos para criar o email.""",
            tools=[submit_claim],
        ) as agent,
    ):
     ```
-    In this code, the **Agent** object is initialized with the client, instructions for the agent, and the tool function you defined to send emails.
+    Nesse código, o objeto **Agent** é inicializado com o cliente, as instruções para o agente e a função de ferramenta definida para enviar emails.
 
-1. Find the comment **Use the agent to process the expenses data**, and add the following code to create a thread for your agent to run on, and then invoke it with a chat message.
+1. Localize o comentário **Usar o agente para processar os dados de despesas** e adicione o código a seguir para criar uma thread na qual o agente será executado e, em seguida, invocá-lo com uma mensagem de chat.
 
-    (Be sure to maintain the indentation level):
+    (Lembre-se de manter o nível de indentação):
 
     ```python
-   # Use the agent to process the expenses data
+   # Usar o agente para processar os dados de despesas
    try:
-       # Add the input prompt to a list of messages to be submitted
+       # Adicionar o prompt de entrada a uma lista de mensagens a serem enviadas
        prompt_messages = [f"{prompt}: {expenses_data}"]
-       # Invoke the agent for the specified thread with the messages
+       # Invocar o agente para a thread especificada com as mensagens
        response = await agent.run(prompt_messages)
-       # Display the response
-       print(f"\n# Agent:\n{response}")
+       # Exibir a resposta
+       print(f"\n# Agente:\n{response}")
    except Exception as e:
-       # Something went wrong
+       # Algo deu errado
        print (e)
     ```
 
-1. Review that the completed code for your agent, using the comments to help you understand what each block of code does, and then save your code changes (**CTRL+S**).
+1. Examine o código concluído do agente, usando os comentários para entender o que cada bloco de código faz, e salve as alterações do código (**CTRL+S**).
 
-## Test the application
+## Testar o aplicativo
 
-1. In the integrated terminal, enter the following commands to run the application:
+1. No terminal integrado, insira os comandos a seguir para executar o aplicativo:
 
     ```
    az login
@@ -217,36 +217,36 @@ Now you're ready to create an AI agent that uses a custom tool to process expens
    python agent-framework.py
     ```
 
-    `az login` allows the AzureCliCredential to authenticate to your Azure account.
+    O comando `az login` permite que o AzureCliCredential se autentique na sua conta do Azure.
 
-1. When asked what to do with the expenses data, enter the following prompt:
+1. Quando perguntado o que fazer com os dados de despesas, insira o seguinte prompt:
 
     ```
-   Submit an expense claim
+   Enviar uma solicitação de despesas
     ```
 
-1. When the application has finished, review the output. The agent should have composed an email for an expenses claim based on the data that was provided.
+1. Quando o aplicativo terminar, examine a saída. O agente deverá ter composto um email para uma solicitação de despesas com base nos dados fornecidos.
 
-    > **Tip**: If the app fails because the rate limit is exceeded. Wait a few seconds and try again. If there is insufficient quota available in your subscription, the model may not be able to respond.
+    > **Dica**: Se o aplicativo falhar porque o limite de taxa foi excedido, aguarde alguns segundos e tente novamente. Se não houver cota suficiente disponível na sua assinatura, talvez o modelo não consiga responder.
 
-1. When you're finished, enter `deactivate` in the terminal to exit the Python virtual environment.
+1. Quando terminar, insira `deactivate` no terminal para sair do ambiente virtual do Python.
 
-## Clean up
+## Limpar
 
-If you've finished exploring Azure AI Agent Service, you should delete the resources you have created in this exercise to avoid incurring unnecessary Azure costs.
+Se você terminou de explorar o Azure AI Agent Service, deverá excluir os recursos criados neste exercício para evitar custos desnecessários do Azure.
 
-### Delete your model
+### Excluir seu modelo
 
-1. In VS Code, refresh the **Azure Resources** view.
+1. No VS Code, atualize a exibição **Azure Resources**.
 
-1. Expand the **Models** subsection.
+1. Expanda a subseção **Models**.
 
-1. Right-click on your deployed model and select **Delete**.
+1. Clique com o botão direito do mouse no modelo implantado e selecione **Delete**.
 
-### Delete the resource group
+### Excluir o grupo de recursos
 
-1. Open the [Azure portal](https://portal.azure.com).
+1. Abra o [portal do Azure](https://portal.azure.com).
 
-1. Navigate to the resource group containing your Microsoft Foundry resources.
+1. Navegue até o grupo de recursos que contém seus recursos do Microsoft Foundry.
 
-1. Select **Delete resource group** and confirm the deletion.
+1. Selecione **Delete resource group** e confirme a exclusão.

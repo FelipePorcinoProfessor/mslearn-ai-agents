@@ -1,149 +1,149 @@
 ---
 lab:
-    title: 'Build a workflow in Microsoft Foundry'
-    description: 'Use the Microsoft Foundry portal to create workflows for AI agents.'
+    title: 'Criar um fluxo de trabalho no Microsoft Foundry'
+    description: 'Use o portal do Microsoft Foundry para criar fluxos de trabalho para agentes de IA.'
     level: 300
     duration: 45
     islab: true
     status: 'released'
 ---
 
-# Build a workflow in Microsoft Foundry
+# Criar um fluxo de trabalho no Microsoft Foundry
 
-In this exercise, you'll use the Microsoft Foundry portal to create a workflow. Workflows are UI-based tools that allow you to define sequences of actions involving AI agents. For this exercise, you'll create a workflow that helps resolve customer support requests.
+Neste exercício, você usará o portal do Microsoft Foundry para criar um fluxo de trabalho. Os fluxos de trabalho são ferramentas baseadas em interface do usuário que permitem definir sequências de ações envolvendo agentes de IA. Neste exercício, você criará um fluxo de trabalho que ajuda a resolver solicitações de suporte ao cliente.
 
-**Workflow overview**
+**Visão geral do fluxo de trabalho**
 
-- Collect incoming support tickets
+- Coletar tickets de suporte recebidos
 
-    The workflow starts with a predefined array of customer support issues. Each item in the array represents an individual support ticket submitted to ContosoPay.
+    O fluxo de trabalho começa com uma matriz predefinida de problemas de suporte ao cliente. Cada item da matriz representa um ticket de suporte individual enviado à ContosoPay.
 
-- Process tickets one at a time
+- Processar os tickets um de cada vez
 
-    A for-each loop iterates over the array, ensuring each support ticket is handled independently while using the same workflow logic.
+    Um loop for-each itera sobre a matriz, garantindo que cada ticket de suporte seja tratado de forma independente, usando a mesma lógica de fluxo de trabalho.
 
-- Classify each ticket with an AI agent
+- Classificar cada ticket com um agente de IA
 
-    For each ticket, the workflow invokes a Triage Agent to classify the issue as Billing, Technical, or General, along with a confidence score.
+    Para cada ticket, o fluxo de trabalho invoca um Triage Agent para classificar o problema como Billing, Technical ou General, juntamente com uma pontuação de confiança.
 
-- Handle uncertainty with conditional logic
+- Tratar a incerteza com lógica condicional
 
-    If the confidence score is below a defined threshold, the workflow recommends additional info for that ticket.
+    Se a pontuação de confiança estiver abaixo de um limite definido, o fluxo de trabalho recomendará informações adicionais para esse ticket.
 
-- Route based on issue category
+- Encaminhar com base na categoria do problema
 
-    Billing issues are flagged for escalation and removed from the automated resolution path.
-    Technical and General issues continue through automated handling.
+    Os problemas de Billing são sinalizados para escalonamento e removidos do caminho de resolução automatizada.
+    Os problemas Technical e General continuam pelo tratamento automatizado.
 
-- Generate a recommended response
+- Gerar uma resposta recomendada
 
-    For non-billing tickets, the workflow invokes a Resolution Agent to draft a category-appropriate support response.
+    Para tickets que não sejam de Billing, o fluxo de trabalho invoca um Resolution Agent para redigir uma resposta de suporte apropriada à categoria.
 
-This exercise should take approximately **30** minutes to complete.
+Este exercício deve levar aproximadamente **30** minutos para ser concluído.
 
-> **Note**: The workflow builder in Microsoft Foundry is currently in preview. You may experience some unexpected behavior, warnings, or errors. If you encounter any issues that block your progress, you may need to start over with a new project and workflow.
+> **Observação**: O construtor de fluxos de trabalho no Microsoft Foundry está atualmente em versão prévia. Você pode encontrar algum comportamento inesperado, avisos ou erros. Se encontrar algum problema que bloqueie seu progresso, talvez seja necessário começar novamente com um novo projeto e fluxo de trabalho.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- An active [Azure subscription](https://azure.microsoft.com/free/)
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
+- [Visual Studio Code](https://code.visualstudio.com/) instalado em seu computador local
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) ativa
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado em seu computador local
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Foundry project
+## Criar um projeto do Foundry
 
-Let's start by creating a Foundry project.
+Vamos começar criando um projeto do Foundry.
 
-1. In a web browser, open the [Foundry portal](https://ai.azure.com) at `https://ai.azure.com` and sign in using your Azure credentials.
+1. Em um navegador da Web, abra o [portal do Foundry](https://ai.azure.com) em `https://ai.azure.com` e entre usando suas credenciais do Azure.
 
-1. Ensure the **New Foundry** toggle is set to *On*.
+1. Verifique se a opção **New Foundry** está definida como *On*.
 
-    ![Screenshot of the New Foundry toggle.](../Media/ai-foundry-toggle.png)
+    ![Captura de tela da opção New Foundry.](../Media/ai-foundry-toggle.png)
 
-2. You may be prompted to create a new project before continuing to the New Foundry experience. Select **Create a new project**.
+2. Talvez seja solicitado que você crie um novo projeto antes de continuar para a experiência do New Foundry. Selecione **Create a new project**.
 
-    ![Screenshot of the prompt to create a new project.](../Media/ai-foundry-new-project.png)
+    ![Captura de tela da solicitação para criar um novo projeto.](../Media/ai-foundry-new-project.png)
 
-    If you're not prompted, select the projects drop down menu on the upper left, and then select **Create new project**.
+    Se essa solicitação não aparecer, selecione o menu suspenso de projetos no canto superior esquerdo e, em seguida, selecione **Create new project**.
 
-3. Enter a name for your Foundry project in the textbox and select **Create**.
+3. Insira um nome para seu projeto do Foundry na caixa de texto e selecione **Create**.
 
-    Wait a few moments for the project to be created. The new Foundry portal home page should appear with your project selected.
+    Aguarde alguns instantes para que o projeto seja criado. A nova página inicial do portal do Foundry deverá aparecer com seu projeto selecionado.
 
-4. Close the **Welcome to the new Microsoft Foundry** dialog if it appears.
+4. Feche a caixa de diálogo **Welcome to the new Microsoft Foundry** se ela aparecer.
 
-    The dialog may prompt you to create an agent which is not necessary at this time. Agents will be created in a later step.
+    A caixa de diálogo pode solicitar que você crie um agente, o que não é necessário neste momento. Os agentes serão criados em uma etapa posterior.
 
-## Create a customer support triage workflow
+## Criar um fluxo de trabalho de triagem do suporte ao cliente
 
-In this section, you'll create a workflow that helps triage and respond to customer support requests for a fictional company called ContosoPay. The workflow uses two AI agents that classify and respond to support tickets.
+Nesta seção, você criará um fluxo de trabalho que ajuda a fazer a triagem e responder às solicitações de suporte ao cliente de uma empresa fictícia chamada ContosoPay. O fluxo de trabalho usa dois agentes de IA que classificam e respondem aos tickets de suporte.
 
-1. On the Foundry portal home page, select **Build** from the toolbar menu.
+1. Na página inicial do portal do Foundry, selecione **Build** no menu da barra de ferramentas.
 
-1. On the left-hand menu, select **Agents** then select the **Workflows** tab.
+1. No menu à esquerda, selecione **Agents** e, em seguida, selecione a guia **Workflows**.
 
-1. In the upper right corner, select **Create** > **Blank workflow** to create a new blank workflow.
+1. No canto superior direito, selecione **Create** > **Blank workflow** para criar um novo fluxo de trabalho em branco.
 
-    The type of workflow you'll create in this exercise is a sequential workflow. However, starting with a blank workflow will simplify the process of adding the necessary nodes.
+    O tipo de fluxo de trabalho que você criará neste exercício é um fluxo de trabalho sequencial. No entanto, começar com um fluxo de trabalho em branco simplificará o processo de adicionar os nós necessários.
 
-1. Select **Save** in the visualizer to save your new workflow. In the dialog box, enter a name for your workflow, such as *ContosoPay-Customer-Support-Triage*, and then select **Save**.
+1. Selecione **Save** no visualizador para salvar seu novo fluxo de trabalho. Na caixa de diálogo, insira um nome para seu fluxo de trabalho, como *ContosoPay-Customer-Support-Triage*, e selecione **Save**.
 
-## Create a ticket array variable
+## Criar uma variável de matriz de tickets
 
-1. In the workflow visualizer, select the **+** (plus) icon to add a new node.
+1. No visualizador do fluxo de trabalho, selecione o ícone **+** (sinal de adição) para adicionar um novo nó.
 
-1. In the workflow actions menu, under **Data transformation**, select **Set variable** to add a node that initializes an array of support tickets.
+1. No menu de ações do fluxo de trabalho, em **Data transformation**, selecione **Set variable** para adicionar um nó que inicializa uma matriz de tickets de suporte.
 
-2. In the **Set variable** node editor, enter a name for a new variable, such as *SupportTickets*.
+2. No editor do nó **Set variable**, insira um nome para uma nova variável, como *SupportTickets*.
 
-    ![Screenshot of creating a new variable in the Set variable node.](../Media/node-new-variable.png)
+    ![Captura de tela da criação de uma nova variável no nó Set variable.](../Media/node-new-variable.png)
 
-    The new variable should appear as `Local.SupportTickets`.
+    A nova variável deve aparecer como `Local.SupportTickets`.
 
-3. In the **To value** field, enter the following array that contains sample support tickets:
+3. No campo **To value**, insira a matriz a seguir, que contém tickets de suporte de exemplo:
 
     ```output
-   [ 
-    "The API returns a 403 error when creating invoices, but our API key hasn't changed.", 
-    "Is there a way to export all invoices as a CSV?", 
-    "I was charged twice for the same invoice last Friday and my customer is also seeing two receipts. Can someone fix this?"]
+   [
+    "A API retorna um erro 403 ao criar faturas, mas nossa chave de API não mudou.",
+    "Existe uma maneira de exportar todas as faturas como CSV?",
+    "Fui cobrado duas vezes pela mesma fatura na última sexta-feira e meu cliente também está vendo dois recibos. Alguém pode corrigir isso?"]
     ```
 
-4. Select **Done** to save the node.
+4. Selecione **Done** para salvar o nó.
 
-## Add a for-each loop to process tickets
+## Adicionar um loop for-each para processar os tickets
 
-1. Select the **+** (plus) icon below the **Set variable** and create a **For each** node to process each support ticket in the array.
+1. Selecione o ícone **+** (sinal de adição) abaixo de **Set variable** e crie um nó **For each** para processar cada ticket de suporte na matriz.
 
-1. In the **For each** node editor, set the **Select the items to loop for each** field to the variable you created earlier: `Local.SupportTickets`.
+1. No editor do nó **For each**, defina o campo **Select the items to loop for each** como a variável criada anteriormente: `Local.SupportTickets`.
 
-1. In the **Loop Value Variable** field, create a new variable named `CurrentTicket`.
+1. No campo **Loop Value Variable**, crie uma nova variável chamada `CurrentTicket`.
 
-1. Select **Done** to save the node.
+1. Selecione **Done** para salvar o nó.
 
-## Invoke an agent to classify the ticket
+## Invocar um agente para classificar o ticket
 
-1. Select the **+** (plus) icon within the **For each** node to add a new node that classifies the current support ticket.
+1. Selecione o ícone **+** (sinal de adição) dentro do nó **For each** para adicionar um novo nó que classifica o ticket de suporte atual.
 
-2. In the workflow actions menu, under **Invoke**, select **Agent** to add an agent node.
+2. No menu de ações do fluxo de trabalho, em **Invoke**, selecione **Agent** para adicionar um nó de agente.
 
-3. In the **Agent** node editor, under **Select an agent**, select **Create new agent**.
+3. No editor do nó **Agent**, em **Select an agent**, selecione **Create new agent**.
 
-4. Enter an agent name such as *Triage-Agent* and select **Create**.
+4. Insira um nome de agente, como *Triage-Agent*, e selecione **Create**.
 
-### Configure the agent settings
+### Configurar as definições do agente
 
-1. In the editor, under **Details**, select the **Parameters** button near the model name.
+1. No editor, em **Details**, selecione o botão **Parameters** próximo ao nome do modelo.
 
-    ![Screenshot of the Parameters button in the agent editor.](../Media/agent-parameters.png)
+    ![Captura de tela do botão Parameters no editor do agente.](../Media/agent-parameters.png)
 
-2. In the **Parameters** pane, next to **Text format**, select **JSON Schema**.
+2. No painel **Parameters**, ao lado de **Text format**, selecione **JSON Schema**.
 
-3. In the **Add response format** pane, enter the following definition and select **Save**:
+3. No painel **Add response format**, insira a definição a seguir e selecione **Save**:
 
     ```json
    {
@@ -172,204 +172,204 @@ In this section, you'll create a workflow that helps triage and respond to custo
    }
     ```
 
-4. In the Agent Details pane, set the **Instructions** field to the following prompt:
+4. No painel Agent Details, defina o campo **Instructions** com o seguinte prompt:
 
     ```output
-   Classify the user's problem description into exactly ONE category from the list below. Provide a confidence score from 0 to 1.
+   Classifique a descrição do problema do usuário em exatamente UMA categoria da lista abaixo. Forneça uma pontuação de confiança de 0 a 1.
 
    Billing
-   - Charges, refunds, duplicate payments
-   - Missing or incorrect payouts
-   - Subscription pricing or invoices being charged
+   - Cobranças, reembolsos, pagamentos duplicados
+   - Pagamentos ausentes ou incorretos
+   - Preços de assinaturas ou cobranças de faturas
 
    Technical
-   - API errors, integrations, webhooks
-   - Platform bugs or unexpected behavior
+   - Erros de API, integrações, webhooks
+   - Bugs da plataforma ou comportamento inesperado
 
    General
-   - How-to questions
-   - Feature availability
-   - Data exports, reports, or UI navigation
+   - Perguntas sobre como fazer algo
+   - Disponibilidade de recursos
+   - Exportações de dados, relatórios ou navegação na interface do usuário
 
-   Important rules
-   - Questions about exporting, viewing, or downloading invoices are General, not Billing
-   - Billing ONLY applies when money was charged, refunded, or paid incorrectly
+   Regras importantes
+   - Perguntas sobre exportar, visualizar ou baixar faturas são General, não Billing
+   - Billing se aplica SOMENTE quando o dinheiro foi cobrado, reembolsado ou pago incorretamente
     ```
 
-5. Select **Node settings** to configure the input and output of the agent.
+5. Selecione **Node settings** para configurar a entrada e a saída do agente.
 
-6. Set the **Input message** field to the `Local.CurrentTicket` variable.
+6. Defina o campo **Input message** como a variável `Local.CurrentTicket`.
 
-7. Under **Save agent output message as**, create a new variable named `TriageOutputText`.
+7. Em **Save agent output message as**, crie uma nova variável chamada `TriageOutputText`.
 
-8. Under **Save the output json_object as**, create a new variable named `TriageOutputJson`.
+8. Em **Save the output json_object as**, crie uma nova variável chamada `TriageOutputJson`.
 
-9. Select **Done** to save the node.
+9. Selecione **Done** para salvar o nó.
 
-## Handle low-confidence classifications
+## Tratar classificações com baixa confiança
 
-1. Select the **+** (plus) icon below the **Invoke agent** node to add a new node that handles low-confidence classifications.
+1. Selecione o ícone **+** (sinal de adição) abaixo do nó **Invoke agent** para adicionar um novo nó que trata classificações com baixa confiança.
 
-1. In the workflow actions menu, under **Flow**, select **If/Else** to add a conditional logic node.
+1. No menu de ações do fluxo de trabalho, em **Flow**, selecione **If/Else** para adicionar um nó de lógica condicional.
 
-1. In the **If/Else** node editor, select the **Add a path** button to create the if-branch condition, then select the pencil icon to edit the condition.
+1. No editor do nó **If/Else**, selecione o botão **Add a path** para criar a condição do ramo if e, em seguida, selecione o ícone de lápis para editar a condição.
 
-1. Set the **Condition** field to the following expression to check if the confidence score is above 0.6:
+1. Defina o campo **Condition** com a expressão a seguir para verificar se a pontuação de confiança é maior que 0.6:
 
     ```output
    Local.TriageOutputJson.confidence > 0.6
     ```
 
-1. Select **Done** to save the node.
+1. Selecione **Done** para salvar o nó.
 
-## Recommend additional info for low-confidence tickets
+## Recomendar informações adicionais para tickets com baixa confiança
 
-1. In the visualizer, under the **Else** branch of the **If/Else condition** node, select the **+** (plus) icon to add a new node that recommends additional information for low-confidence tickets.
+1. No visualizador, no ramo **Else** do nó de condição **If/Else**, selecione o ícone **+** (sinal de adição) para adicionar um novo nó que recomenda informações adicionais para tickets com baixa confiança.
 
-1. In the workflow actions menu, under **Basics**, select **Deliver a message** to add a send message activity.
+1. No menu de ações do fluxo de trabalho, em **Basics**, selecione **Deliver a message** para adicionar uma atividade de envio de mensagem.
 
-1. In the **Deliver a message** node editor, set the **Message to send** field to the following response:
+1. No editor do nó **Deliver a message**, defina o campo **Message to send** com a resposta a seguir:
 
     ```output
-   The support ticket classification has low confidence. Requesting more details about the issue: "{Local.CurrentTicket}"
+   A classificação do ticket de suporte tem baixa confiança. Solicitando mais detalhes sobre o problema: "{Local.CurrentTicket}"
     ```
 
-1. Select **Done** to save the node.
+1. Selecione **Done** para salvar o nó.
 
-## Route the ticket based on category
+## Encaminhar o ticket com base na categoria
 
-In this section, you'll add conditional logic to route the ticket based on its classified category if the confidence score is high enough.
+Nesta seção, você adicionará lógica condicional para encaminhar o ticket com base na categoria classificada, caso a pontuação de confiança seja suficientemente alta.
 
-1. In the visualizer, under the **If** branch of the **If/Else condition** node, select the **+** (plus) icon to add a new node that routes the ticket based on its category.
+1. No visualizador, no ramo **If** do nó **If/Else condition**, selecione o ícone **+** (sinal de adição) para adicionar um novo nó que encaminha o ticket com base na categoria.
 
-1. In the workflow actions menu, under **Flow**, select **If/Else** to add another conditional logic node.
+1. No menu de ações do fluxo de trabalho, em **Flow**, selecione **If/Else** para adicionar outro nó de lógica condicional.
 
-1. In the **If/Else** node editor, select the **Add a path** button to create the if-branch condition, then select the pencil icon to edit the condition.
+1. No editor do nó **If/Else**, selecione o botão **Add a path** para criar a condição do ramo if e, em seguida, selecione o ícone de lápis para editar a condição.
 
-1. Set the **If Condition** to the following expression to check if the ticket category is "Billing":
+1. Defina a **If Condition** com a expressão a seguir para verificar se a categoria do ticket é "Billing":
 
     ```output
    Local.TriageOutputJson.category = "Billing"
     ```
 
-1. Select the **+** (plus) icon under the **If** branch of the **If/Else** node to add a new node that drafts a response for non-billing tickets.
+1. Selecione o ícone **+** (sinal de adição) no ramo **If** do nó **If/Else** para adicionar um novo nó que redige uma resposta para tickets que não sejam de Billing.
 
-1. In the workflow actions menu, under **Basics**, select **Deliver a message** to add a send message activity.
+1. No menu de ações do fluxo de trabalho, em **Basics**, selecione **Deliver a message** para adicionar uma atividade de envio de mensagem.
 
-1. In the **Deliver a message** node editor, set the **Message to send** to the following response:
-
-    ```output
-   Escalate billing issue to human support team.
-    ```
-
-1. Select **Done** to save the node.
-
-## Generate a recommended response
-
-1. In the visualizer, select the **+** (plus) icon under the **Else** branch of the second **If/Else** node to add a new node that drafts a response for non-billing tickets.
-
-2. In the workflow actions menu, under **Invoke**, select **Agent** to add an agent node.
-
-3. In the **Agent** node editor, select **Create new agent**.
-
-4. Enter an agent name such as *Resolution-Agent* and select **Create**.
-
-5. In the agent editor, set the **Instructions** field to the following prompt:
+1. No editor do nó **Deliver a message**, defina **Message to send** com a resposta a seguir:
 
     ```output
-   You are a customer support resolution assistant for ContosoPay, a B2B payments and invoicing platform.
-
-   Your task is to draft a clear, professional, and friendly support response based on the issue category and customer message.
-
-   Guidelines:
-   If the issue category is Technical:
-   Suggest 1–2 common troubleshooting steps at a high level.
-
-   Avoid asking for logs, credentials, or sensitive data.
-
-   Do not imply fault by the customer.
-   If the issue category is General:
-   Provide a concise, helpful explanation or guidance.
-   Keep the response under 5 sentences.
-
-   Tone:
-   Professional, calm, and supportive
-   Clear and concise
-   No emojis
-
-   Output:
-   Return only the drafted response text.
-   Do not include internal reasoning or analysis.
+   Encaminhe o problema de Billing para a equipe de suporte humano.
     ```
 
-6. Select **Node settings** to configure the input and output of the agent.
+1. Selecione **Done** para salvar o nó.
 
-7. Set the **Input message** field to the `Local.TriageOutputText` variable.
+## Gerar uma resposta recomendada
 
-8. Under **Save agent output message as**, create a new variable named `ResolutionOutputText`.
+1. No visualizador, selecione o ícone **+** (sinal de adição) abaixo do ramo **Else** do segundo nó **If/Else** para adicionar um novo nó que redige uma resposta para tickets que não sejam de Billing.
 
-9. Select **Done** to save the node.
+2. No menu de ações do fluxo de trabalho, em **Invoke**, selecione **Agent** para adicionar um nó de agente.
 
-## Preview the workflow
+3. No editor do nó **Agent**, selecione **Create new agent**.
 
-1. Select the **Save** button to save all changes to your workflow.
+4. Insira um nome de agente, como *Resolution-Agent*, e selecione **Create**.
 
-1. Select the **Preview** button to start the workflow.
-
-1. In the chat window that appears, enter some text to trigger the workflow, such as `Start processing support tickets.`
-
-1. Observe the workflow as it processes each support ticket in sequence. Review the messages generated by the workflow in the chat window.
-
-    You should see some output indicating that billing issues are being escalated, while technical and general issues receive drafted responses. For example:
+5. No editor do agente, defina o campo **Instructions** com o seguinte prompt:
 
     ```output
-   Current Ticket:
-   The API returns a 403 error when creating invoices, but our API key hasn't changed.
+   Você é um assistente de resolução de suporte ao cliente da ContosoPay, uma plataforma B2B de pagamentos e faturamento.
 
+   Sua tarefa é redigir uma resposta de suporte clara, profissional e amigável com base na categoria do problema e na mensagem do cliente.
 
-   Copilot said:
-   Thank you for reaching out about the 403 error when creating invoices. This error typically indicates a permissions or access issue. 
-   Please ensure that your API key has the necessary permissions for invoice creation and that your request is being sent to the correct endpoint. 
-   If the issue persists, try regenerating your API key and updating it in your integration to see if that resolves the problem.
+   Diretrizes:
+   Se a categoria do problema for Technical:
+   Sugira de 1 a 2 etapas comuns de solução de problemas em alto nível.
+
+   Evite solicitar logs, credenciais ou dados confidenciais.
+
+   Não dê a entender que a culpa é do cliente.
+   Se a categoria do problema for General:
+   Forneça uma explicação ou orientação concisa e útil.
+   Mantenha a resposta com menos de 5 frases.
+
+   Tom:
+   Profissional, calmo e prestativo
+   Claro e conciso
+   Sem emojis
+
+   Saída:
+   Retorne somente o texto da resposta redigida.
+   Não inclua raciocínio interno ou análise.
     ```
 
-## Use your workflow in a client application
+6. Selecione **Node settings** para configurar a entrada e a saída do agente.
 
-Now that you've built and tested your workflow in the Foundry portal, you can also invoke it from your own code using the Azure AI Projects SDK. This allows you to integrate the workflow into your applications or automate its execution.
+7. Defina o campo **Input message** como a variável `Local.TriageOutputText`.
 
-### Clone the starter code repository
+8. Em **Save agent output message as**, crie uma nova variável chamada `ResolutionOutputText`.
 
-For this exercise, you'll use starter code that will help you connect to your Foundry project and invoke a workflow.
+9. Selecione **Done** para salvar o nó.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+## Visualizar o fluxo de trabalho
 
-1. Type **Git: Clone** and select it from the list.
+1. Selecione o botão **Save** para salvar todas as alterações no fluxo de trabalho.
 
-1. Enter the repository URL:
+1. Selecione o botão **Preview** para iniciar o fluxo de trabalho.
+
+1. Na janela de chat exibida, insira algum texto para disparar o fluxo de trabalho, como `Iniciar o processamento dos tickets de suporte.`
+
+1. Observe o fluxo de trabalho enquanto ele processa cada ticket de suporte em sequência. Revise as mensagens geradas pelo fluxo de trabalho na janela de chat.
+
+    Você deverá ver uma saída indicando que os problemas de Billing estão sendo escalonados, enquanto os problemas Technical e General recebem respostas redigidas. Por exemplo:
+
+    ```output
+   Ticket atual:
+   A API retorna um erro 403 ao criar faturas, mas nossa chave de API não mudou.
+
+
+   O Copilot disse:
+   Obrigado por entrar em contato sobre o erro 403 ao criar faturas. Esse erro normalmente indica um problema de permissões ou acesso.
+   Verifique se sua chave de API tem as permissões necessárias para a criação de faturas e se sua solicitação está sendo enviada ao endpoint correto.
+   Se o problema persistir, tente gerar novamente sua chave de API e atualizá-la na integração para verificar se isso resolve o problema.
+    ```
+
+## Usar seu fluxo de trabalho em um aplicativo cliente
+
+Agora que você criou e testou seu fluxo de trabalho no portal do Foundry, também pode invocá-lo a partir do seu próprio código usando o SDK do Azure AI Projects. Isso permite integrar o fluxo de trabalho aos seus aplicativos ou automatizar sua execução.
+
+### Clonar o repositório de código inicial
+
+Neste exercício, você usará um código inicial que ajudará a se conectar ao seu projeto do Foundry e invocar um fluxo de trabalho.
+
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
+
+1. Digite **Git: Clone** e selecione-o na lista.
+
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local em seu computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/06-build-workflow-ms-foundry`, then choose **Select Folder**.
+1. Quando o repositório for aberto, selecione **File > Open Folder** e navegue até `mslearn-ai-agents/Labfiles/06-build-workflow-ms-foundry`, depois escolha **Select Folder**.
 
-1. In the Explorer pane, expand the **Python** folder to view the code files for this exercise. 
+1. No painel Explorer, expanda a pasta **Python** para visualizar os arquivos de código deste exercício.
 
-### Configure the application
+### Configurar o aplicativo
 
-1. In the browser, return to the workflow visualizer in the Foundry portal.
+1. No navegador, retorne ao visualizador do fluxo de trabalho no portal do Foundry.
 
-2. Select **Code** in the upper right corner of the visualizer. Then select **.env variables** to view the environment variables required to connect to your Foundry project from code.
+2. Selecione **Code** no canto superior direito do visualizador. Em seguida, selecione **.env variables** para visualizar as variáveis de ambiente necessárias para se conectar ao seu projeto do Foundry a partir do código.
 
-3. Copy the value of the **AZURE_EXISTING_AIPROJECT_ENDPOINT** variable, which is the endpoint URL for your Foundry project. You'll need this value to connect to your project in VS Code. 
+3. Copie o valor da variável **AZURE_EXISTING_AIPROJECT_ENDPOINT**, que é a URL do endpoint do seu projeto do Foundry. Você precisará desse valor para se conectar ao seu projeto no VS Code.
 
-4. In VS Code, right-click on the **requirements.txt** file and select **Open in Integrated Terminal**.
+4. No VS Code, clique com o botão direito do mouse no arquivo **requirements.txt** e selecione **Open in Integrated Terminal**.
 
-5. In the terminal, enter the following command to install the required Python packages in a virtual environment:
+5. No terminal, insira o comando a seguir para instalar os pacotes Python necessários em um ambiente virtual:
 
     ```
    python -m venv labenv
@@ -377,28 +377,28 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    pip install -r requirements.txt
     ```
 
-6. Open the **.env** file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the code tab of the workflow visualizer). Use **Ctrl+S** to save the file after making these changes.
+6. Abra o arquivo **.env**, substitua o espaço reservado **your_project_endpoint** pelo endpoint do seu projeto (copiado da guia de código do visualizador do fluxo de trabalho). Use **Ctrl+S** para salvar o arquivo depois de fazer essas alterações.
 
-### Invoke the workflow from code
+### Invocar o fluxo de trabalho a partir do código
 
-Now you're ready to create a project that invokes a workflow. Let's get started!
+Agora você está pronto para criar um projeto que invoca um fluxo de trabalho. Vamos começar!
 
-1. Open the **workflow.py** file in the code editor.
+1. Abra o arquivo **workflow.py** no editor de código.
 
-1. Review the code in the file, noting that it contains strings for each agent name and instructions.
+1. Revise o código no arquivo, observando que ele contém strings para o nome e as instruções de cada agente.
 
-1. Find the comment **Add references** and add the following code to import the classes you'll need:
+1. Localize o comentário **Add references** e adicione o código a seguir para importar as classes necessárias:
 
     ```python
-   # Add references
+   # Adicione as referências
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
     ```
 
-2. Find the comment **Connect to the agents client**, and add the following code to create an AgentsClient connected to your project:
+2. Localize o comentário **Connect to the agents client** e adicione o código a seguir para criar um AgentsClient conectado ao seu projeto:
 
     ```python
-   # Connect to the AI Project client
+   # Conecte-se ao cliente do projeto de IA
    with (
        DefaultAzureCredential() as credential,
        AIProjectClient(endpoint=endpoint, credential=credential) as project_client,
@@ -406,66 +406,66 @@ Now you're ready to create a project that invokes a workflow. Let's get started!
    ):
     ```
 
-    Now you'll add code that uses the AgentsClient to create multiple agents, each with a specific role to play in processing a support ticket.
+    Agora você adicionará código que usa o AgentsClient para criar vários agentes, cada um com uma função específica no processamento de um ticket de suporte.
 
-    > **Tip**: When adding subsequent code, be sure to maintain the right level of indentation.
+    > **Dica**: Ao adicionar o código subsequente, mantenha o nível correto de indentação.
 
-3. Find the comment **Specify the workflow** and add the following code:
+3. Localize o comentário **Specify the workflow** e adicione o código a seguir:
 
     ```python
-    # Specify the workflow
+    # Especifique o fluxo de trabalho
     workflow = {
         "name": "ContosoPay-Customer-Support-Triage"
     }
     ```
 
-    Be sure to use the name and version of the workflow you created in the Foundry portal.
+    Use o nome e a versão do fluxo de trabalho criado no portal do Foundry.
 
-4. Find the comment **Create a conversation and run the workflow**, and add the following code to create a conversation and invoke your workflow:
+4. Localize o comentário **Create a conversation and run the workflow** e adicione o código a seguir para criar uma conversa e invocar seu fluxo de trabalho:
 
     ```python
-   # Create a conversation and run the workflow
+   # Crie uma conversa e execute o fluxo de trabalho
    conversation = openai_client.conversations.create()
-   print(f"Created conversation (id: {conversation.id})")
+   print(f"Conversa criada (id: {conversation.id})")
 
    stream = openai_client.responses.create(
        conversation=conversation.id,
        extra_body={"agent_reference" : {"name" : workflow["name"], "type": "agent_reference"}},
-       input="Start",
+       input="Iniciar",
        stream=True,
    )
     ```
 
-    This code will stream the output of the workflow execution to the console, allowing you to see the flow of messages as the workflow processes each ticket.
+    Esse código transmite a saída da execução do fluxo de trabalho para o console, permitindo ver o fluxo de mensagens enquanto o fluxo de trabalho processa cada ticket.
 
-5. Find the comment **Process events from the workflow run**, and add the following code to process the streamed output and print messages to the console:
+5. Localize o comentário **Process events from the workflow run** e adicione o código a seguir para processar a saída transmitida e imprimir mensagens no console:
 
     ```python
-   # Process events from the workflow run
+   # Processe os eventos da execução do fluxo de trabalho
    for event in stream:
        if (event.type == "response.completed"):
-           print("\nResponse completed:")
+           print("\nResposta concluída:")
            response = openai_client.responses.retrieve(event.response.id)
            print_workflow_output(response.output_text)
     ```
 
-    This code listens for the completion of the workflow response and then retrieves and prints the final output text to the console. The `print_workflow_output` function is a helper function defined in the code file that formats the output for easier reading.
+    Esse código aguarda a conclusão da resposta do fluxo de trabalho e, em seguida, recupera e imprime o texto de saída final no console. A função `print_workflow_output` é uma função auxiliar definida no arquivo de código que formata a saída para facilitar a leitura.
 
-6. Find the comment **Clean up resources**, and enter the following code to delete the conversation when it is no longer required:
+6. Localize o comentário **Clean up resources** e insira o código a seguir para excluir a conversa quando ela não for mais necessária:
 
     ```python
-   # Clean up resources
+   # Limpe os recursos
    openai_client.conversations.delete(conversation_id=conversation.id)
-   print("\nConversation deleted")
+   print("\nConversa excluída")
     ```
 
-7. Use the **CTRL+S** command to save your changes to the code file.
+7. Use o comando **CTRL+S** para salvar suas alterações no arquivo de código.
 
-## Test the client application
+## Testar o aplicativo cliente
 
-Now you're ready to run your code and watch your AI agents collaborate.
+Agora você está pronto para executar seu código e observar a colaboração entre seus agentes de IA.
 
-1. In the integrated terminal, run the following commands:
+1. No terminal integrado, execute os comandos a seguir:
     ```
    az login
     ```
@@ -474,26 +474,26 @@ Now you're ready to run your code and watch your AI agents collaborate.
    python workflow.py
     ```
 
-1. Wait a moment for the workflow to process the tickets. As the workflow runs, you should see output in the console indicating the progress of the workflow, including messages generated by the agents and status updates for each action in the workflow.
+1. Aguarde um momento para que o fluxo de trabalho processe os tickets. Enquanto o fluxo de trabalho é executado, você deverá ver no console uma saída indicando o progresso, incluindo mensagens geradas pelos agentes e atualizações de status para cada ação no fluxo de trabalho.
 
-1. When the workflow completes, you should see some output similar to the following:
+1. Quando o fluxo de trabalho for concluído, você deverá ver uma saída semelhante à seguinte:
 
     ```output
-   Response completed:
-   Current Ticket:
-   The API returns a 403 error when creating invoices, but our API key hasn't changed.{"customer_issue":"API returns a 403 error when creating invoices, API key unchanged.","category":"Technical","confidence":1}Thank you for contacting us about the 403 error when creating invoices with the API. This error typically relates to permission issues. Please ensure your API key has the necessary permissions for invoice creation and that the endpoint URL is correct. If the issue persists, try regenerating the API key and updating it in your application.
+   Resposta concluída:
+   Ticket atual:
+   A API retorna um erro 403 ao criar faturas, mas nossa chave de API não mudou.{"customer_issue":"A API retorna um erro 403 ao criar faturas, a chave de API não mudou.","category":"Technical","confidence":1}Obrigado por entrar em contato sobre o erro 403 ao criar faturas com a API. Esse erro normalmente está relacionado a problemas de permissões. Verifique se sua chave de API tem as permissões necessárias para a criação de faturas e se a URL do endpoint está correta. Se o problema persistir, tente gerar novamente a chave de API e atualizá-la no aplicativo.
    ...
     ```
 
-    In the output, you can see how the workflow completes each support ticket, including the classification of each ticket and the recommended response or escalation. Great work!
+    Na saída, você pode ver como o fluxo de trabalho conclui cada ticket de suporte, incluindo a classificação de cada ticket e a resposta recomendada ou o escalonamento. Muito bem!
 
-2. When you're finished, enter `deactivate` in the terminal to exit the Python virtual environment.
+2. Quando terminar, insira `deactivate` no terminal para sair do ambiente virtual do Python.
 
-## Clean up
+## Limpar
 
-If you've finished exploring workflows in Microsoft Foundry, you should delete the resources you have created in this exercise to avoid incurring unnecessary Azure costs.
+Se você terminou de explorar os fluxos de trabalho no Microsoft Foundry, exclua os recursos criados neste exercício para evitar custos desnecessários do Azure.
 
-1. Navigate to the [Azure portal](https://portal.azure.com) at `https://portal.azure.com` and view the contents of the resource group where your Foundry project was deployed.
+1. Navegue até o [portal do Azure](https://portal.azure.com) em `https://portal.azure.com` e visualize o conteúdo do grupo de recursos no qual seu projeto do Foundry foi implantado.
 
-1. On the toolbar, select **Delete resource group**.
-1. Enter the resource group name and confirm that you want to delete it.
+1. Na barra de ferramentas, selecione **Delete resource group**.
+1. Insira o nome do grupo de recursos e confirme que deseja excluí-lo.

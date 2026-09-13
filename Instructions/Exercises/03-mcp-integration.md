@@ -1,107 +1,107 @@
 ---
 lab:
-    title: 'Extend agents with Model Context Protocol (MCP) tools'
-    description: 'Extend agent capabilities by integrating Model Context Protocol (MCP) server tools.'
+    title: 'Estender agentes com ferramentas do Model Context Protocol (MCP)'
+    description: 'Estenda os recursos dos agentes integrando ferramentas de servidor do Model Context Protocol (MCP).'
     level: 300
     duration: 60
     islab: true
     status: 'released'
 ---
 
-# Extend agents with Model Context Protocol (MCP) tools
+# Estender agentes com ferramentas do Model Context Protocol (MCP)
 
-In this exercise, you'll use the Foundry Toolkit for VS Code extension to create an agent that can use Model Context Protocol (MCP) server tools to access external data sources and APIs. The agent will be able to retrieve up-to-date information and interact with custom services through MCP tools.
+Neste exercício, você usará a extensão Foundry Toolkit for VS Code para criar um agente que pode usar ferramentas de servidor do Model Context Protocol (MCP) para acessar fontes de dados e APIs externas. O agente poderá recuperar informações atualizadas e interagir com serviços personalizados por meio de ferramentas MCP.
 
-This exercise should take approximately **60** minutes to complete.
+Este exercício deve levar aproximadamente **60** minutos para ser concluído.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: Algumas das tecnologias usadas neste exercício estão em versão prévia ou em desenvolvimento ativo. Você pode encontrar comportamentos inesperados, avisos ou erros.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de começar este exercício, verifique se você tem:
 
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- An active [Azure subscription](https://azure.microsoft.com/free/)
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
+- O [Visual Studio Code](https://code.visualstudio.com/) instalado no computador local
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) ativa
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado no computador local
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm um build para a versão 3.14. Este laboratório foi testado com o Python 3.12.
 
-## Create a Foundry project with the Foundry Toolkit for VS Code extension
+## Criar um projeto do Foundry com a extensão Foundry Toolkit for VS Code
 
-As a developer, you may spend some time working in the Foundry portal; but you’re also likely to spend a lot of time in Visual Studio Code. The Foundry Toolkit for VS Code extension provides a convenient way to work with Foundry project resources without leaving the development environment.
+Como desenvolvedor, você pode passar algum tempo trabalhando no portal do Foundry; mas também é provável que passe bastante tempo no Visual Studio Code. A extensão Foundry Toolkit for VS Code oferece uma maneira conveniente de trabalhar com os recursos de projetos do Foundry sem sair do ambiente de desenvolvimento.
 
-1. Open Visual Studio Code.
+1. Abra o Visual Studio Code.
 
-2. Select **Extensions** from the left pane (or press **Ctrl+Shift+X**).
+2. Selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**).
 
-3. Search the extensions marketplace for the `Foundry Toolkit` extension from Microsoft and select **Install**.
+3. Pesquise no marketplace de extensões a extensão `Foundry Toolkit`, da Microsoft, e selecione **Install**.
 
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
+    > **Observação**: Atualmente, a extensão está listada como **Foundry Toolkit**, mas alguns rótulos e comandos do VS Code, ou capturas de tela mais antigas, ainda podem fazer referência a **AI Toolkit**. Neste laboratório, considere que esses nomes se referem à mesma experiência de extensão.
 
-4. After installing the extension, select its icon in the sidebar to open the Foundry Toolkit view.
+4. Depois de instalar a extensão, selecione o ícone dela na barra lateral para abrir a exibição Foundry Toolkit.
 
-    You should be prompted to sign in to your Azure account if you haven't already.
+    Você deverá receber uma solicitação para entrar na sua conta do Azure, caso ainda não tenha feito isso.
 
-5. Select **Create Project** under **Microsoft Foundry Resources**.
+5. Selecione **Create Project** em **Microsoft Foundry Resources**.
 
-    If a default project is already active, the project name will appear under **My Resources**. You can create a new project by right-clicking on the active project and selecting **Switch Default Project in Azure Resources**.
+    Se um projeto padrão já estiver ativo, o nome do projeto aparecerá em **My Resources**. Você pode criar um novo projeto clicando com o botão direito do mouse no projeto ativo e selecionando **Switch Default Project in Azure Resources**.
 
-6. Select your Azure subscription and resource group, then enter a name for your Foundry project to create a new project for this exercise.
+6. Selecione sua assinatura do Azure e o grupo de recursos e, em seguida, insira um nome para o projeto do Foundry a fim de criar um novo projeto para este exercício.
 
-    When the deployment is complete, you should see the project appear in the Foundry Toolkit pane as the default project.
+    Quando a implantação for concluída, o projeto deverá aparecer no painel Foundry Toolkit como o projeto padrão.
 
-## Deploy a model
+## Implantar um modelo
 
-At the core of any generative AI project, there’s at least one generative AI model. In this task, you'll deploy a model from the Model Catalog to use with your agent.
+No núcleo de qualquer projeto de IA generativa, há pelo menos um modelo de IA generativa. Nesta tarefa, você implantará um modelo do Model Catalog para usar com seu agente.
 
-1. When the "Project deployed successfully" popup appears, select the **Deploy a new model** button. This opens the Model Catalog.
+1. Quando o pop-up "Project deployed successfully" aparecer, selecione o botão **Deploy a new model**. Isso abrirá o Model Catalog.
 
-   > **Tip**: You can also access the Model Catalog by selecting the **+** icon next to **Models** in the Resources section, or by pressing **F1** and running the command **Foundry Toolkit: Show model catalog**.
+   > **Dica**: Você também pode acessar o Model Catalog selecionando o ícone **+** ao lado de **Models** na seção Resources ou pressionando **F1** e executando o comando **Foundry Toolkit: Show model catalog**.
 
-1. In the Model Catalog, locate the **gpt-5** model (you can use the search bar to find it quickly).
+1. No Model Catalog, localize o modelo **gpt-5** (você pode usar a barra de pesquisa para encontrá-lo rapidamente).
 
-1. Select **Deploy** next to the gpt-5 model.
+1. Selecione **Deploy** ao lado do modelo gpt-5.
 
-1. Configure the deployment settings:
-   - **Deployment name**: Enter a name like "gpt-5"
-   - **Deployment type**: Select **Global Standard** (or **Standard** if Global Standard is not available)
-   - **Model version**: Leave as default
-   - **Tokens per minute**: Raise the Tokens per Minute limit to 150000 or higher.
+1. Defina as configurações de implantação:
+   - **Deployment name**: Insira um nome, como "gpt-5"
+   - **Deployment type**: Selecione **Global Standard** (ou **Standard** se Global Standard não estiver disponível)
+   - **Model version**: Mantenha o padrão
+   - **Tokens per minute**: Aumente o limite de Tokens per Minute para 150000 ou mais.
 
-1. Select **Deploy to Microsoft Foundry** in the bottom-left corner.
+1. Selecione **Deploy to Microsoft Foundry** no canto inferior esquerdo.
 
-1. Wait for the deployment to complete. Your deployed model will appear under the **Models** section in the Resources view.
+1. Aguarde a conclusão da implantação. O modelo implantado aparecerá na seção **Models** na exibição Resources.
 
-1. Right-click the name of the project deployment and select **Copy Project Endpoint**. You'll need this URL to connect your agent to the Foundry project in the next steps.
+1. Clique com o botão direito do mouse no nome da implantação do projeto e selecione **Copy Project Endpoint**. Você precisará dessa URL para conectar seu agente ao projeto do Foundry nas próximas etapas.
 
-    ![Screenshot of copying the project endpoint in the Foundry Toolkit VS Code extension.](../Media/vs-code-endpoint.png)
+    ![Captura de tela da cópia do endpoint do projeto na extensão Foundry Toolkit para VS Code.](../Media/vs-code-endpoint.png)
 
-## Clone the starter code repository
+## Clonar o repositório de código inicial
 
-For this exercise, you'll use starter code that will help you connect to your Foundry project and create an agent that uses MCP server tools.
+Neste exercício, você usará um código inicial que ajudará a se conectar ao seu projeto do Foundry e a criar um agente que usa ferramentas de servidor MCP.
 
-1. In VS Code, open the Command Palette (**Ctrl+Shift+P** or **View > Command Palette**).
+1. No VS Code, abra a Paleta de Comandos (**Ctrl+Shift+P** ou **View > Command Palette**).
 
-1. Type **Git: Clone** and select it from the list.
+1. Digite **Git: Clone** e selecione-o na lista.
 
-1. Enter the repository URL:
+1. Insira a URL do repositório:
 
     ```
    https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-1. Choose a location on your local machine to clone the repository.
+1. Escolha um local no computador local para clonar o repositório.
 
-1. When prompted, select **Open** to open the cloned repository in VS Code.
+1. Quando solicitado, selecione **Open** para abrir o repositório clonado no VS Code.
 
-1. Once the repository opens, select **File > Open Folder** and navigate to `mslearn-ai-agents/Labfiles/03-mcp-integration`, then choose **Select Folder**.
+1. Depois que o repositório for aberto, selecione **File > Open Folder** e navegue até `mslearn-ai-agents/Labfiles/03-mcp-integration`; em seguida, escolha **Select Folder**.
 
-1. In the Explorer pane, expand the **Python** folder to view the code files for this exercise.
+1. No painel Explorer, expanda a pasta **Python** para exibir os arquivos de código deste exercício.
 
-1. Right-click on the **requirements.txt** file and select **Open in Integrated Terminal**.
+1. Clique com o botão direito do mouse no arquivo **requirements.txt** e selecione **Open in Integrated Terminal**.
 
-1. In the terminal, enter the following command to install the required Python packages in a virtual environment:
+1. No terminal, insira o comando a seguir para instalar os pacotes Python necessários em um ambiente virtual:
 
     ```
    python -m venv labenv
@@ -109,32 +109,32 @@ For this exercise, you'll use starter code that will help you connect to your Fo
    pip install -r requirements.txt
     ```
 
-1. Open the **.env** file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the project deployment resource in the Foundry Toolkit extension) and ensure that the MODEL_DEPLOYMENT_NAME variable is set to your model deployment name. Use **Ctrl+S** to save the file after making these changes.
+1. Abra o arquivo **.env**, substitua o espaço reservado **your_project_endpoint** pelo endpoint do seu projeto (copiado do recurso de implantação do projeto na extensão Foundry Toolkit) e verifique se a variável MODEL_DEPLOYMENT_NAME está definida como o nome da implantação do seu modelo. Use **Ctrl+S** para salvar o arquivo depois de fazer essas alterações.
 
-Now you're ready to create an AI agent that uses MCP server tools to access external data sources and APIs.
+Agora você está pronto para criar um agente de IA que usa ferramentas de servidor MCP para acessar fontes de dados e APIs externas.
 
-## Connect an Azure AI Agent to a remote MCP server
+## Conectar um Azure AI Agent a um servidor MCP remoto
 
-In this task, you'll connect to a remote MCP server, prepare the AI agent, and run a user prompt.
+Nesta tarefa, você se conectará a um servidor MCP remoto, preparará o agente de IA e executará um prompt de usuário.
 
-1. Open the **agent.py** file in the code editor.
+1. Abra o arquivo **agent.py** no editor de código.
 
-   > **Tip**: As you add code, be sure to maintain the correct indentation. Use the comment indentation levels as a guide.
+   > **Dica**: Ao adicionar código, mantenha a indentação correta. Use os níveis de indentação dos comentários como guia.
 
-1. Find the comment **Add references** and add the following code to import the classes:
+1. Localize o comentário **Add references** e adicione o código a seguir para importar as classes:
 
     ```python
-   # Add references
+   # Adicionar referências
    from azure.identity import DefaultAzureCredential
    from azure.ai.projects import AIProjectClient
    from azure.ai.projects.models import PromptAgentDefinition, MCPTool
    from openai.types.responses.response_input_param import McpApprovalResponse, ResponseInputParam
     ```
 
-1. Find the comment **Connect to the agents client** and add the following code to connect to the Azure AI project using the current Azure credentials.
+1. Localize o comentário **Connect to the agents client** e adicione o código a seguir para se conectar ao projeto do Azure AI usando as credenciais atuais do Azure.
 
     ```python
-   # Connect to the agents client
+   # Conectar ao cliente de agentes
    with (
        DefaultAzureCredential() as credential,
        AIProjectClient(endpoint=project_endpoint, credential=credential) as project_client,
@@ -142,10 +142,10 @@ In this task, you'll connect to a remote MCP server, prepare the AI agent, and r
    ):
     ```
 
-1. Under the comment **Initialize agent MCP tool**, add the following code:
+1. Abaixo do comentário **Initialize agent MCP tool**, adicione o código a seguir:
 
     ```python
-   # Initialize agent MCP tool
+   # Inicializar a ferramenta MCP do agente
    mcp_tool = MCPTool(
        server_label="api-specs",
        server_url="https://learn.microsoft.com/api/mcp",
@@ -153,57 +153,57 @@ In this task, you'll connect to a remote MCP server, prepare the AI agent, and r
    )
     ```
 
-    This code will connect to the Microsoft Learn Docs remote MCP server. This is a cloud-hosted service that enables clients to access trusted and up-to-date information directly from Microsoft's official documentation.
+    Esse código se conectará ao servidor MCP remoto do Microsoft Learn Docs. Esse é um serviço hospedado na nuvem que permite aos clientes acessar informações confiáveis e atualizadas diretamente da documentação oficial da Microsoft.
 
-1. Under the comment **Create a new agent with the MCP tool** and add the following code:
+1. Abaixo do comentário **Create a new agent with the MCP tool**, adicione o código a seguir:
 
     ```python
-   # Create a new agent with the MCP tool
+   # Criar um novo agente com a ferramenta MCP
    agent = project_client.agents.create_version(
        agent_name="MyAgent",
        definition=PromptAgentDefinition(
            model=model_deployment,
-           instructions="You are a helpful agent that can use MCP tools to assist users. Use the available MCP tools to answer questions and perform tasks.",
+           instructions="Você é um agente prestativo que pode usar ferramentas MCP para ajudar os usuários. Use as ferramentas MCP disponíveis para responder a perguntas e realizar tarefas.",
            tools=[mcp_tool],
        ),
    )
-   print(f"Agent created (id: {agent.id}, name: {agent.name}, version: {agent.version})")
+   print(f"Agente criado (id: {agent.id}, nome: {agent.name}, versão: {agent.version})")
     ```
 
-    In this code, you provide instructions for the agent and provide it with the MCP tool definitions.
+    Nesse código, você fornece instruções para o agente e fornece a ele as definições da ferramenta MCP.
 
-1. Find the comment **Create a conversation thread** and add the following code:
+1. Localize o comentário **Create a conversation thread** e adicione o código a seguir:
 
     ```python
-   # Create a conversation thread
+   # Criar um thread de conversa
    conversation = openai_client.conversations.create()
-   print(f"Created conversation (id: {conversation.id})")
+   print(f"Conversa criada (id: {conversation.id})")
     ```
 
-1. Find the comment **Send initial request that will trigger the MCP tool** and add the following code:
+1. Localize o comentário **Send initial request that will trigger the MCP tool** e adicione o código a seguir:
 
     ```python
-   # Send initial request that will trigger the MCP tool
+   # Enviar a solicitação inicial que acionará a ferramenta MCP
    response = openai_client.responses.create(
        conversation=conversation.id,
-       input="Give me the Azure CLI commands to create an Azure Container App with a managed identity.",
+       input="Forneça os comandos da CLI do Azure para criar um Azure Container App com uma identidade gerenciada.",
       extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
    )
     ```
 
-1. Find the comment **Process any MCP approval requests that were generated** and add the following code:
+1. Localize o comentário **Process any MCP approval requests that were generated** e adicione o código a seguir:
 
     ```python
-   # Process any MCP approval requests that were generated
-   # The agent may issue several tool calls, each needing its own approval,
-   # so we loop until there are none left.
+   # Processar todas as solicitações de aprovação MCP geradas
+   # O agente pode emitir várias chamadas de ferramentas, cada uma exigindo sua própria aprovação,
+   # por isso repetimos o loop até que não reste nenhuma.
    while True:
-       # Collect any MCP approval requests from the latest response
+       # Coletar todas as solicitações de aprovação MCP da resposta mais recente
        input_list: ResponseInputParam = []
        for item in response.output:
            if item.type == "mcp_approval_request":
                if item.server_label == "api-specs" and item.id:
-                   # Automatically approve the MCP request to allow the agent to proceed
+                   # Aprovar automaticamente a solicitação MCP para permitir que o agente prossiga
                    input_list.append(
                        McpApprovalResponse(
                            type="mcp_approval_response",
@@ -212,37 +212,37 @@ In this task, you'll connect to a remote MCP server, prepare the AI agent, and r
                        )
                    )
 
-       # No more approvals needed -> the agent has produced its final response
+       # Não são necessárias mais aprovações -> o agente produziu sua resposta final
        if not input_list:
            break
 
-       # Send the approval response back and retrieve the next response
+       # Enviar a resposta de aprovação e recuperar a próxima resposta
        response = openai_client.responses.create(
            input=input_list,
            previous_response_id=response.id,
            extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
        )
 
-   print(f"\nAgent response: {response.output_text}")
+   print(f"\nResposta do agente: {response.output_text}")
     ```
 
-    This code listens for any MCP approval requests in the agent's response and automatically approves them.
+    Esse código verifica se há solicitações de aprovação MCP na resposta do agente e as aprova automaticamente.
 
-1. Find the comment **Clean up resources by deleting the agent version** and add the following code:
+1. Localize o comentário **Clean up resources by deleting the agent version** e adicione o código a seguir:
 
     ```python
-   # Clean up resources by deleting the agent version
+   # Limpar os recursos excluindo a versão do agente
    project_client.agents.delete_version(agent_name=agent.name, agent_version=agent.version)
-   print("Agent deleted")
+   print("Agente excluído")
     ```
 
-1. Save the code file (*CTRL+S*) when you're finished.
+1. Salve o arquivo de código (*CTRL+S*) quando terminar.
 
-## Test the connection to the remote MCP server
+## Testar a conexão com o servidor MCP remoto
 
-Now you're ready to run the application and see how the agent uses the MCP tool to retrieve information from the Microsoft Learn Docs remote MCP server.
+Agora você está pronto para executar o aplicativo e ver como o agente usa a ferramenta MCP para recuperar informações do servidor MCP remoto do Microsoft Learn Docs.
 
-1. In the integrated terminal, enter the following command to run the application:
+1. No terminal integrado, insira o comando a seguir para executar o aplicativo:
 
     ```
    az login
@@ -252,15 +252,15 @@ Now you're ready to run the application and see how the agent uses the MCP tool 
    python agent.py
     ```
 
-1. Wait for the agent to process the prompt, using the MCP server to find a suitable tool to retrieve the requested information. You should see some output similar to the following:
+1. Aguarde o agente processar o prompt, usando o servidor MCP para encontrar uma ferramenta adequada para recuperar as informações solicitadas. Você deverá ver uma saída semelhante à seguinte:
 
-    ```
-   Agent created (id: MyAgent:2, name: MyAgent, version: 2)
-   Created conversation (id: conv_086911ecabcbc05700BBHIeNRoPSO5tKPHiXRkgHuStYzy27BS)
+    ````
+   Agente criado (id: MyAgent:2, nome: MyAgent, versão: 2)
+   Conversa criada (id: conv_086911ecabcbc05700BBHIeNRoPSO5tKPHiXRkgHuStYzy27BS)
 
-   Agent response: Here are Azure CLI commands to create an Azure Container App with a managed identity:
+   Resposta do agente: Aqui estão os comandos da CLI do Azure para criar um Azure Container App com uma identidade gerenciada:
 
-   **1. For a System-assigned Managed Identity**
+   **1. Para uma identidade gerenciada atribuída pelo sistema**
     ```sh
     az containerapp create \
     --name <CONTAINERAPP_NAME> \
@@ -270,126 +270,126 @@ Now you're ready to run the application and see how the agent uses the MCP tool 
     --identity 'system'
     ```
 
-   [continued...]
+   [continuação...]
 
-   Agent deleted
+   Agente excluído
 
-    ```
+    ````
 
-    Notice that the agent was able to invoke the MCP tool to automatically fulfill the request.
+    Observe que o agente conseguiu invocar a ferramenta MCP para atender automaticamente à solicitação.
 
-1. You can update the input in the request to ask for different information. In each case, the agent will attempt to find technical documentation by using the MCP tool.
+1. Você pode atualizar a entrada na solicitação para pedir informações diferentes. Em cada caso, o agente tentará encontrar a documentação técnica usando a ferramenta MCP.
 
-## Create an MCP server with custom tools
+## Criar um servidor MCP com ferramentas personalizadas
 
-In addition to connecting to remote MCP servers, you can also create your own custom MCP server tools and connect them to your agent. A Model Context Protocol (MCP) Server is a component that hosts callable tools. These tools are Python functions that can be exposed to AI agents. When tools are annotated with `@mcp.tool()`, they become discoverable to the client, allowing an AI agent to call them autonomously during a conversation or task. In this task, you'll add tools that will allow an agent to perform inventory inquiries and recommendations.
+Além de se conectar a servidores MCP remotos, você também pode criar suas próprias ferramentas de servidor MCP personalizadas e conectá-las ao agente. Um servidor Model Context Protocol (MCP) é um componente que hospeda ferramentas que podem ser chamadas. Essas ferramentas são funções Python que podem ser expostas a agentes de IA. Quando as ferramentas são anotadas com `@mcp.tool()`, elas se tornam detectáveis pelo cliente, permitindo que um agente de IA as chame de forma autônoma durante uma conversa ou tarefa. Nesta tarefa, você adicionará ferramentas que permitirão a um agente realizar consultas e recomendações de inventário.
 
-1. Open the **server.py** file in the code editor.
+1. Abra o arquivo **server.py** no editor de código.
 
-    In this code file, you'll define the tools the agent can use to simulate a backend service for the retail store. Notice the server setup code at the top of the file. It uses `FastMCP` to quickly spin up an MCP server instance named "Inventory". This server will host the tools you define and make them accessible to the agent during the lab.
+    Neste arquivo de código, você definirá as ferramentas que o agente poderá usar para simular um serviço de back-end da loja de varejo. Observe o código de configuração do servidor na parte superior do arquivo. Ele usa `FastMCP` para iniciar rapidamente uma instância de servidor MCP chamada "Inventory". Esse servidor hospedará as ferramentas que você definir e as disponibilizará ao agente durante o laboratório.
 
-1. Under the comment **Add references**, add the following code:
+1. Abaixo do comentário **Add references**, adicione o código a seguir:
 
     ```python
-   # Add references
+   # Adicionar referências
    from fastmcp import FastMCP
     ```
 
-1. Under the comment **Create an MCP server**, add the following code to create a new MCP server instance:
+1. Abaixo do comentário **Create an MCP server**, adicione o código a seguir para criar uma nova instância de servidor MCP:
 
     ```python
-   # Create an MCP server
+   # Criar um servidor MCP
    mcp = FastMCP(name="Inventory")
     ```
 
-    This code initializes a new MCP server with the label "Inventory".
+    Esse código inicializa um novo servidor MCP com o rótulo "Inventory".
 
-1. Find the comment **Add an inventory check mcp tool** and add the following decorator above the function definition, which should now look like this:
+1. Localize o comentário **Add an inventory check mcp tool** e adicione o decorador a seguir acima da definição da função, que deverá ficar assim:
 
     ```python
-   # Add an inventory check mcp tool
+   # Adicionar uma ferramenta MCP de verificação de inventário
    @mcp.tool()
    def get_inventory_levels() -> dict:
-      # continued...
+      # continuação...
     ```
 
-    This dictionary represents a sample inventory. The `@mcp.tool()` decorator registers the function as a tool on the MCP server, allowing the LLM to discover your function.
+    Esse dicionário representa um inventário de exemplo. O decorador `@mcp.tool()` registra a função como uma ferramenta no servidor MCP, permitindo que o LLM descubra sua função.
 
-1. Find the comment **Add a weekly sales mcp tool** and add the following decorator above the function definition, which should now look like this:
+1. Localize o comentário **Add a weekly sales mcp tool** e adicione o decorador a seguir acima da definição da função, que deverá ficar assim:
 
     ```python
-   # Add a weekly sales mcp tool
+   # Adicionar uma ferramenta MCP de vendas semanais
    @mcp.tool()
    def get_weekly_sales() -> dict:
-      # continued...
+      # continuação...
     ```
 
-1. Find the comment **Run the MCP server** and add the following code to start the server:
+1. Localize o comentário **Run the MCP server** e adicione o código a seguir para iniciar o servidor:
 
     ```python
-   # Run the MCP server
+   # Executar o servidor MCP
    mcp.run(show_banner=False)
     ```
 
-    This code starts the MCP server, making your tools available for discovery and use by the agent. Setting `show_banner=False` prevents the startup banner from being printed to stdout, which would corrupt the MCP stdio protocol.
+    Esse código inicia o servidor MCP, disponibilizando suas ferramentas para descoberta e uso pelo agente. Definir `show_banner=False` impede que o banner de inicialização seja impresso em stdout, o que corromperia o protocolo MCP stdio.
 
-1. Save the file (*CTRL+S*).
+1. Salve o arquivo (*CTRL+S*).
 
-## Implement an MCP client to connect to the custom MCP server
+## Implementar um cliente MCP para se conectar ao servidor MCP personalizado3
 
-An MCP client is the component that connects to the MCP server to discover and call tools. You can think of it as the bridge between the agent and the server-hosted functions, enabling dynamic tool use in response to user prompts.
+Um cliente MCP é o componente que se conecta ao servidor MCP para descobrir e chamar ferramentas. Você pode entendê-lo como a ponte entre o agente e as funções hospedadas no servidor, permitindo o uso dinâmico de ferramentas em resposta aos prompts do usuário.
 
-1. Navigate to the **client.py** file.
+1. Navegue até o arquivo **client.py**.
 
-1. Find the comment **Add references** and add the following code to import the classes:
+1. Localize o comentário **Add references** e adicione o código a seguir para importar as classes:
 
     ```python
-   # Add references
+   # Adicionar referências
    from mcp import ClientSession, StdioServerParameters
    from mcp.client.stdio import stdio_client
     ```
 
-1. In the **connect_to_server** method, find the comment **Start the MCP server** and add the following code:
+1. No método **connect_to_server**, localize o comentário **Start the MCP server** e adicione o código a seguir:
 
     ```python
-   # Start the MCP server
+   # Iniciar o servidor MCP
    stdio_transport = await exit_stack.enter_async_context(stdio_client(server_params))
    stdio, write = stdio_transport
     ```
 
-    In a standard production setup, the server would run separately from the client. But for the sake of this lab, the client is responsible for starting the server using standard input/output transport. This creates a lightweight communication channel between the two components and simplifies the local development setup.
+    Em uma configuração de produção padrão, o servidor seria executado separadamente do cliente. Mas, para os fins deste laboratório, o cliente é responsável por iniciar o servidor usando o transporte de entrada/saída padrão. Isso cria um canal de comunicação leve entre os dois componentes e simplifica a configuração do desenvolvimento local.
 
-1. Find the comment **Create an MCP client session** and add the following code:
+1. Localize o comentário **Create an MCP client session** e adicione o código a seguir:
 
     ```python
-   # Create an MCP client session
+   # Criar uma sessão de cliente MCP
    session = await exit_stack.enter_async_context(ClientSession(stdio, write))
    await session.initialize()
     ```
 
-    This creates a new client session using the input and output streams from the previous step. Calling `session.initialize` prepares the session to discover and call tools that are registered on the MCP server.
+    Isso cria uma nova sessão de cliente usando os fluxos de entrada e saída da etapa anterior. Chamar `session.initialize` prepara a sessão para descobrir e chamar ferramentas registradas no servidor MCP.
 
-1. Under the comment **List available tools**, add the following code to verify that the client has connected to the server:
+1. Abaixo do comentário **List available tools**, adicione o código a seguir para verificar se o cliente se conectou ao servidor:
 
     ```python
-   # List available tools
+   # Listar ferramentas disponíveis
    response = await session.list_tools()
    tools = response.tools
-   print("\nConnected to server with tools:", [tool.name for tool in tools]) 
+   print("\nConectado ao servidor com as ferramentas:", [tool.name for tool in tools])
     ```
 
-    Now your client session is ready for use with your Azure AI Agent.
+    Agora sua sessão de cliente está pronta para ser usada com o Azure AI Agent.
 
-## Connect the MCP tools to your agent
+## Conectar as ferramentas MCP ao seu agente
 
-In this task, you'll connect the MCP server tools to your agent so that it can call them in response to user prompts.
+Nesta tarefa, você conectará as ferramentas do servidor MCP ao seu agente para que ele possa chamá-las em resposta aos prompts do usuário.
 
-> **Tip**: As you add code, be sure to maintain the correct indentation. Use the comment indentation levels as a guide.
+> **Dica**: Ao adicionar código, mantenha a indentação correta. Use os níveis de indentação dos comentários como guia.
 
-1. In the **chat_loop** method, find the comment **Build a function for each tool** and add the following code:
+1. No método **chat_loop**, localize o comentário **Build a function for each tool** e adicione o código a seguir:
 
     ```python
-   # Build a function for each tool
+   # Criar uma função para cada ferramenta
    def make_tool_func(tool_name):
        async def tool_func(**kwargs):
            result = await session.call_tool(tool_name, kwargs)
@@ -398,16 +398,16 @@ In this task, you'll connect the MCP server tools to your agent so that it can c
        tool_func.__name__ = tool_name
        return tool_func
 
-   # Store the functions in a dictionary for easy access when processing function calls
+   # Armazenar as funções em um dicionário para facilitar o acesso ao processar chamadas de funções
    functions_dict = {tool.name: make_tool_func(tool.name) for tool in tools}
     ```
 
-    This code dynamically wraps tools available in the MCP server so that they can be called by the AI agent. Each tool is turned into an async function that the agent can invoke.
+    Esse código encapsula dinamicamente as ferramentas disponíveis no servidor MCP para que possam ser chamadas pelo agente de IA. Cada ferramenta é transformada em uma função assíncrona que o agente pode invocar.
 
-1. Find the comment **Create FunctionTool definitions for the agent** and add the following code:
+1. Localize o comentário **Create FunctionTool definitions for the agent** e adicione o código a seguir:
 
     ```python
-   # Create FunctionTool definitions for the agent
+   # Criar definições FunctionTool para o agente
    mcp_function_tools: FunctionTool = []
    for tool in tools:
        function_tool = FunctionTool(
@@ -423,41 +423,41 @@ In this task, you'll connect the MCP server tools to your agent so that it can c
        mcp_function_tools.append(function_tool)
     ```
 
-1. Find the comment **Create the agent** and add the following code:
+1. Localize o comentário **Create the agent** e adicione o código a seguir:
 
     ```python
-   # Create the agent
+   # Criar o agente
    agent = project_client.agents.create_version(
        agent_name="inventory-agent",
        definition=PromptAgentDefinition(
            model=model_deployment,
            instructions="""
-           You are an inventory assistant. Here are some general guidelines:
-           - Recommend restock if item inventory < 10  and weekly sales > 15
-           - Recommend clearance if item inventory > 20 and weekly sales < 5
+           Você é um assistente de inventário. Veja algumas diretrizes gerais:
+           - Recomende reabastecimento se o inventário do item < 10 e as vendas semanais > 15
+           - Recomende liquidação se o inventário do item > 20 e as vendas semanais < 5
            """,
            tools=mcp_function_tools
        ),
    )
     ```
 
-   With these instructions and tools, the agent is able to invoke the tools to retrieve inventory and sales data, and then use that information to provide helpful responses to the user.
+   Com essas instruções e ferramentas, o agente pode invocar as ferramentas para recuperar dados de inventário e vendas e, em seguida, usar essas informações para fornecer respostas úteis ao usuário.
 
-1. Locate the comment **Process function calls** and add the following code:
+1. Localize o comentário **Process function calls** e adicione o código a seguir:
 
     ```python
-   # Process function calls
+   # Processar chamadas de funções
    for item in response.output:
        if item.type == "function_call":
-           # Retrieve the matching function tool
+           # Recuperar a ferramenta de função correspondente
            function_name = item.name
            kwargs = json.loads(item.arguments)
            required_function = functions_dict.get(function_name)
 
-           # Invoke the function
+           # Invocar a função
            output = await required_function(**kwargs)
 
-           # Append the output text
+           # Acrescentar o texto da saída
            input_list.append(
               FunctionCallOutput(
                  type="function_call_output",
@@ -467,91 +467,91 @@ In this task, you'll connect the MCP server tools to your agent so that it can c
            )
     ```
 
-    This code listens for any function calls in the agent's response, invokes the corresponding tool function, and prepares the output to be sent back to the agent.
+    Esse código verifica se há chamadas de funções na resposta do agente, invoca a função de ferramenta correspondente e prepara a saída para ser enviada de volta ao agente.
 
-1. Find the comment **Send function call outputs back to the model and retrieve a response** and add the following code:
+1. Localize o comentário **Send function call outputs back to the model and retrieve a response** e adicione o código a seguir:
 
     ```python
-   # Send function call outputs back to the model and retrieve a response
+   # Enviar as saídas das chamadas de funções de volta ao modelo e recuperar uma resposta
    if input_list:
       response = openai_client.responses.create(
             input=input_list,
             previous_response_id=response.id,
             extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
       )
-   print(f"Agent response: {response.output_text}")
+   print(f"Resposta do agente: {response.output_text}")
     ```
 
-1. Save the code file (*CTRL+S*) when you have finished.
+1. Salve o arquivo de código (*CTRL+S*) quando terminar.
 
-## Test the custom MCP tools with your agent
+## Testar as ferramentas MCP personalizadas com seu agente
 
-1. In the integrated terminal, enter the following command to run the application:
+1. No terminal integrado, insira o comando a seguir para executar o aplicativo:
 
     ```
    python client.py
     ```
 
-1. When prompted, enter a prompt such as:
+1. Quando solicitado, insira um prompt como:
 
     ```
-   Show me the current inventory levels for all products.
+   Mostre os níveis atuais de inventário de todos os produtos.
     ```
 
-    > **Tip**: If the app fails because the rate limit is exceeded. Wait a few seconds and try again. If there is insufficient quota available in your subscription, the model may not be able to respond.
+    > **Dica**: Se o aplicativo falhar porque o limite de taxa foi excedido, aguarde alguns segundos e tente novamente. Se não houver cota suficiente disponível em sua assinatura, talvez o modelo não consiga responder.
 
-    You should see some output similar to the following:
+    Você deverá ver uma saída semelhante à seguinte:
 
     ```
     MessageRole.AGENT:
-    Agent response: Here are the current inventory levels for all items:
+    Resposta do agente: Aqui estão os níveis atuais de inventário de todos os itens:
 
-   - Moisturizer: 6
+   - Hidratante: 6
    - Shampoo: 8
-   - Body Spray: 28
-   [continued ...]
+   - Spray corporal: 28
+   [continuação ...]
 
-   Would you like recommendations for restocking or clearance? If so, I can check the weekly sales to advise accordingly.
+   Você gostaria de recomendações para reabastecimento ou liquidação? Se quiser, posso verificar as vendas semanais para orientar você.
     ```
 
-    Notice that the agent was able to call the MCP tools to retrieve inventory and sales data, and then use that information to provide a helpful response to the user.
+    Observe que o agente conseguiu chamar as ferramentas MCP para recuperar dados de inventário e vendas e, em seguida, usar essas informações para fornecer uma resposta útil ao usuário.
 
-1. You can continue the conversation if you like. The thread is *stateful*, so it retains the conversation history - meaning that the agent has the full context for each response.
+1. Você pode continuar a conversa, se quiser. O thread é *stateful*, portanto mantém o histórico da conversa — o que significa que o agente tem o contexto completo para cada resposta.
 
-    Try entering prompts such as:
-
-    ```
-   Are there any products that should be restocked?
-    ```
+    Tente inserir prompts como:
 
     ```
-   Which products would you recommend for clearance?
+   Há algum produto que deva ser reabastecido?
     ```
 
     ```
-   What are the best sellers this week?
+   Quais produtos você recomendaria para liquidação?
     ```
 
-1. Enter `quit` to exit the application.
+    ```
+   Quais são os produtos mais vendidos nesta semana?
+    ```
 
-    You can also use `deactivate` to exit the Python virtual environment in the terminal.
+1. Insira `quit` para sair do aplicativo.
 
-## Clean up
+    Você também pode usar `deactivate` para sair do ambiente virtual do Python no terminal.
 
-When you've finished exploring the Foundry Toolkit for VS Code extension, you should clean up the resources to avoid incurring unnecessary Azure costs.
+## Limpar
 
-### Delete your model
+Quando terminar de explorar a extensão Foundry Toolkit for VS Code, você deverá limpar os recursos para evitar custos desnecessários do Azure.
 
-1. In VS Code, refresh the **Azure Resources** view.
+### Excluir seu modelo
 
-1. Expand the **Models** subsection.
+1. No VS Code, atualize a exibição **Azure Resources**.
 
-1. Right-click on your deployed model and select **Delete**.
+1. Expanda a subseção **Models**.
 
-### Delete the resource group
+1. Clique com o botão direito do mouse no modelo implantado e selecione **Delete**.
 
-1. Open the [Azure portal](https://portal.azure.com).
+### Excluir o grupo de recursos
 
-1. Navigate to the resource group containing your Microsoft Foundry resources.
+1. Abra o [portal do Azure](https://portal.azure.com).
 
-1. Select **Delete resource group** and confirm the deletion.
+1. Navegue até o grupo de recursos que contém seus recursos do Microsoft Foundry.
+
+1. Selecione **Delete resource group** e confirme a exclusão.

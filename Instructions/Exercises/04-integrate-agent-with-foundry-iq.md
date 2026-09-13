@@ -1,217 +1,217 @@
 ---
 lab:
-    title: 'Integrate an AI agent with Foundry IQ'
-    description: 'Use Azure AI Agent Service to develop an agent that uses Foundry IQ to search knowledge bases.'
+    title: 'Integrar um agente de IA com o Foundry IQ'
+    description: 'Use o Azure AI Agent Service para desenvolver um agente que usa o Foundry IQ para pesquisar bases de conhecimento.'
     level: 300
     duration: 45
     islab: true
     status: 'released'
 ---
 
-# Integrate an AI agent with Foundry IQ
+# Integrar um agente de IA com o Foundry IQ
 
-In this exercise, you'll use Microsoft Foundry portal to create an agent that integrates with Foundry IQ to search and retrieve information from knowledge bases. You'll create a search resource, configure a knowledge base with sample data, build an agent in the portal, and then connect to it from Visual Studio Code to interact programmatically.
+Neste exercício, você usará o portal do Microsoft Foundry para criar um agente que se integra ao Foundry IQ a fim de pesquisar e recuperar informações de bases de conhecimento. Você criará um recurso de pesquisa, configurará uma base de conhecimento com dados de exemplo, criará um agente no portal e, em seguida, conectará a ele usando o Visual Studio Code para interagir programaticamente.
 
-> **Tip**: The code used in this exercise is based on the Microsoft Foundry SDK for Python. You can develop similar solutions using the SDKs for Microsoft .NET, JavaScript, and Java. Refer to [Microsoft Foundry SDK client libraries](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) for details.
+> **Dica**: O código usado neste exercício é baseado no SDK do Microsoft Foundry para Python. Você pode desenvolver soluções semelhantes usando os SDKs do Microsoft .NET, JavaScript e Java. Consulte [Bibliotecas de cliente do SDK do Microsoft Foundry](https://learn.microsoft.com/azure/ai-foundry/how-to/develop/sdk-overview) para obter detalhes.
 
-This exercise should take approximately **45** minutes to complete.
+Este exercício deve levar aproximadamente **45** minutos para ser concluído.
 
-> **Note**: Some of the technologies used in this exercise are in preview or in active development. You may experience some unexpected behavior, warnings, or errors.
+> **Observação**: Algumas das tecnologias usadas neste exercício estão em versão preliminar ou em desenvolvimento ativo. Você pode encontrar algum comportamento inesperado, avisos ou erros.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this exercise, ensure you have:
+Antes de iniciar este exercício, verifique se você tem:
 
-- An [Azure subscription](https://azure.microsoft.com/free/) with permissions to create AI resources
-- [Visual Studio Code](https://code.visualstudio.com/) installed on your local machine
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Git](https://git-scm.com/downloads) installed on your local machine
-- Basic familiarity with the Microsoft Foundry portal and Python programming
+- Uma [assinatura do Azure](https://azure.microsoft.com/free/) com permissões para criar recursos de IA
+- O [Visual Studio Code](https://code.visualstudio.com/) instalado no computador local
+- O [Python 3.13](https://www.python.org/downloads/) instalado
+- O [Git](https://git-scm.com/downloads) instalado no computador local
+- Familiaridade básica com o portal do Microsoft Foundry e programação em Python
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para a versão 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-## Create a Foundry project
+## Criar um projeto do Foundry
 
-Let's start by creating a Foundry project with the new Foundry experience.
+Vamos começar criando um projeto do Foundry com a nova experiência do Foundry.
 
-1. In a web browser, open the [Foundry portal](https://ai.azure.com) at `https://ai.azure.com` and sign in using your Azure credentials. Close any tips or quick start panes that are opened the first time you sign in.
+1. Em um navegador da Web, abra o [portal do Foundry](https://ai.azure.com) em `https://ai.azure.com` e entre usando suas credenciais do Azure. Feche todas as dicas ou painéis de início rápido que forem abertos na primeira vez que você entrar.
 
-    > **Important**: Make sure the **New Foundry** toggle is *On* for this lab to use the updated user interface.
+    > **Importante**: Verifique se a opção **New Foundry** está *Ativada* para que este laboratório use a interface do usuário atualizada.
 
-1. Once you toggle to the **New Foundry**, you'll be asked to select a project. In the dropdown, select **Create a new project**.
-1. In the **Create a project** dialog, enter a valid name for your project (for example, *agent-iq-lab*).
-1. Confirm or configure the following settings for your project:
+1. Depois de alternar para o **New Foundry**, será solicitado que você selecione um projeto. Na lista suspensa, selecione **Create a new project**.
+1. Na caixa de diálogo **Create a project**, insira um nome válido para o projeto (por exemplo, *agent-iq-lab*).
+1. Confirme ou defina as seguintes configurações para o projeto:
     - **Foundry resource**: *Create a new Foundry resource or select an existing one*
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Create or select a resource group*
-    - **Location**: *Select any available region*\*
+    - **Subscription**: *Sua assinatura do Azure*
+    - **Resource group**: *Crie ou selecione um grupo de recursos*
+    - **Location**: *Selecione qualquer região disponível*\*
 
-    > \* Some Azure AI resources are constrained by regional model quotas. In the event of a quota limit being exceeded later in the exercise, there's a possibility you may need to create another resource in a different region.
+    > \* Alguns recursos de IA do Azure estão sujeitos a cotas de modelo limitadas por região. Se um limite de cota for excedido posteriormente no exercício, talvez seja necessário criar outro recurso em uma região diferente.
 
-1. Select **Create** and wait for your project to be created. This may take a few minutes.
-1. When your project is created, you'll see the project home page.
+1. Selecione **Create** e aguarde a criação do projeto. Isso pode levar alguns minutos.
+1. Quando o projeto for criado, você verá a página inicial do projeto.
 
-## Create an agent
+## Criar um agente
 
-1. On the home page, select the **Build** tab, then on the **Agents** tab select **Create agent**.
-1. Create your agent with a descriptive name, such as `product-expert-agent`.
+1. Na página inicial, selecione a guia **Build** e, em seguida, na guia **Agents**, selecione **Create agent**.
+1. Crie seu agente com um nome descritivo, como `product-expert-agent`.
 
-When creating an agent, it will deploy the default model (like `gpt-5`). Once your agent is created, you'll see the agent playground with that default model automatically selected for you.
+Ao criar um agente, o modelo padrão (como `gpt-5`) será implantado. Depois que o agente for criado, você verá o playground do agente com esse modelo padrão selecionado automaticamente.
 
-## Configure your data and Foundry IQ
+## Configurar seus dados e o Foundry IQ
 
-Now you'll configure your agent that uses Foundry IQ to search the knowledge base.
+Agora você configurará seu agente para usar o Foundry IQ e pesquisar a base de conhecimento.
 
-1. First, give your agent the following instructions:
+1. Primeiro, dê ao agente as seguintes instruções:
 
     ```
-   You are a helpful AI assistant for Contoso, specializing in outdoor camping and hiking products. 
-   You must ALWAYS search the knowledge base to answer questions about our products or product 
-   catalog. Provide detailed, accurate information and always cite your sources.
-   If you don't find relevant information in the knowledge base, say so clearly.
+   Você é um assistente de IA prestativo da Contoso, especializado em produtos para acampamento e trilhas ao ar livre.
+   Você DEVE SEMPRE pesquisar a base de conhecimento para responder a perguntas sobre nossos produtos ou nosso
+   catálogo de produtos. Forneça informações detalhadas e precisas e sempre cite suas fontes.
+   Se não encontrar informações relevantes na base de conhecimento, diga isso claramente.
     ```
 
-1. Select **Save** to save your current agent configuration.
-1. Then, in the **Knowledge** section, expand the **Add** dropdown, and select **Connect to Foundry IQ**.
-1. In the Foundry IQ setup window, select **Connect to an AI Search resource** and then **Create new resource** which should open up a dialog to create the resource.
-1. Create a search resource with the default settings:
-    - **Resource name**: *A globally unique name*
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Use the same resource group as your project*
-    - **Region**: *The same location as your project*
-    - **Pricing tier**: Free *if available, otherwise choose Basic*
+1. Selecione **Save** para salvar a configuração atual do agente.
+1. Em seguida, na seção **Knowledge**, expanda a lista suspensa **Add** e selecione **Connect to Foundry IQ**.
+1. Na janela de configuração do Foundry IQ, selecione **Connect to an AI Search resource** e, em seguida, **Create new resource**, o que deve abrir uma caixa de diálogo para criar o recurso.
+1. Crie um recurso de pesquisa com as configurações padrão:
+    - **Resource name**: *Um nome globalmente exclusivo*
+    - **Subscription**: *Sua assinatura do Azure*
+    - **Resource group**: *Use o mesmo grupo de recursos do projeto*
+    - **Region**: *O mesmo local do projeto*
+    - **Pricing tier**: Free *se disponível; caso contrário, escolha Basic*
     - **Foundry IQ Knowledge base capabilities**: Pause til next month
 
-    > **Note**: If you run into any problems creating the resource here, select the link at the bottom of the form to create it from the Azure portal instead.
+    > **Observação**: Se você tiver problemas para criar o recurso aqui, selecione o link na parte inferior do formulário para criá-lo no portal do Azure.
 
-Now you'll upload sample product information documents to connect to with Foundry IQ.
+Agora você carregará documentos de informações de produtos de exemplo para conectar ao Foundry IQ.
 
-1. Download the sample product information files by opening a new browser tab and navigating to `https://github.com/MicrosoftLearning/mslearn-ai-agents/raw/main/Labfiles/04-integrate-agent-with-foundry-iq/data/contoso-products.zip`
-1. Extract the files from the zip, which should be 3 PDFs detailing the products from Contoso.
-1. Open a new tab and navigate to the Azure portal at `https://portal.azure.com`. In the top search bar, search fo **Storage accounts** and select **Storage accounts** from the services section.
-1. Create a storage account with the following settings:
-    - **Subscription**: *Your Azure subscription*
-    - **Resource group**: *Use the same resource group as your project*
-    - **Storage account name**: *A unique storage account name*
-    - **Region**: *The same location as your project*
-    - **Primary service**: *Azure Blob Storage or Azure Data Lake Storage*
+1. Baixe os arquivos de informações de produtos de exemplo abrindo uma nova guia do navegador e navegando até `https://github.com/MicrosoftLearning/mslearn-ai-agents/raw/main/Labfiles/04-integrate-agent-with-foundry-iq/data/contoso-products.zip`
+1. Extraia os arquivos do zip, que devem ser 3 PDFs detalhando os produtos da Contoso.
+1. Abra uma nova guia e navegue até o portal do Azure em `https://portal.azure.com`. Na barra de pesquisa superior, pesquise **Storage accounts** e selecione **Storage accounts** na seção de serviços.
+1. Crie uma conta de armazenamento com as seguintes configurações:
+    - **Subscription**: *Sua assinatura do Azure*
+    - **Resource group**: *Use o mesmo grupo de recursos do projeto*
+    - **Storage account name**: *Um nome exclusivo para a conta de armazenamento*
+    - **Region**: *O mesmo local do projeto*
+    - **Primary service**: *Azure Blob Storage ou Azure Data Lake Storage*
     - **Performance**: *Standard*
     - **Redundancy**: *Locally-redundant storage (LRS)*
-1. Once created, go to the storage account you created and select **Upload** from the top bar.
-1. In the **Upload blob** blade, create a new container named `contosoproducts`.
-1. Browse for the files extracted from the zip file, select all 3 PDF files, and select **Upload**.
-1. Once your files are uploaded, navigate to the search service you created.
-1. On the left pane, under **Security + networking** > **Keys**, select **Both** for API Access control and confirm the selection. Once complete, leave the Azure Portal tab open and navigate back to the Foundry portal tab and refresh the page.
-1. Verify you are on the **Knowledge** page, select **Create a knowledge base**, choosing **Azure Blob Storage** as your knowledge source, then select **Connect**.
-1. Configure your knowledge source with the following settings:
+1. Depois de criada, acesse a conta de armazenamento criada e selecione **Upload** na barra superior.
+1. No painel **Upload blob**, crie um novo contêiner chamado `contosoproducts`.
+1. Procure os arquivos extraídos do arquivo zip, selecione os 3 arquivos PDF e selecione **Upload**.
+1. Depois que os arquivos forem carregados, navegue até o serviço de pesquisa criado.
+1. No painel esquerdo, em **Security + networking** > **Keys**, selecione **Both** para o controle de acesso à API e confirme a seleção. Quando terminar, deixe a guia do Portal do Azure aberta, volte para a guia do portal do Foundry e atualize a página.
+1. Verifique se você está na página **Knowledge**, selecione **Create a knowledge base**, escolhendo **Azure Blob Storage** como sua fonte de conhecimento, e selecione **Connect**.
+1. Configure sua fonte de conhecimento com as seguintes configurações:
     - **Name**: `ks-contosoproducts`
     - **Description**: `Contoso product catalog items`
-    - **Storage account name**: *Select your storage account*
+    - **Storage account name**: *Selecione sua conta de armazenamento*
     - **Container name**: `contosoproducts`
     - **Authentication type**: *API Key*
     - **Content extraction mode**: *minimal*
-    - **Embedding model**: *Select the available deployed model, likely text-embedding-3-small*
-    - **Chat completions model**: *Select the available deployed model, likely gpt-5*
-1. Select **Create**.
-1. On the knowledge base creation page, select the `gpt-5` model from the **Chat completions model** dropdown, leaving the rest of the field defaults as is.
-1. Select **Save knowledge base**, and then refresh your browser to verify the knowledge source status is *active*. If it isn't yet, wait a minute and refresh your page until it is.
-1. Select the back button to return to the **Knowledge** page, then select the **Manage** link next to the *Connection* drop-down.
-1. Scroll down to the **Connected resources**, where you should see your search service. Select that row, find the **Authentication** section.
-1. Select **Key authentication** and then select **Edit authentication**.
-1. Leaving the dialog open, return to the Azure portal tab which should still be on your search service **Keys** page. Copy one of those keys into the dialog in Foundry and select **Save**.
+    - **Embedding model**: *Selecione o modelo implantado disponível, provavelmente text-embedding-3-small*
+    - **Chat completions model**: *Selecione o modelo implantado disponível, provavelmente gpt-5*
+1. Selecione **Create**.
+1. Na página de criação da base de conhecimento, selecione o modelo `gpt-5` na lista suspensa **Chat completions model**, deixando os demais padrões dos campos como estão.
+1. Selecione **Save knowledge base** e atualize o navegador para verificar se o status da fonte de conhecimento está *active*. Se ainda não estiver, aguarde um minuto e atualize a página até que esteja.
+1. Selecione o botão Voltar para retornar à página **Knowledge** e, em seguida, selecione o link **Manage** ao lado da lista suspensa *Connection*.
+1. Role para baixo até **Connected resources**, onde você deverá ver o serviço de pesquisa. Selecione essa linha e localize a seção **Authentication**.
+1. Selecione **Key authentication** e, em seguida, selecione **Edit authentication**.
+1. Deixando a caixa de diálogo aberta, volte à guia do portal do Azure, que ainda deve estar na página **Keys** do serviço de pesquisa. Copie uma dessas chaves para a caixa de diálogo do Foundry e selecione **Save**.
 
-Your Foundry IQ settings should now be complete.
+As configurações do Foundry IQ agora devem estar concluídas.
 
-## Test the Agent in the playground
+## Testar o agente no playground
 
-Before connecting from code, test your agent in the portal playground.
+Antes de conectar pelo código, teste o agente no playground do portal.
 
-1. Navigate back to your agent on the **Build** > **Agents** page, and select the agent you created.
-2. In the agent page, you should see a playground tab selected. Find the knowledge section and add Foundry IQ, selecting the connection and knowledge base you created.
-1. Try the following test queries to verify the agent can retrieve information from the knowledge base:
-    - `What types of tents does Contoso offer?`
-    - `Tell me about which backpacks are available in XL.`
-    - `What camping accessories are available?`
+1. Volte ao seu agente na página **Build** > **Agents** e selecione o agente criado.
+2. Na página do agente, você deverá ver uma guia do playground selecionada. Localize a seção de conhecimento e adicione o Foundry IQ, selecionando a conexão e a base de conhecimento que você criou.
+1. Experimente as seguintes consultas de teste para verificar se o agente consegue recuperar informações da base de conhecimento:
+    - `Que tipos de barracas a Contoso oferece?`
+    - `Conte-me quais mochilas estão disponíveis no tamanho XL.`
+    - `Quais acessórios para acampamento estão disponíveis?`
 
-1. Review the responses and notice:
-    - The agent provides specific information from the knowledge base
-    - Citations or references to the source documents may be included
-    - The agent stays focused on product information
+1. Examine as respostas e observe:
+    - O agente fornece informações específicas da base de conhecimento
+    - Citações ou referências aos documentos de origem podem ser incluídas
+    - O agente permanece concentrado nas informações dos produtos
 
-1. You can also try interacting with your agent in the **Preview agent** for a more refined webapp experience.
+1. Você também pode tentar interagir com seu agente no **Preview agent** para obter uma experiência de aplicativo Web mais refinada.
 
-1. In the agent details page, locate and copy the following information to a notepad (you'll need these later):
-    - **Agent name**: This is the name you created (`product-expert-agent`)
-    - **Project endpoint**: Found in the project settings or home page
+1. Na página de detalhes do agente, localize e copie as seguintes informações para um bloco de notas (você precisará delas mais tarde):
+    - **Agent name**: Este é o nome que você criou (`product-expert-agent`)
+    - **Project endpoint**: Encontrado nas configurações do projeto ou na página inicial
 
-### Configure the agent to require approval for tool calls
+### Configurar o agente para exigir aprovação para chamadas de ferramentas
 
-When you create an agent in the portal, its Foundry IQ (knowledge) tool runs **without** asking for approval by default. To ensure your app can review and control each knowledge base lookup, you'll change the agent to require approval before it uses tools with the Foundry Toolkit for VS Code extension.
+Quando você cria um agente no portal, a ferramenta Foundry IQ (conhecimento) é executada **sem** solicitar aprovação por padrão. Para garantir que seu aplicativo possa revisar e controlar cada consulta à base de conhecimento, você alterará o agente para exigir aprovação antes de usar ferramentas com a extensão Foundry Toolkit for VS Code.
 
-> **Note**: The Foundry portal doesn't currently expose a setting to change this approval behavior, so you'll configure it from the Foundry Toolkit extension instead.
+> **Observação**: No momento, o portal do Foundry não expõe uma configuração para alterar esse comportamento de aprovação, portanto você o configurará na extensão Foundry Toolkit.
 
-1. In Visual Studio Code, select **Extensions** from the left pane (or press **Ctrl+Shift+X**), then search the marketplace for the `Foundry Toolkit for VS Code` extension from Microsoft and select **Install** (if it isn't already installed).
+1. No Visual Studio Code, selecione **Extensions** no painel esquerdo (ou pressione **Ctrl+Shift+X**), pesquise no marketplace a extensão `Foundry Toolkit for VS Code` da Microsoft e selecione **Install** (se ela ainda não estiver instalada).
 
-    > **Note**: The extension is currently listed as **Foundry Toolkit**, but some VS Code labels, commands, or older screenshots may still refer to **AI Toolkit**. In this lab, treat those names as referring to the same extension experience.
+    > **Observação**: A extensão está listada atualmente como **Foundry Toolkit**, mas alguns rótulos, comandos ou capturas de tela antigas do VS Code ainda podem fazer referência ao **AI Toolkit**. Neste laboratório, considere esses nomes como referentes à mesma experiência da extensão.
 
-1. Select the **Foundry Toolkit** icon in the sidebar, and sign in to your Azure account if you're prompted.
+1. Selecione o ícone **Foundry Toolkit** na barra lateral e entre na sua conta do Azure, se solicitado.
    
-    > **Note**: If you're unable to sign in with the Foundry Toolkit extension, you my need to select the Azure extension. Sign in there, then navigate back to the Foundry Toolkit to access your resources.
+    > **Observação**: Se não conseguir entrar com a extensão Foundry Toolkit, talvez seja necessário selecionar a extensão do Azure. Entre nela e, em seguida, volte ao Foundry Toolkit para acessar seus recursos.
 
-1. Under **Microsoft Foundry Resources**, choose **Set Default Project** and select the project you created earlier.
-1. Expand the project section. Under **Prompt Agents**, select your `product-expert-agent` agent to open the **Agent Builder** window.
-1. In the **Tools** section, you should already see a tool named with a `kb-knowledgebase` prefix followed by a unique ID (for example, `kb-knowledgebase677-7w5fj`). This is the Foundry IQ knowledge base tool, and it was added automatically when you connected Foundry IQ in the portal.
+1. Em **Microsoft Foundry Resources**, escolha **Set Default Project** e selecione o projeto criado anteriormente.
+1. Expanda a seção do projeto. Em **Prompt Agents**, selecione seu agente `product-expert-agent` para abrir a janela **Agent Builder**.
+1. Na seção **Tools**, você já deverá ver uma ferramenta com um nome que começa com o prefixo `kb-knowledgebase`, seguido por um ID exclusivo (por exemplo, `kb-knowledgebase677-7w5fj`). Essa é a ferramenta de base de conhecimento do Foundry IQ, adicionada automaticamente quando você conectou o Foundry IQ no portal.
 
-    > **Note**: The agent lists more than one tool. The Foundry portal adds a **Web search** tool to new agents by default, and you may also see a standalone **Azure AI Search** tool. The agent actually calls the `kb-knowledgebase...` tool when it searches your knowledge base, so setting approval on any other tool has no effect.
+    > **Observação**: O agente lista mais de uma ferramenta. O portal do Foundry adiciona uma ferramenta **Web search** aos novos agentes por padrão, e você também poderá ver uma ferramenta autônoma **Azure AI Search**. O agente, na verdade, chama a ferramenta `kb-knowledgebase...` quando pesquisa sua base de conhecimento; portanto, definir a aprovação em qualquer outra ferramenta não terá efeito.
 
-1. Select the ellipsis (**...**) icon on the `kb-knowledgebase...` tool, then select **Ask for approval for all tools**, and save your changes if you're prompted.
+1. Selecione o ícone de reticências (**...**) na ferramenta `kb-knowledgebase...`, selecione **Ask for approval for all tools** e salve as alterações, se for solicitado.
 
-Your agent will now request approval each time it uses Foundry IQ to search the knowledge base, which the client app you complete next will handle.
+Agora, seu agente solicitará aprovação sempre que usar o Foundry IQ para pesquisar a base de conhecimento; o aplicativo cliente que você concluirá a seguir cuidará disso.
 
-## Connect to your agent from an app
+## Conectar-se ao agente por meio de um aplicativo
 
-Now you'll create a Python application to interact with your agent programmatically. Starter files have been provided in the GitHub repository to help you get started quickly.
+Agora você criará um aplicativo Python para interagir programaticamente com seu agente. Arquivos iniciais foram fornecidos no repositório do GitHub para ajudar você a começar rapidamente.
 
-### Prepare to develop an app in Visual Studio Code
+### Preparar-se para desenvolver um aplicativo no Visual Studio Code
 
-Now let's use Visual Studio Code to develop an app. The code files for your app have been provided in a GitHub repo.
+Agora vamos usar o Visual Studio Code para desenvolver um aplicativo. Os arquivos de código do aplicativo foram fornecidos em um repositório do GitHub.
 
-1. Start Visual Studio Code, and open the command palette (Shift+Ctrl+P). Then search for and run the **Git: Clone** command to clone the `https://github.com/MicrosoftLearning/mslearn-ai-agents` repo to a local folder (it doesn't matter which folder).
-1. When the repository has been cloned, open the folder in Visual Studio Code.
+1. Inicie o Visual Studio Code e abra a paleta de comandos (Shift+Ctrl+P). Em seguida, pesquise e execute o comando **Git: Clone** para clonar o repositório `https://github.com/MicrosoftLearning/mslearn-ai-agents` em uma pasta local (não importa qual pasta).
+1. Quando o repositório tiver sido clonado, abra a pasta no Visual Studio Code.
 
-    > **Note**: If Visual Studio Code shows you a pop-up message prompting you to trust the code you are opening, click **Yes, I trust the authors** option to continue.
+    > **Observação**: Se o Visual Studio Code mostrar uma mensagem pop-up solicitando que você confie no código que está abrindo, clique na opção **Yes, I trust the authors** para continuar.
 
-1. Wait while additional files are installed to support the Python code projects in the repo (if prompted).
+1. Aguarde enquanto arquivos adicionais são instalados para dar suporte aos projetos de código Python no repositório (se solicitado).
 
-    > **Note**: If you are prompted to install required assets to build and debug, select **Not Now**.
+    > **Observação**: Se for solicitado que você instale os ativos necessários para compilar e depurar, selecione **Not Now**.
 
-1. In the **Explorer** pane, expand the **Labfiles/04-integrate-agent-with-foundry-iq/Python** folder.
+1. No painel **Explorer**, expanda a pasta **Labfiles/04-integrate-agent-with-foundry-iq/Python**.
 
-    The provided files include application code, configuration settings, and the agent client starter code.
+    Os arquivos fornecidos incluem o código do aplicativo, as configurações e o código inicial do cliente do agente.
 
-### Configure the application settings
+### Configurar as definições do aplicativo
 
-1. In Visual Studio Code, in the **Labfiles/04-integrate-agent-with-foundry-iq/Python** folder, open the **.env** configuration file.
-1. In the code file, replace the **your_project_endpoint** placeholder with the endpoint for your project (copied from the project **Home** page in the Foundry portal) and ensure that the AGENT_NAME variable is set to your agent name (which should be *product-expert-agent*).
-1. After you've replaced the placeholder, save the file.
+1. No Visual Studio Code, na pasta **Labfiles/04-integrate-agent-with-foundry-iq/Python**, abra o arquivo de configuração **.env**.
+1. No arquivo de código, substitua o espaço reservado **your_project_endpoint** pelo endpoint do projeto (copiado da página **Home** do projeto no portal do Foundry) e verifique se a variável AGENT_NAME está definida como o nome do agente (que deve ser *product-expert-agent*).
+1. Depois de substituir o espaço reservado, salve o arquivo.
 
-### Complete the agent client code
+### Concluir o código do cliente do agente
 
-> **Tip**: As you add code, be sure to maintain the correct indentation. Use the comment indentation levels as a guide.
+> **Dica**: Ao adicionar o código, mantenha o recuo correto. Use os níveis de recuo dos comentários como guia.
 
-1. In Visual Studio Code, in the **Labfiles/04-integrate-agent-with-foundry-iq/Python** folder, open the **agent_client.py** code file.
-1. Review the starter code that has been provided, including:
-    - Import statements and configuration loading
-    - The `send_message_to_agent()` function structure
-    - The `display_conversation_history()` function
-    - The main program loop
+1. No Visual Studio Code, na pasta **Labfiles/04-integrate-agent-with-foundry-iq/Python**, abra o arquivo de código **agent_client.py**.
+1. Examine o código inicial fornecido, incluindo:
+    - Instruções de importação e carregamento da configuração
+    - A estrutura da função `send_message_to_agent()`
+    - A função `display_conversation_history()`
+    - O loop principal do programa
 
-1. Find the first **TODO** comment and add the following code to connect to the project, get the OpenAI client, retrieve the agent, and create a new conversation:
+1. Localize o primeiro comentário **TODO** e adicione o código a seguir para conectar-se ao projeto, obter o cliente OpenAI, recuperar o agente e criar uma nova conversa:
 
-    > **Tip**: Be careful to maintain the correct indentation level.
+    > **Dica**: Tenha cuidado para manter o nível correto de recuo.
 
     ```python
-   # Connect to the project and agent
+   # Conectar-se ao projeto e ao agente
    credential = DefaultAzureCredential(
        exclude_environment_credential=True,
        exclude_managed_identity_credential=True
@@ -221,41 +221,41 @@ Now let's use Visual Studio Code to develop an app. The code files for your app 
        endpoint=project_endpoint
    )
 
-   # Get the OpenAI client
+   # Obter o cliente OpenAI
    openai_client = project_client.get_openai_client()
 
-   # Get the agent
+   # Obter o agente
    agent = project_client.agents.get(agent_name=agent_name)
-   print(f"Connected to agent: {agent.name} (id: {agent.id})\n")
+   print(f"Conectado ao agente: {agent.name} (id: {agent.id})\n")
 
-   # Create a new conversation
+   # Criar uma nova conversa
    conversation = openai_client.conversations.create(items=[])
-   print(f"Created conversation (id: {conversation.id})\n")
+   print(f"Conversa criada (id: {conversation.id})\n")
     ```
 
-1. Find the second **TODO** comment inside the `send_message_to_agent()` function and add the following code to send messages and handle responses, including MCP approval requests:
+1. Localize o segundo comentário **TODO** dentro da função `send_message_to_agent()` e adicione o código a seguir para enviar mensagens e tratar respostas, incluindo solicitações de aprovação do MCP:
 
     ```python
-   # Add user message to the conversation
+   # Adicionar a mensagem do usuário à conversa
    openai_client.conversations.items.create(
        conversation_id=conversation.id,
        items=[{"type": "message", "role": "user", "content": user_message}],
    )
 
-   # Store in conversation history (client-side)
+   # Armazenar no histórico da conversa (lado do cliente)
    conversation_history.append({
        "role": "user",
        "content": user_message
    })
 
-   # Create a response using the agent
+   # Criar uma resposta usando o agente
    response = openai_client.responses.create(
        conversation=conversation.id,
        extra_body={"agent_reference": {"name": agent.name, "type": "agent_reference"}},
        input=""
    )
 
-   # Loop until a response has no pending approval requests (zero, one, or many)
+   # Repetir até que uma resposta não tenha solicitações de aprovação pendentes (zero, uma ou várias)
    while True:
        approval_requests = [
            item for item in (getattr(response, "output", None) or [])
@@ -267,20 +267,20 @@ Now let's use Visual Studio Code to develop an app. The code files for your app 
 
        approval_items = []
        for approval_request in approval_requests:
-           print(f"[Approval required for: {approval_request.name}]\n")
-           print(f"Server: {approval_request.server_label}")
+           print(f"[Aprovação necessária para: {approval_request.name}]\n")
+           print(f"Servidor: {approval_request.server_label}")
 
-           # Show the tool call arguments for transparency
+           # Mostrar os argumentos da chamada da ferramenta para fins de transparência
            import json
            try:
                args = json.loads(approval_request.arguments)
-               print(f"Arguments: {json.dumps(args, indent=2)}\n")
+               print(f"Argumentos: {json.dumps(args, indent=2)}\n")
            except Exception:
-               print(f"Arguments: {approval_request.arguments}\n")
+               print(f"Argumentos: {approval_request.arguments}\n")
 
-           approval_input = input("Approve this action? (yes/no): ").strip().lower()
+           approval_input = input("Aprovar esta ação? (yes/no): ").strip().lower()
            approved = approval_input in ['yes', 'y']
-           print("Approving action...\n" if approved else "Action denied.\n")
+           print("Aprovando ação...\n" if approved else "Ação negada.\n")
 
            approval_items.append({
                "type": "mcp_approval_response",
@@ -288,7 +288,7 @@ Now let's use Visual Studio Code to develop an app. The code files for your app 
                "approve": approved
            })
 
-       # Send the approval decisions and fetch the next response
+       # Enviar as decisões de aprovação e obter a próxima resposta
        openai_client.conversations.items.create(
            conversation_id=conversation.id,
            items=approval_items
@@ -302,25 +302,25 @@ Now let's use Visual Studio Code to develop an app. The code files for your app 
 
     ```
 
-    > **Note**: The agent doesn't always request approval, and it can occasionally request approval for more than one tool call in the same turn. Looping until `approval_requests` is empty handles both cases correctly.
+    > **Observação**: O agente nem sempre solicita aprovação e, ocasionalmente, pode solicitar aprovação para mais de uma chamada de ferramenta no mesmo turno. Repetir o loop até que `approval_requests` esteja vazio trata ambos os casos corretamente.
 
-1. After you've added the code, save the file.
+1. Depois de adicionar o código, salve o arquivo.
 
-1. Review the code now uses the conversations API to manage interactions with your agent, where:
-    - A conversation is created and tracked by its ID
-    - User messages are added to the conversation using `conversations.items.create()`
-    - Responses are generated using `responses.create()` with an agent reference
-    - **MCP approval handling**: When the agent needs to access Foundry IQ, it requests approval by returning one or more `mcp_approval_request` items in the response output
-    - The code loops, prompting you to approve or deny each pending request, until the agent returns a response with no outstanding approval requests (including the case where no approval was ever needed)
-    - After each approval/denial, an `mcp_approval_response` is added to the conversation and a new response is generated
-    - The agent retrieves information from Foundry IQ based on your approval decision
+1. Examine o código, que agora usa a API de conversas para gerenciar as interações com o agente, da seguinte forma:
+    - Uma conversa é criada e rastreada pelo ID
+    - As mensagens do usuário são adicionadas à conversa usando `conversations.items.create()`
+    - As respostas são geradas usando `responses.create()` com uma referência ao agente
+    - **Tratamento de aprovação do MCP**: Quando o agente precisa acessar o Foundry IQ, ele solicita aprovação retornando um ou mais itens `mcp_approval_request` na saída da resposta
+    - O código repete o processo, solicitando que você aprove ou negue cada solicitação pendente, até que o agente retorne uma resposta sem solicitações de aprovação pendentes (inclusive quando nenhuma aprovação foi necessária)
+    - Após cada aprovação ou negação, um `mcp_approval_response` é adicionado à conversa e uma nova resposta é gerada
+    - O agente recupera informações do Foundry IQ com base na sua decisão de aprovação
 
-## Test the Integration
+## Testar a integração
 
-Now you'll run your application and test the agent's ability to retrieve information from the knowledge base.
+Agora você executará o aplicativo e testará a capacidade do agente de recuperar informações da base de conhecimento.
 
-1. In Visual Studio Code, open an integrated terminal for the **Labfiles/04-integrate-agent-with-foundry-iq/Python** folder by right-clicking the folder and selecting **Open in Integrated Terminal**.
-1. First, create a virtual environment and install dependencies.
+1. No Visual Studio Code, abra um terminal integrado para a pasta **Labfiles/04-integrate-agent-with-foundry-iq/Python** clicando com o botão direito do mouse na pasta e selecionando **Open in Integrated Terminal**.
+1. Primeiro, crie um ambiente virtual e instale as dependências.
 
     ```
    python -m venv labenv
@@ -328,97 +328,97 @@ Now you'll run your application and test the agent's ability to retrieve informa
    pip install -r requirements.txt
     ```
 
-1. In the terminal pane, enter the following command to sign into Azure.
+1. No painel do terminal, insira o comando a seguir para entrar no Azure.
 
     ```
    az login
     ```
 
-    > **Note**: In most scenarios, just using *az login* will be sufficient. However, if you have subscriptions in multiple tenants, you may need to specify the tenant by using the *--tenant* parameter. See [Sign into Azure interactively using the Azure CLI](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) for details.
+    > **Observação**: Na maioria dos cenários, usar apenas *az login* será suficiente. No entanto, se você tiver assinaturas em vários locatários, talvez seja necessário especificar o locatário usando o parâmetro *--tenant*. Consulte [Entrar no Azure interativamente usando a CLI do Azure](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively) para obter detalhes.
 
-1. When prompted, follow the instructions to open the sign-in page in a new tab and enter the authentication code provided and your Azure credentials. Then complete the sign in process in the command line, selecting the subscription containing your Foundry resource if prompted.
+1. Quando solicitado, siga as instruções para abrir a página de entrada em uma nova guia e insira o código de autenticação fornecido e suas credenciais do Azure. Em seguida, conclua o processo de entrada na linha de comando, selecionando a assinatura que contém o recurso do Foundry, se solicitado.
 
-1. In the terminal pane, run your application:
+1. No painel do terminal, execute o aplicativo:
 
     ```
    python agent_client.py
     ```
 
-1. When the application starts, test the agent with the following queries:
+1. Quando o aplicativo for iniciado, teste o agente com as seguintes consultas:
 
-    **Query 1 - Product Categories:**
-
-    ```
-   What types of outdoor products does Contoso offer?
-    ```
-
-    When prompted for approval, type **yes** to allow the agent to search the knowledge base. Observe how the agent retrieves information from multiple documents in the knowledge base.
-
-    **Query 2 - Specific Product Details:**
+    **Consulta 1 — Categorias de produtos:**
 
     ```
-   Tell me about the weatherproof features of your tents.
+   Que tipos de produtos para atividades ao ar livre a Contoso oferece?
     ```
 
-    Approve the request and notice how the agent provides specific details from the tents catalog.
+    Quando for solicitada aprovação, digite **yes** para permitir que o agente pesquise a base de conhecimento. Observe como o agente recupera informações de vários documentos da base de conhecimento.
 
-    **Query 3 - Product Comparisons:**
-
-    ```
-   What's the difference between your daypacks and expedition backpacks?
-    ```
-
-    Approve the request and see how the agent can synthesize information from the backpacks guide.
-
-    **Query 4 - Accessories and Add-ons:**
+    **Consulta 2 — Detalhes de produtos específicos:**
 
     ```
-   What camping accessories would you recommend for a weekend hiking trip?
+   Conte-me sobre os recursos de resistência às intempéries das suas barracas.
     ```
 
-    Approve the request and observe the agent's ability to provide recommendations based on the knowledge base.
+    Aprove a solicitação e observe como o agente fornece detalhes específicos do catálogo de barracas.
 
-    **Query 5 - Follow-up Question:**
+    **Consulta 3 — Comparações de produtos:**
 
     ```
-   How much do those items typically cost?
+   Qual é a diferença entre suas mochilas de uso diário e suas mochilas para expedição?
     ```
 
-    Notice how the agent maintains conversation context from your previous query.
+    Aprove a solicitação e veja como o agente consegue sintetizar informações do guia de mochilas.
 
-1. Type `history` to view the complete conversation history.
+    **Consulta 4 — Acessórios e complementos:**
 
-1. Type `quit` when you're done testing.
+    ```
+   Quais acessórios para acampamento você recomendaria para uma viagem de fim de semana com trilhas?
+    ```
 
-### Review the results
+    Aprove a solicitação e observe a capacidade do agente de fornecer recomendações com base na base de conhecimento.
 
-Consider the following aspects of the agent's responses:
+    **Consulta 5 — Pergunta de acompanhamento:**
 
-- **MCP Approval Flow**: Each time the agent needs to access the knowledge base, it requests approval, giving you control over external tool usage
-- **Accuracy**: The agent provides information directly from the knowledge base documents
-- **Citations**: The agent may include source references or document IDs
-- **Context awareness**: The agent remembers previous messages in the conversation
-- **Grounding**: The agent indicates when it cannot find relevant information in the knowledge base
-- **Error handling**: The application gracefully handles errors and connection issues
+    ```
+   Quanto esses itens costumam custar?
+    ```
 
-## Summary
+    Observe como o agente mantém o contexto da conversa a partir da consulta anterior.
 
-In this exercise, you:
+1. Digite `history` para visualizar o histórico completo da conversa.
 
-- Created a Foundry project and agent with the new Foundry UI
-- Built a knowledge base with product information documents
-- Configured an agent in the portal with Foundry IQ enabled
-- Connected to your agent from Visual Studio Code using the Python SDK
-- Implemented a client application with MCP approval handling, conversation history, and error handling
-- Tested the agent's ability to retrieve and synthesize information from the knowledge base with user-controlled approval for external tool access
+1. Digite `quit` quando terminar os testes.
 
-This demonstrates how to integrate AI agents with Foundry IQ to create intelligent applications that can search and retrieve information from enterprise knowledge bases while maintaining conversational context.
+### Examinar os resultados
 
-## Clean up
+Considere os seguintes aspectos das respostas do agente:
 
-If you've finished exploring Azure AI Agent Service and Foundry IQ, you should delete the resources you have created in this exercise to avoid incurring unnecessary Azure costs.
+- **Fluxo de aprovação do MCP**: Cada vez que o agente precisa acessar a base de conhecimento, ele solicita aprovação, dando a você controle sobre o uso de ferramentas externas
+- **Precisão**: O agente fornece informações diretamente dos documentos da base de conhecimento
+- **Citações**: O agente pode incluir referências de origem ou IDs de documentos
+- **Consciência do contexto**: O agente se lembra das mensagens anteriores da conversa
+- **Fundamentação**: O agente indica quando não consegue encontrar informações relevantes na base de conhecimento
+- **Tratamento de erros**: O aplicativo trata corretamente erros e problemas de conexão
 
-1. In a web browser, open the [Azure portal](https://portal.azure.com) at `https://portal.azure.com`.
-1. Navigate to the resource group containing your Foundry resource and AI Search resources.
-1. On the toolbar, select **Delete resource group**.
-1. Enter the resource group name and confirm that you want to delete it.
+## Resumo
+
+Neste exercício, você:
+
+- Criou um projeto e um agente do Foundry com a nova interface do usuário do Foundry
+- Criou uma base de conhecimento com documentos de informações de produtos
+- Configurou um agente no portal com o Foundry IQ habilitado
+- Conectou-se ao agente pelo Visual Studio Code usando o SDK do Python
+- Implementou um aplicativo cliente com tratamento de aprovação do MCP, histórico de conversas e tratamento de erros
+- Testou a capacidade do agente de recuperar e sintetizar informações da base de conhecimento com aprovação controlada pelo usuário para acesso a ferramentas externas
+
+Isso demonstra como integrar agentes de IA ao Foundry IQ para criar aplicativos inteligentes capazes de pesquisar e recuperar informações de bases de conhecimento empresariais, mantendo o contexto da conversa.
+
+## Limpar
+
+Se você terminou de explorar o Azure AI Agent Service e o Foundry IQ, exclua os recursos criados neste exercício para evitar custos desnecessários do Azure.
+
+1. Em um navegador da Web, abra o [portal do Azure](https://portal.azure.com) em `https://portal.azure.com`.
+1. Navegue até o grupo de recursos que contém os recursos do Foundry e do AI Search.
+1. Na barra de ferramentas, selecione **Delete resource group**.
+1. Insira o nome do grupo de recursos e confirme que deseja excluí-lo.

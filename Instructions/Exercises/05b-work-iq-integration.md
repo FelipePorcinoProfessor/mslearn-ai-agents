@@ -1,104 +1,104 @@
 ---
 lab:
-    title: 'Work IQ - Workplace intelligence for AI agents (optional)'
-    description: 'Build AI agents that access Microsoft 365 workplace data using Work IQ and the Model Context Protocol for meeting prep, project tracking, and action items.'
+    title: 'Work IQ - Inteligência do ambiente de trabalho para agentes de IA (opcional)'
+    description: 'Crie agentes de IA que acessem dados do ambiente de trabalho do Microsoft 365 usando o Work IQ e o Model Context Protocol para preparação de reuniões, acompanhamento de projetos e itens de ação.'
     level: 300
     duration: 40
     islab: true
     status: 'released'
 ---
 
-# Work IQ - Workplace intelligence for AI agents
+# Work IQ - Inteligência do ambiente de trabalho para agentes de IA
 
-In this lab, you'll build an AI agent that accesses your Microsoft 365 workplace data using **Work IQ** - Microsoft's contextual intelligence layer built on the Model Context Protocol (MCP). You'll create a workplace intelligence agent that can prepare for meetings, track projects, extract action items, and answer workplace questions using real M365 data.
+Neste laboratório, você criará um agente de IA que acessa os dados do seu ambiente de trabalho do Microsoft 365 usando o **Work IQ** — a camada de inteligência contextual da Microsoft criada com base no Model Context Protocol (MCP). Você criará um agente de inteligência do ambiente de trabalho capaz de preparar reuniões, acompanhar projetos, extrair itens de ação e responder a perguntas sobre o ambiente de trabalho usando dados reais do M365.
 
-This lab takes approximately **40** minutes.
+Este laboratório leva aproximadamente **40** minutos.
 
-> **Note:** This is an **optional/advanced lab** that requires a Microsoft 365 Copilot license. It's designed for enterprise learners, Microsoft employees, or those with M365 Copilot access. Standard M365 accounts without Copilot will not work.
+> **Observação:** Este é um **laboratório opcional/avançado** que requer uma licença do Microsoft 365 Copilot. Ele foi projetado para alunos corporativos, funcionários da Microsoft ou pessoas com acesso ao M365 Copilot. Contas padrão do M365 sem Copilot não funcionarão.
 
-## Prerequisites
+## Pré-requisitos
 
-Before starting this lab, ensure you have:
+Antes de iniciar este laboratório, verifique se você tem:
 
-- Basic understanding of AI agents and the Model Context Protocol (MCP)
-- **Microsoft 365 with Copilot License**
-- IT admin approval for Work IQ (organizational accounts only)
-- [Node.js 18](https://nodejs.org/en/download/) or later installed
-- [Python 3.13](https://www.python.org/downloads/) installed
-- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) installed (authenticated with `az login`)
-- Active M365 data (emails, meetings, Teams chats) to query
+- Conhecimento básico sobre agentes de IA e o Model Context Protocol (MCP)
+- **Microsoft 365 com licença do Copilot**
+- Aprovação do administrador de TI para o Work IQ (somente contas organizacionais)
+- [Node.js 18](https://nodejs.org/en/download/) ou posterior instalado
+- [Python 3.13](https://www.python.org/downloads/) instalado
+- [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) instalado (autenticado com `az login`)
+- Dados ativos do M365 (emails, reuniões, chats do Teams) para consultar
 
-> \* Python 3.14 isn't supported yet: some dependencies have no 3.14 build. This lab was tested with Python 3.13.12.
+> \* O Python 3.14 ainda não é compatível: algumas dependências não têm uma compilação para a versão 3.14. Este laboratório foi testado com o Python 3.13.12.
 
-> **Important:** Work IQ **only works** with Microsoft 365 Copilot-enabled accounts. You cannot complete this lab without Copilot.
+> **Importante:** O Work IQ **funciona somente** com contas habilitadas para o Microsoft 365 Copilot. Não é possível concluir este laboratório sem o Copilot.
 
-## Install Work IQ
+## Instalar o Work IQ
 
-1. Open your terminal or command prompt.
+1. Abra o terminal ou o prompt de comando.
 
-2. Install Work IQ globally via npm:
+2. Instale o Work IQ globalmente via npm:
 
     ```bash
    npm install -g @microsoft/workiq
     ```
 
-3. Accept the End User License Agreement:
+3. Aceite o Contrato de Licença de Usuário Final:
 
     ```bash
    workiq accept-eula
     ```
 
-4. Test your Work IQ installation:
+4. Teste a instalação do Work IQ:
 
     ```bash
-   workiq ask -q "What meetings do I have today?"
+   workiq ask -q "Quais reuniões tenho hoje?"
     ```
 
-5. **If the test succeeds** - You'll see meeting information from your M365 calendar. Continue to the next task!
+5. **Se o teste for bem-sucedido** — você verá informações de reuniões do seu calendário do M365. Prossiga para a próxima tarefa!
 
-6. **If you see "Admin consent required":**
+6. **Se aparecer a mensagem "Admin consent required":**
 
-   - The command will display a consent URL
-   - Send this URL to your IT administrator with the message: "I need Work IQ access for the Microsoft Learn AI Agents lab"
-   - Wait for admin approval, then retry the test command
+   - O comando exibirá uma URL de consentimento
+   - Envie essa URL ao administrador de TI com a mensagem: "Preciso de acesso ao Work IQ para o laboratório AI Agents do Microsoft Learn"
+   - Aguarde a aprovação do administrador e tente o comando de teste novamente
 
-7. **If you see "No M365 Copilot license":**
+7. **Se aparecer a mensagem "No M365 Copilot license":**
 
-   - Unfortunately, you cannot complete this lab without a Copilot license
-   - You can still read through the instructions to understand the concepts
-   - Consider this lab optional and return to it when you have Copilot access
+   - Infelizmente, não é possível concluir este laboratório sem uma licença do Copilot
+   - Você ainda pode ler as instruções para entender os conceitos
+   - Considere este laboratório opcional e retorne a ele quando tiver acesso ao Copilot
 
-## Prepare to develop an app in Visual Studio Code
+## Preparar-se para desenvolver um aplicativo no Visual Studio Code
 
-Now let's use Visual Studio Code to develop an app. The code files for your app have been provided in a GitHub repo.
+Agora vamos usar o Visual Studio Code para desenvolver um aplicativo. Os arquivos de código do seu aplicativo foram fornecidos em um repositório do GitHub.
 
-1. Start Visual Studio Code, and open a terminal window.
+1. Inicie o Visual Studio Code e abra uma janela do terminal.
 
-2. Enter the command to clone the repo to a local folder (it doesn't matter which folder):
+2. Digite o comando para clonar o repositório em uma pasta local (não importa qual pasta):
 
     ```bash
    git clone https://github.com/MicrosoftLearning/mslearn-ai-agents.git
     ```
 
-3. When the repository has been cloned, open the folder in Visual Studio Code.
+3. Quando o repositório tiver sido clonado, abra a pasta no Visual Studio Code.
 
-    > **Note**: If Visual Studio Code shows you a pop-up message prompting you to trust the code you are opening, select **Yes, I trust the authors** to continue.
+    > **Observação**: Se o Visual Studio Code mostrar uma mensagem pop-up solicitando que você confie no código que está abrindo, selecione **Yes, I trust the authors** para continuar.
 
-4. Wait while additional files are installed to support the Python code projects in the repo (if prompted).
+4. Aguarde enquanto arquivos adicionais são instalados para dar suporte aos projetos de código Python no repositório (se solicitado).
 
-    > **Note**: If you are prompted to install required assets to build and debug, select **Not Now**.
+    > **Observação**: Se for solicitado que você instale os ativos necessários para compilar e depurar, selecione **Not Now**.
 
-5. In the **Explorer** pane, expand the **Labfiles/05b-work-iq-integration/Python** folder.
+5. No painel **Explorer**, expanda a pasta **Labfiles/05b-work-iq-integration/Python**.
 
-    The provided files include application code, configuration settings, and the agent client starter code.
+    Os arquivos fornecidos incluem o código do aplicativo, as configurações e o código inicial do cliente do agente.
 
-6. In the terminal, enter the command to create a Python virtual environment:
+6. No terminal, digite o comando para criar um ambiente virtual do Python:
 
     ```bash
    python -m venv venv
     ```
 
-7. Activate the virtual environment:
+7. Ative o ambiente virtual:
 
    **Windows:**
 
@@ -112,246 +112,246 @@ Now let's use Visual Studio Code to develop an app. The code files for your app 
    source venv/bin/activate
     ```
 
-8. Install required Python packages:
+8. Instale os pacotes Python necessários:
 
     ```bash
    pip install -r requirements.txt
     ```
 
-9. Configure your `.env` file:
+9. Configure o arquivo `.env`:
 
-   In the lab folder, open the `.env` file and update it with your Foundry project endpoint:
+   Na pasta do laboratório, abra o arquivo `.env` e atualize-o com o endpoint do seu projeto do Foundry:
 
     ```env
    PROJECT_ENDPOINT=https://your-project.services.ai.azure.com/api/projects/your-id
    MODEL_DEPLOYMENT_NAME=gpt-5
     ```
 
-   > **Tip:** To get your endpoint: In VS Code, open the **Foundry Toolkit** extension, right-click on your active project, and select **Copy Endpoint**. The Foundry Toolkit is included in the Foundry Toolkit for VS Code extension.
+   > **Dica:** Para obter seu endpoint: no VS Code, abra a extensão **Foundry Toolkit**, clique com o botão direito do mouse no projeto ativo e selecione **Copy Endpoint**. O Foundry Toolkit está incluído na extensão Foundry Toolkit for VS Code.
 
-### Verify setup
+### Verificar a configuração
 
-Ensure you have:
+Verifique se você tem:
 
-- Work IQ installed and accessible (`workiq --version` works)
-- Admin consent approved (or personal M365 account with Copilot)
-- `workiq_lab.py` - Main interactive application
-- `requirements.txt` - Python dependencies installed
-- `.env` file configured with your project endpoint
+- Work IQ instalado e acessível (`workiq --version` funciona)
+- Consentimento do administrador aprovado (ou uma conta pessoal do M365 com Copilot)
+- `workiq_lab.py` — aplicativo interativo principal
+- `requirements.txt` — dependências do Python instaladas
+- Arquivo `.env` configurado com o endpoint do seu projeto
 
-## Explore Workplace Intelligence Scenarios
+## Explorar cenários de inteligência do ambiente de trabalho
 
-In this exercise, you'll run a unified interactive application that demonstrates five workplace intelligence scenarios using a single AI agent with Work IQ tools.
+Neste exercício, você executará um aplicativo interativo unificado que demonstra cinco cenários de inteligência do ambiente de trabalho usando um único agente de IA com ferramentas do Work IQ.
 
-### Launch the lab application
+### Iniciar o aplicativo do laboratório
 
-1. Ensure you're in the lab directory with your virtual environment activated.
+1. Verifique se você está no diretório do laboratório com o ambiente virtual ativado.
 
-2. Run the lab application:
+2. Execute o aplicativo do laboratório:
 
     ```bash
    python workiq_lab.py
     ```
 
-3. The application will:
-   - Validate Work IQ setup
-   - Connect to your Microsoft Foundry project
-   - Initialize the Work IQ MCP client
-   - Create a workplace intelligence agent
-   - Display an interactive menu with 5 scenarios
+3. O aplicativo irá:
+   - Validar a configuração do Work IQ
+   - Conectar-se ao seu projeto do Microsoft Foundry
+   - Inicializar o cliente MCP do Work IQ
+   - Criar um agente de inteligência do ambiente de trabalho
+   - Exibir um menu interativo com cinco cenários
 
-### Meeting Prep scenario
+### Cenário de preparação para reuniões
 
-This scenario helps you prepare for meetings by gathering relevant context.
+Este cenário ajuda você a se preparar para reuniões reunindo o contexto relevante.
 
-1. From the main menu, select **1 - Meeting Prep**.
+1. No menu principal, selecione **1 - Meeting Prep (Preparação para reuniões)**.
 
-2. When prompted, enter a meeting topic or time, such as:
-   - "my 2pm meeting"
-   - "Q4 Planning session"
-   - "team standup"
+2. Quando solicitado, insira um tópico ou horário de reunião, por exemplo:
+   - "minha reunião das 14h"
+   - "sessão de planejamento do Q4"
+   - "reunião diária da equipe"
 
-3. The agent will:
-   - Find your meeting details (time, attendees, agenda)
-   - Search recent emails about the topic
-   - Look for previous meetings on this subject
-   - Summarize key points and decisions
-   - Suggest discussion points
+3. O agente irá:
+   - Encontrar os detalhes da sua reunião (horário, participantes, agenda)
+   - Pesquisar emails recentes sobre o tópico
+   - Procurar reuniões anteriores sobre esse assunto
+   - Resumir os pontos e as decisões principais
+   - Sugerir pontos para discussão
 
-4. Review the output and note:
-   - How sources are cited (emails, meetings, dates)
-   - How the agent synthesizes information from multiple sources
-   - The time saved compared to manual searching
+4. Revise a saída e observe:
+   - Como as fontes são citadas (emails, reuniões, datas)
+   - Como o agente sintetiza informações de várias fontes
+   - O tempo economizado em comparação com uma pesquisa manual
 
-**Reflection:** How does this differ from manually searching your email and calendar?
+**Reflexão:** Qual é a diferença em relação a pesquisar manualmente seu email e calendário?
 
-### Project Status scenario
+### Cenário de status do projeto
 
-This scenario tracks project updates across your workplace tools.
+Este cenário acompanha as atualizações do projeto em suas ferramentas de trabalho.
 
-1. From the main menu, select **2 - Project Status**.
+1. No menu principal, selecione **2 - Project Status (Status do projeto)**.
 
-2. Enter a project name you're working on, such as:
-   - "Website redesign"
-   - "Q1 OKRs"
-   - "Customer onboarding"
+2. Insira o nome de um projeto em que você está trabalhando, por exemplo:
+   - "Reformulação do site"
+   - "OKRs do Q1"
+   - "Integração de clientes"
 
-3. The agent will:
-   - Search emails and Teams messages about the project
-   - Find related meetings and their outcomes
-   - Identify recent decisions and changes
-   - List blockers or issues mentioned
-   - Summarize next steps and deadlines
+3. O agente irá:
+   - Pesquisar emails e mensagens do Teams sobre o projeto
+   - Encontrar reuniões relacionadas e seus resultados
+   - Identificar decisões e alterações recentes
+   - Listar bloqueios ou problemas mencionados
+   - Resumir as próximas etapas e os prazos
 
-4. Analyze the results:
-   - How comprehensive is the status update?
-   - What sources did the agent use?
-   - Could this be built with traditional APIs? What's the development effort difference?
+4. Analise os resultados:
+   - Quão abrangente é a atualização de status?
+   - Quais fontes o agente usou?
+   - Isso poderia ser criado com APIs tradicionais? Qual é a diferença no esforço de desenvolvimento?
 
-### Action Items scenario
+### Cenário de itens de ação
 
-This scenario extracts your open tasks from various sources.
+Este cenário extrai suas tarefas em aberto de várias fontes.
 
-1. From the main menu, select **3 - Action Items**.
+1. No menu principal, selecione **3 - Action Items (Itens de ação)**.
 
-2. Choose a time range (or press Enter for "this week"):
-   - "today"
-   - "last 3 days"
-   - "this month"
+2. Escolha um intervalo de tempo (ou pressione Enter para usar "esta semana"):
+   - "hoje"
+   - "últimos 3 dias"
+   - "este mês"
 
-3. The agent will:
-   - Search meeting notes for assigned action items
-   - Look for task-related emails sent to you
-   - Check Teams messages where you were mentioned
-   - Identify items with deadlines
-   - Prioritize by urgency if possible
+3. O agente irá:
+   - Pesquisar notas de reuniões em busca de itens de ação atribuídos
+   - Procurar emails relacionados a tarefas enviados a você
+   - Verificar mensagens do Teams nas quais você foi mencionado
+   - Identificar itens com prazos
+   - Priorizar por urgência, se possível
 
-4. Examine the output:
-   - Are all your action items captured?
-   - How accurate is the prioritization?
-   - Where were action items found (meetings, emails, Teams)?
+4. Examine a saída:
+   - Todos os seus itens de ação foram capturados?
+   - Quão precisa é a priorização?
+   - Onde os itens de ação foram encontrados (reuniões, emails, Teams)?
 
-### Combined Intelligence scenario
+### Cenário de inteligência combinada
 
-This scenario demonstrates using **both** Work IQ (workplace data) and Foundry IQ (knowledge base) together.
+Este cenário demonstra o uso conjunto do **Work IQ** (dados do ambiente de trabalho) e do **Foundry IQ** (base de conhecimento).
 
-> **Note:** This scenario requires Azure AI Search configured in your Foundry project with an indexed knowledge base.
+> **Observação:** Este cenário requer o Azure AI Search configurado no seu projeto do Foundry com uma base de conhecimento indexada.
 
-1. From the main menu, select **4 - Combined Intelligence**.
+1. No menu principal, selecione **4 - Combined Intelligence (Inteligência combinada)**.
 
-2. Enter a topic that exists in both your workplace discussions and official documentation:
-   - "remote work policy"
-   - "expense reporting"
-   - "security guidelines"
+2. Insira um tópico que exista tanto nas discussões do seu ambiente de trabalho quanto na documentação oficial:
+   - "política de trabalho remoto"
+   - "relatórios de despesas"
+   - "diretrizes de segurança"
 
-3. The agent will:
-   - Search workplace data (Work IQ): emails, meetings, Teams discussions
-   - Search knowledge base (Foundry IQ): official docs, policies, procedures
-   - Compare workplace discussions with official documentation
-   - Identify gaps or inconsistencies
-   - Provide a comprehensive summary with labeled sources
+3. O agente irá:
+   - Pesquisar dados do ambiente de trabalho (Work IQ): emails, reuniões, discussões do Teams
+   - Pesquisar a base de conhecimento (Foundry IQ): documentos oficiais, políticas, procedimentos
+   - Comparar as discussões do ambiente de trabalho com a documentação oficial
+   - Identificar lacunas ou inconsistências
+   - Fornecer um resumo abrangente com fontes identificadas
 
-4. Compare the two perspectives:
-   - What's documented officially vs. discussed informally?
-   - Are there any contradictions?
-   - Which source is more up-to-date?
+4. Compare as duas perspectivas:
+   - O que está documentado oficialmente em comparação com o que é discutido informalmente?
+   - Existem contradições?
+   - Qual fonte está mais atualizada?
 
-**Key Insight:**
+**Insight principal:**
 
-- **Work IQ** tells you what people are actually doing and saying
-- **Foundry IQ** tells you what's officially documented
-- **Together** they provide complete context for decision-making
+- O **Work IQ** informa o que as pessoas realmente estão fazendo e dizendo
+- O **Foundry IQ** informa o que está documentado oficialmente
+- **Juntos**, eles fornecem o contexto completo para a tomada de decisões
 
-### Custom Query scenario
+### Cenário de consulta personalizada
 
-This scenario lets you explore your workplace data with your own questions.
+Este cenário permite explorar seus dados do ambiente de trabalho com suas próprias perguntas.
 
-1. From the main menu, select **5 - Custom Query**.
+1. No menu principal, selecione **5 - Custom Query (Consulta personalizada)**.
 
-2. Try different types of workplace questions:
+2. Experimente diferentes tipos de perguntas sobre o ambiente de trabalho:
 
-   **Email searches:**
-
-    ```
-   Find emails about the budget from my manager
-    ```
-
-   **Meeting summaries:**
+   **Pesquisas de email:**
 
     ```
-   What was decided in yesterday's standup?
+   Encontre emails do meu gerente sobre o orçamento
     ```
 
-   **Team activity:**
+   **Resumos de reuniões:**
 
     ```
-   What did the engineering team discuss this week?
+   O que foi decidido na reunião diária de ontem?
     ```
 
-   **Document discovery:**
+   **Atividade da equipe:**
 
     ```
-   Show me shared documents about security policies
+   O que a equipe de engenharia discutiu esta semana?
     ```
 
-3. Experiment with:
-   - Different time ranges
-   - Different data sources (emails vs. meetings vs. Teams)
-   - Different levels of specificity
-   - Follow-up questions to refine results
+   **Descoberta de documentos:**
 
-4. Note what works well:
-   - Specific queries usually work better than vague ones
-   - Including time ranges improves relevance
-   - Names and keywords help narrow results
+    ```
+   Mostre documentos compartilhados sobre políticas de segurança
+    ```
 
-## Explore and Experiment
+3. Faça experiências com:
+   - Diferentes intervalos de tempo
+   - Diferentes fontes de dados (emails, reuniões ou Teams)
+   - Diferentes níveis de especificidade
+   - Perguntas de acompanhamento para refinar os resultados
 
-Now that you've completed all scenarios, take 5-10 minutes to explore on your own.
+4. Observe o que funciona bem:
+   - Consultas específicas geralmente funcionam melhor do que consultas vagas
+   - Incluir intervalos de tempo melhora a relevância
+   - Nomes e palavras-chave ajudam a restringir os resultados
 
-### Test edge cases
+## Explorar e experimentar
 
-1. Try queries about data you don't have - how does the agent respond?
+Agora que você concluiu todos os cenários, reserve de 5 a 10 minutos para explorar por conta própria.
 
-2. Ask ambiguous questions - how does the agent handle them?
+### Testar casos extremos
 
-3. Search for very old information - what are the limits?
+1. Tente fazer consultas sobre dados que você não possui — como o agente responde?
 
-### Explore different query styles
+2. Faça perguntas ambíguas — como o agente lida com elas?
 
-1. **Very specific**: "Find the email from John about Q3 budget sent on January 15th"
+3. Pesquise informações muito antigas — quais são os limites?
 
-2. **Very broad**: "Tell me about recent developments"
+### Explorar diferentes estilos de consulta
 
-3. **Comparative**: "Compare this week's discussions to last week's"
+1. **Muito específica**: "Encontre o email de João sobre o orçamento do Q3 enviado em 15 de janeiro"
 
-### View Work IQ capabilities
+2. **Muito ampla**: "Conte-me sobre os desenvolvimentos recentes"
 
-From the main menu, select **6 - View Work IQ Capabilities** to review:
+3. **Comparativa**: "Compare as discussões desta semana com as da semana passada"
 
-- Architecture overview
-- Data sources available
-- Security and privacy model
-- Work IQ vs. Foundry IQ comparison
-- Common use cases
+### Ver os recursos do Work IQ
 
-## Understanding the Code
+No menu principal, selecione **6 - View Work IQ Capabilities (Exibir recursos do Work IQ)** para revisar:
 
-Let's examine the key patterns used in this lab.
+- Visão geral da arquitetura
+- Fontes de dados disponíveis
+- Modelo de segurança e privacidade
+- Comparação entre Work IQ e Foundry IQ
+- Casos de uso comuns
 
-### Pattern 1: Work IQ MCP Client Initialization
+## Entender o código
+
+Vamos examinar os principais padrões usados neste laboratório.
+
+### Padrão 1: inicialização do cliente MCP do Work IQ
 
 ```python
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# Store server parameters for reuse
+# Armazena os parâmetros do servidor para reutilização
 self.workiq_server_params = StdioServerParameters(
     command="npx",
     args=["-y", "@microsoft/workiq", "mcp"]
 )
 
-# Fetch available tools from Work IQ MCP server
+# Obtém as ferramentas disponíveis do servidor MCP do Work IQ
 async def _fetch():
     async with stdio_client(self.workiq_server_params) as (read, write):
         async with ClientSession(read, write) as session:
@@ -362,14 +362,14 @@ async def _fetch():
 raw_tools = asyncio.run(_fetch())
 ```
 
-Rather than maintaining a persistent connection, a new MCP session is opened per operation. `StdioServerParameters` stores the command and arguments used to launch the Work IQ MCP server subprocess each time.
+Em vez de manter uma conexão persistente, uma nova sessão MCP é aberta para cada operação. `StdioServerParameters` armazena o comando e os argumentos usados para iniciar o subprocesso do servidor MCP do Work IQ a cada vez.
 
-### Pattern 2: Creating Agent with Work IQ Tools
+### Padrão 2: criar um agente com ferramentas do Work IQ
 
 ```python
 from azure.ai.projects.models import PromptAgentDefinition, FunctionTool
 
-# Convert MCP tools to FunctionTool objects
+# Converte as ferramentas MCP em objetos FunctionTool
 workiq_tools = [
     FunctionTool(
         name=tool.name,
@@ -379,42 +379,42 @@ workiq_tools = [
     for tool in raw_tools
 ]
 
-# Create agent with Work IQ tools
+# Cria um agente com ferramentas do Work IQ
 self.agent = self.project_client.agents.create_version(
     agent_name="workplace-intelligence-agent",
     definition=PromptAgentDefinition(
         model=self.model_deployment,
-        instructions="You are a workplace intelligence assistant...",
-        tools=workiq_tools  # Work IQ tools added here
+        instructions="Você é um assistente de inteligência do ambiente de trabalho...",
+        tools=workiq_tools  # Ferramentas do Work IQ adicionadas aqui
     )
 )
 
-# Keep a map of raw tools for lookup during execution
+# Mantém um mapa das ferramentas brutas para pesquisa durante a execução
 self.raw_tools_map = {tool.name: tool for tool in raw_tools}
 ```
 
-Each MCP tool is wrapped in a `FunctionTool` object and passed to a `PromptAgentDefinition`. The raw tools map enables efficient lookup when the agent calls a tool by name.
+Cada ferramenta MCP é encapsulada em um objeto `FunctionTool` e passada para um `PromptAgentDefinition`. O mapa de ferramentas brutas permite uma pesquisa eficiente quando o agente chama uma ferramenta pelo nome.
 
-### Pattern 3: Executing Queries with Responses API
+### Padrão 3: executar consultas com a Responses API
 
 ```python
-# Create conversation
+# Cria a conversa
 conversation = self.openai_client.conversations.create(
     items=[{"type": "message", "role": "user", "content": query}]
 )
 
-# Create response with agent
+# Cria uma resposta com o agente
 response = self.openai_client.responses.create(
     conversation=conversation.id,
     extra_body={"agent_reference": {"name": self.agent.name, "type": "agent_reference"}}
 )
 ```
 
-This uses the Responses API pattern (not the old Runs/Threads pattern) for cleaner agent execution.
+Isso usa o padrão da Responses API (não o padrão antigo de Runs/Threads) para uma execução mais limpa do agente.
 
-### Pattern 4: Tool Call Loop
+### Padrão 4: loop de chamadas de ferramentas
 
-After the initial response, the agent may request one or more Work IQ tool calls. These must be executed and fed back to continue the conversation:
+Após a resposta inicial, o agente pode solicitar uma ou mais chamadas de ferramentas do Work IQ. Elas devem ser executadas e retornadas para que a conversa continue:
 
 ```python
 from openai.types.responses.response_input_param import FunctionCallOutput
@@ -428,7 +428,7 @@ while True:
         if item.type == "function_call":
             kwargs = json.loads(item.arguments)
 
-            # Call the Work IQ tool via MCP
+            # Chama a ferramenta do Work IQ via MCP
             async def _execute():
                 async with stdio_client(self.workiq_server_params) as (read, write):
                     async with ClientSession(read, write) as session:
@@ -445,21 +445,21 @@ while True:
             )
 
     if input_list:
-        # Send tool results back and continue
+        # Envia os resultados das ferramentas de volta e continua
         response = self.openai_client.responses.create(
             input=input_list,
             previous_response_id=response.id,
             extra_body={"agent_reference": {"name": self.agent.name, "type": "agent_reference"}}
         )
     else:
-        break  # No more tool calls - final response ready
+        break  # Não há mais chamadas de ferramentas — resposta final pronta
 ```
 
-The loop continues until the agent produces a response with no pending function calls, at which point `response.output_text` contains the final answer.
+O loop continua até que o agente produza uma resposta sem chamadas de função pendentes; nesse momento, `response.output_text` contém a resposta final.
 
-## Clean Up
+## Limpar recursos
 
-The lab automatically cleans up the agent when you exit:
+O laboratório limpa automaticamente o agente quando você sai:
 
 ```python
 self.openai_client.agents.delete_version(
@@ -468,13 +468,13 @@ self.openai_client.agents.delete_version(
 )
 ```
 
-No Azure resources are created in this lab (Work IQ uses your M365 license), so no additional cleanup is needed.
+Nenhum recurso do Azure é criado neste laboratório (o Work IQ usa sua licença do M365), portanto, não é necessária nenhuma limpeza adicional.
 
-## Troubleshooting
+## Solução de problemas
 
 ### "Work IQ command not found"
 
-**Solution:** Install Work IQ:
+**Solução:** Instale o Work IQ:
 
 ```bash
 npm install -g @microsoft/workiq
@@ -482,29 +482,29 @@ npm install -g @microsoft/workiq
 
 ### "Admin consent required"
 
-**Solution:**
+**Solução:**
 
-1. Run `workiq mcp` to get the consent URL
-2. Send to your IT admin for approval
-3. Or use a personal M365 account with Copilot
+1. Execute `workiq mcp` para obter a URL de consentimento
+2. Envie-a ao administrador de TI para aprovação
+3. Ou use uma conta pessoal do M365 com Copilot
 
 ### "No M365 Copilot license"
 
-**Solution:** This lab requires Copilot. Either:
+**Solução:** Este laboratório requer o Copilot. Escolha uma destas opções:
 
-- Purchase M365 Copilot license ($30/month)
-- Use organizational account with Copilot
-- Read through the lab to understand concepts without hands-on
+- Compre uma licença do M365 Copilot (US$ 30/mês)
+- Use uma conta organizacional com Copilot
+- Leia o laboratório para entender os conceitos sem realizar as atividades práticas
 
 ### "MCP server not responding"
 
-**Solution:** Test Work IQ directly:
+**Solução:** Teste o Work IQ diretamente:
 
 ```bash
-workiq ask -q "What meetings do I have?"
+workiq ask -q "Quais reuniões tenho?"
 ```
 
-If this fails, reinstall:
+Se isso falhar, reinstale:
 
 ```bash
 npm install -g @microsoft/workiq
@@ -512,8 +512,8 @@ npm install -g @microsoft/workiq
 
 ### "No data returned"
 
-**Solution:**
+**Solução:**
 
-- Ensure your M365 account has emails, meetings, Teams activity
-- Try broader queries
-- Check if your query matches your actual data
+- Verifique se sua conta do M365 tem emails, reuniões e atividade no Teams
+- Tente consultas mais amplas
+- Verifique se sua consulta corresponde aos seus dados reais
