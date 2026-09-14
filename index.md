@@ -1,52 +1,30 @@
 ---
-title: Exercícios de AI Agents em Português
+title: Develop generative AI solutions in Azure
 permalink: index.html
 layout: home
 ---
 
-# Exercícios de AI Agents em Português
+The following exercises are designed to provide you with a hands-on learning experience in which you'll explore common tasks that developers do when building generative AI solutions on Microsoft Azure.
 
-Bem-vindo ao material traduzido para português dos exercícios práticos de desenvolvimento de **AI Agents** no Microsoft Azure. As atividades usam o **Microsoft Foundry**, o **Foundry Agent Service**, o **Foundry Toolkit**, o **Agent Framework** e outras ferramentas do ecossistema Azure.
+> **Note**: To complete the exercises, you'll need an Azure subscription in which you have sufficient permissions and quota to provision the necessary Azure resources and generative AI models. If you don't already have one, you can sign up for an [Azure account](https://azure.microsoft.com/free). There's a free trial option for new users that includes credits for the first 30 days.
 
-> **Observação:** os nomes de produtos, ferramentas, APIs, comandos e outros termos técnicos foram mantidos em inglês quando necessário para preservar a precisão técnica e facilitar a execução dos exercícios.
+## Exercises
 
-### Exercícios disponíveis
+<hr>
 
-{% assign exercises = site.pages | where_exp:"page", "page.url contains '/Instructions/Exercises/'" | where_exp:"page", "page.lab.duration" | sort: "url" %}
+{% assign labs = site.pages | where_exp:"page", "page.url contains '/Instructions/Exercises'" %}
+{% for activity in labs  %}
+{% if activity.lab.title %}
+### [{{ activity.lab.title }}]({{ site.github.url }}{{ activity.url }})
 
-{% for exercise in exercises %}
-<div class="exercise-card">
 
-## [{{ exercise.lab.title }}]({{ exercise.url | relative_url }})
+{% if activity.lab.level %}**Level**: {{activity.lab.level}} \| {% endif %}{% if activity.lab.duration %}**Duration**: {{activity.lab.duration}}{% endif %}
 
-{% if exercise.lab.level %}**Nível:** {{ exercise.lab.level }}<br>
-{% endif %}{% if exercise.lab.duration %}**Duração:** {{ exercise.lab.duration }} minutos<br>
+{% if activity.lab.description %}
+*{{activity.lab.description}}*
 {% endif %}
-
-{{ exercise.lab.description }}
-
-</div>
+<hr>
+{% endif %}
 {% endfor %}
 
-## Como usar este site
-
-Selecione um exercício acima para abrir suas instruções completas. Os exemplos de código podem ser copiados diretamente para o ambiente de desenvolvimento, respeitando os pré-requisitos e as configurações descritas em cada atividade.
-
-## Recursos relacionados
-
-- [Microsoft Learn — Desenvolver AI Agents no Azure](https://learn.microsoft.com/training/paths/develop-ai-agents-on-azure/)
-- [Microsoft Foundry](https://ai.azure.com)
-- [Documentação do Azure AI Foundry](https://learn.microsoft.com/azure/ai-foundry/)
-
-<style>
-.exercise-card {
-  border: 1px solid #d9e2f2;
-  border-left: 5px solid #0078d4;
-  border-radius: 8px;
-  padding: 1rem 1.25rem;
-  margin: 1rem 0;
-  background: #f8fbff;
-}
-.exercise-card h3 { margin-top: 0; }
-.exercise-card p:last-child { margin-bottom: 0; }
-</style>
+> **Note**: While you can complete these exercises on their own, they're designed to complement modules on [Microsoft Learn](https://aka.ms/mslearn-generative-ai), in which you'll find a deeper dive into some of the underlying concepts on which these exercises are based.
