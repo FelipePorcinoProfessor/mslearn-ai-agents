@@ -1,4 +1,4 @@
-timestamp,cpu_percent,memory_percent,disk_percent,network_mbps
+data_hora,cpu_porcentagem,memoria_porcentagem,disco_porcentagem,rede_mbps
 2026-01-06 08:00:00,23,45,62,12.5
 2026-01-06 09:00:00,34,48,62,18.3
 2026-01-06 10:00:00,56,52,62,24.7
