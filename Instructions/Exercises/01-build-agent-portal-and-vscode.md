@@ -79,7 +79,7 @@ Agora que você criou um agente, vamos configurá-lo com instruções e adiciona
 1. Baixe o documento de política de TI do repositório do laboratório. Abra uma nova guia do navegador e navegue até:
 
     ```
-   https://raw.githubusercontent.com/MicrosoftLearning/mslearn-ai-agents/main/Labfiles/01-build-agent-portal-and-vscode/IT_Policy.txt
+   https://raw.githubusercontent.com/FelipePorcinoProfessor/mslearn-ai-agents/main/Labfiles/01-build-agent-portal-and-vscode/IT_Policy_PTBR.txt
     ```
 
     Salve o arquivo no computador local.
