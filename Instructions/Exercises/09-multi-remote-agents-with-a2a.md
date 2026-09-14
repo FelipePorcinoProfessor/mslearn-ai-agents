@@ -6,7 +6,7 @@ lab:
     duration: 30
     islab: true
     status: 'released'
-    layout: default
+layout: default
 ---
 
 # Conectar-se a agentes remotos com o protocolo A2A

@@ -6,7 +6,7 @@ lab:
     duration: 45
     islab: true
     status: 'released'
-    layout: default
+layout: default
 ---
 
 # Criar um fluxo de trabalho no Microsoft Foundry

@@ -6,7 +6,7 @@ lab:
     duration: 40
     islab: true
     status: 'released'
-    layout: default
+layout: default
 ---
 
 # Implemente agentes no Microsoft Teams e no Copilot

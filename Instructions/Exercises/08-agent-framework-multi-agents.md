@@ -6,7 +6,7 @@ lab:
     duration: 30
     islab: true
     status: 'released'
-    layout: default
+layout: default
 ---
 
 # Desenvolva uma solução multiagente com o Microsoft Agent Framework

@@ -6,7 +6,7 @@ lab:
     duration: 60
     islab: true
     status: 'released'
-    layout: default
+layout: default
 ---
 
 # Estender agentes com ferramentas do Model Context Protocol (MCP)
