@@ -10,7 +10,7 @@ Bem-vindo ao material traduzido para português dos exercícios práticos de des
 
 > **Observação:** os nomes de produtos, ferramentas, APIs, comandos e outros termos técnicos foram mantidos em inglês quando necessário para preservar a precisão técnica e facilitar a execução dos exercícios.
 
-## Exercícios disponíveis
+### Exercícios disponíveis
 
 {% assign exercises = site.pages | where_exp:"page", "page.url contains '/Instructions/Exercises/'" | where_exp:"page", "page.lab.duration" | sort: "url" %}
 
