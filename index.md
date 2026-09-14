@@ -14,18 +14,18 @@ Bem-vindo ao material traduzido para português dos exercícios práticos de des
 
 {% assign exercises = site.pages | where_exp:"page", "page.url contains '/Instructions/Exercises/'" | where_exp:"page", "page.lab.duration" | sort: "url" %}
 
-{% for activity in labs  %}
-{% if activity.lab.title %}
-### [{{ activity.lab.title }}]({{ site.github.url }}{{ activity.url }})
+{% for exercise in exercises %}
+<div class="exercise-card">
 
+## [{{ exercise.lab.title }}]({{ exercise.url | relative_url }})
 
-{% if activity.lab.level %}**Level**: {{activity.lab.level}} \| {% endif %}{% if activity.lab.duration %}**Duration**: {{activity.lab.duration}}{% endif %}
-
-{% if activity.lab.description %}
-*{{activity.lab.description}}*
+{% if exercise.lab.level %}**Nível:** {{ exercise.lab.level }}<br>
+{% endif %}{% if exercise.lab.duration %}**Duração:** {{ exercise.lab.duration }} minutos<br>
 {% endif %}
-<hr>
-{% endif %}
+
+{{ exercise.lab.description }}
+
+</div>
 {% endfor %}
 
 ## Como usar este site
