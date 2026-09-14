@@ -1,0 +1,241 @@
+DOCUMENTO DE POLÍTICA DE SUPORTE DE TI DA CONTOSO CORPORATION
+
+Data de Vigência: Janeiro de 2026
+Versão: 2.0
+
+====================
+1. POLÍTICA DE REDEFINIÇÃO DE SENHA
+====================
+
+Todas as solicitações de redefinição de senha devem ser enviadas por meio do portal de IT Support ou ligando para o IT helpdesk.
+
+Processo:
+1. Confirme sua identidade usando seu ID de funcionário e as perguntas de segurança
+2. As redefinições de senha geralmente são concluídas em até 15 minutos durante o horário comercial
+3. Você receberá uma senha temporária via SMS ou e-mail
+4. Você deve alterar a senha temporária no primeiro login
+5. As novas senhas devem atender aos requisitos de complexidade:
+   - Mínimo de 12 caracteres
+   - Incluir letras maiúsculas, minúsculas, números e caracteres especiais
+   - Não é possível reutilizar as últimas 5 senhas
+
+Opção Self-Service:
+- Os funcionários podem redefinir as senhas através do portal self-service em https://password.contoso.com
+- Requer inscrição prévia em multi-factor authentication
+
+Redefinições de Emergência:
+- Emergências fora do horário comercial: Ligue para +1-800-555-HELP
+- Acesso a sistemas críticos: Entre em contato com seu gestor para escalonamento
+
+====================
+2. SOLICITAÇÕES DE INSTALAÇÃO DE SOFTWARE
+====================
+
+Todas as instalações de software devem ser aprovadas e realizadas pela equipe de TI.
+
+Software Padrão:
+Os seguintes softwares são pré-aprovados e podem ser solicitados por meio do portal de TI:
+- Microsoft Office Suite
+- Adobe Acrobat Reader
+- Zoom
+- Microsoft Teams
+- Google Chrome
+- Mozilla Firefox
+- 7-Zip
+- VLC Media Player
+
+Software Personalizado/Especializado:
+1. Envie a solicitação pelo portal de IT Support
+2. Forneça uma justificativa de negócio
+3. Aprovação do gestor é necessária
+4. Análise de segurança (2-3 dias úteis)
+5. Aquisição de licença (se necessário)
+6. Instalação agendada em até 5 dias úteis após a aprovação
+
+Prazos do Processo:
+- Software padrão: 1-2 dias úteis
+- Software personalizado: 5-10 dias úteis
+- Software enterprise: 15-30 dias úteis
+
+Software Open Source:
+- Requer aprovação da equipe de segurança
+- Envie o formulário de Software Assessment Request
+- Inclua o link para o repositório do código-fonte
+- Aguarde de 5 a 7 dias úteis para análise
+
+====================
+3. RESOLUÇÃO DE PROBLEMAS DE HARDWARE (TROUBLESHOOTING)
+====================
+
+IMPRESSORAS:
+Problemas Comuns:
+- Atolamento de papel: Limpe o caminho do papel e verifique se há pedaços rasgados
+- Não está imprimindo: Verifique a conexão, reinicie a impressora e confirme a fila de impressão
+- Baixa qualidade de impressão: Execute o ciclo de limpeza e verifique os níveis de tinta/toner
+- Problemas de cor: Calibre a impressora e verifique as configurações de cor
+
+Escalonamento: Entre em contato com o IT helpdesk se o problema persistir após a resolução básica de problemas.
+
+MONITORES:
+Problemas Comuns:
+- Sem imagem: Verifique as conexões dos cabos e a fonte de energia
+- Imagem piscando: Verifique as configurações de refresh rate e tente um cabo diferente
+- Resolução incorreta: Ajuste as configurações de exibição no sistema operacional
+- Dead pixels: Documente e informe para substituição em garantia
+
+TECLADOS/MICE:
+Problemas Comuns:
+- Sem resposta: Verifique a conexão USB e tente uma porta diferente
+- Sem fio não funciona: Substitua as pilhas/baterias e pareie o dispositivo novamente
+- Teclas não funcionam: Limpe o teclado e verifique se há danos físicos
+- Movimento do mouse irregular: Limpe o sensor e tente uma superfície diferente
+
+LAPTOPS:
+Problemas Comuns:
+- Não liga: Verifique a carga da bateria e tente usar apenas o adaptador AC
+- Superaquecimento: Certifique-se de que as saídas de ar estejam desobstruídas e use em uma superfície rígida
+- Desempenho lento: Feche programas desnecessários e reinicie o dispositivo
+- Bateria não carrega: Verifique o adaptador AC e atualize a BIOS
+
+Substituição de Hardware:
+- Envie a solicitação pelo portal de IT Support
+- Inclua o número de série do dispositivo e a descrição do problema
+- Substituições padrão: 2-3 dias úteis
+- Equipamento de empréstimo disponível para necessidades urgentes
+
+====================
+4. ACESSO À REDE E VPN
+====================
+
+Acesso VPN:
+- Todos os trabalhadores remotos devem usar a VPN da empresa
+- Baixe o cliente VPN a partir do portal de TI
+- Use suas credenciais de rede para conectar
+- Informe problemas de conexão imediatamente
+
+Resolução de Problemas de Rede:
+1. Verifique as conexões físicas
+2. Reinicie o adaptador de rede
+3. Execute a ferramenta de diagnóstico de rede
+4. Entre em contato com o IT helpdesk se o problema persistir
+
+Problemas de Wi-Fi:
+- Rede preferencial: Contoso-Corporate
+- Rede de convidados: Contoso-Guest (acesso limitado)
+- Salas de reunião: Contoso-Meeting
+- Informe áreas sem sinal (dead zones) à TI para melhoria da cobertura
+
+====================
+5. E-MAIL E FERRAMENTAS DE COMUNICAÇÃO
+====================
+
+Problemas de E-mail:
+- Não consegue enviar/receber: Verifique a conexão com a internet e o status da conta
+- Caixa de entrada cheia: Arquive ou exclua e-mails antigos
+- Spam/phishing: Não clique em links e encaminhe para security@contoso.com
+- Fora do escritório (Out of office): Configure por meio das configurações do cliente de e-mail
+
+Microsoft Teams:
+- Ferramenta de comunicação preferencial para mensagens internas
+- Chamadas de vídeo: Certifique-se de que as permissões de câmera/microfone estejam ativadas
+- Compartilhamento de tela: Use "Compartilhar janela específica" para dados sensíveis
+- Gravação de reuniões: Apenas com o consentimento dos participantes
+
+====================
+6. SEGURANÇA E GESTÃO DE ACESSO
+====================
+
+Multi-Factor Authentication (MFA):
+- Obrigatório para todas as contas
+- Inscreva-se em https://mfa.contoso.com
+- Métodos suportados: Aplicativo autenticador, SMS, chamada telefônica
+- Códigos de backup disponíveis para emergências
+
+Solicitações de Acesso:
+- Envie pelo portal de IT Security
+- Aprovação do gestor é necessária
+- Segue o princípio do menor privilégio (least privilege)
+- Revisão de acesso a cada 90 dias
+
+Contas Bloqueadas:
+- Bloqueadas automaticamente após 5 tentativas de login com falha
+- Desbloqueio self-service: https://unlock.contoso.com
+- O IT helpdesk pode desbloquear imediatamente, se necessário
+
+====================
+7. BACKUP E RECUPERAÇÃO DE DADOS
+====================
+
+Backups Automáticos:
+- Arquivos de desktop/laptop: Backup realizado todas as noites para armazenamento em nuvem
+- Unidades de rede: Backup contínuo
+- E-mail: Retido por 7 anos
+
+Recuperação de Arquivos:
+- Arquivos recentes: Verifique a lixeira primeiro
+- Arquivos excluídos: Envie uma solicitação de recuperação (disponível por 30 dias)
+- Arquivos mais antigos: Entre em contato com a TI para recuperação do arquivo morto (2-3 dias úteis)
+
+====================
+8. GESTÃO DE DISPOSITIVOS MÓVEIS (MDM)
+====================
+
+Celulares/Tablets da Empresa:
+- Devem estar cadastrados no sistema MDM
+- Políticas de segurança são aplicadas
+- Perdido/roubado: Informe imediatamente ao IT Security
+- Capacidade de remote wipe para proteção de dados
+
+BYOD (Bring Your Own Device):
+- Cadastro opcional para acesso ao e-mail
+- Perfil de trabalho separado é criado
+- Dados da empresa são isolados dos dados pessoais
+- Pode ser apagado remotamente (apenas os dados da empresa)
+
+====================
+9. HORÁRIO DE SUPORTE E CONTATOS
+====================
+
+Horário do IT Helpdesk:
+- Segunda a Sexta: 07:00 às 19:00 (Horário Local)
+- Finais de Semana/Feriados: Apenas suporte de emergência
+
+Meios de Contato:
+- Telefone: +1-800-555-HELP (4357)
+- E-mail: itsupport@contoso.com
+- Portal: https://support.contoso.com
+- Chat: Disponível através da intranet da empresa
+
+Prazos de Resposta:
+- Crítico (sistema inoperante): 30 minutos
+- Alto (grande impacto): 2 horas
+- Médio (impacto limitado): 4 horas
+- Baixo (dúvidas gerais): 1 dia útil
+
+====================
+10. DIRETRIZES PARA ABERTURA DE TICKETS
+====================
+
+Ao abrir um ticket, inclua:
+- Seu nome e ID de funcionário
+- Localização/escritório
+- Telefone de contato e e-mail
+- Descrição detalhada do problema
+- Quaisquer mensagens de erro (capturas de tela são úteis)
+- Passos para reproduzir o problema
+- Quando o problema começou
+- O que você já tentou fazer
+
+Níveis de Prioridade:
+- Crítico: Sistema completamente inoperante, incidente de segurança
+- Alto: Funcionalidade principal indisponível, múltiplos usuários afetados
+- Médio: Problema parcial de funcionalidade, solução alternativa disponível
+- Baixo: Pequeno inconveniente, solicitação de informação
+
+====================
+FIM DO DOCUMENTO
+====================
+
+Para dúvidas sobre esta política, entre em contato com:
+IT Policy Manager
+itpolicy@contoso.com
