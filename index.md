@@ -17,7 +17,7 @@ Bem-vindo ao material traduzido para português dos exercícios práticos de des
 {% for exercise in exercises %}
 <div class="exercise-card">
 
-### [{{ exercise.lab.title }}]({{ exercise.url | relative_url }})
+## [{{ exercise.lab.title }}]({{ exercise.url | relative_url }})
 
 {% if exercise.lab.level %}**Nível:** {{ exercise.lab.level }}<br>
 {% endif %}{% if exercise.lab.duration %}**Duração:** {{ exercise.lab.duration }} minutos<br>
