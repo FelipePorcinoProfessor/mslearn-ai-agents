@@ -1,7 +1,7 @@
 ---
 title: Desenvolva soluções de IA generativa no Azure
 permalink: index.html
-layout: home
+layout: default
 ---
 
 <style>
@@ -27,7 +27,7 @@ layout: home
   <strong>Observação:</strong> para concluir os exercícios, você precisará de uma assinatura do Azure com permissões e cota suficientes para provisionar os recursos do Azure e os modelos de IA generativa necessários. Se ainda não tiver uma, você poderá criar uma <a href="https://azure.microsoft.com/free">conta do Azure</a>. Há uma opção de avaliação gratuita para novos usuários, com créditos para os primeiros 30 dias.
 </div>
 
-## Exercises
+## Exercícios
 
 <div class="exercise-grid">
   {%- assign exercises = site.pages | where_exp: "page", "page.path contains 'Instructions/Exercises/'" | sort: "path" -%}

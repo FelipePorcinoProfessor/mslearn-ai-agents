@@ -6,6 +6,7 @@ lab:
     duration: 40
     islab: true
     status: 'released'
+    layout: default
 ---
 
 # Work IQ - Inteligência do ambiente de trabalho para agentes de IA

@@ -6,6 +6,7 @@ lab:
     duration: 45
     islab: true
     status: 'released'
+    layout: default
 ---
 
 # Integrar um agente de IA com o Foundry IQ

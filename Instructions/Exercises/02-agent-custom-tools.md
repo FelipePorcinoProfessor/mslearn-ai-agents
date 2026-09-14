@@ -6,6 +6,7 @@ lab:
     duration: 50
     islab: true
     status: 'released'
+    layout: default
 ---
 
 # Usar uma função personalizada em um agente de IA

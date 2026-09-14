@@ -6,6 +6,7 @@ lab:
     duration: 30
     islab: true
     status: 'released'
+    layout: default
 ---
 
 # Desenvolva um agente de chat de IA do Azure com o SDK do Microsoft Agent Framework

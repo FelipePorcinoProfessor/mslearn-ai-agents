@@ -6,6 +6,7 @@ lab:
     duration: 45
     islab: true
     status: 'released'
+    layout: default
 ---
 
 # Criar agentes de IA com o portal e o VS Code
